@@ -6,4 +6,4 @@ TO DO
 3.Create a High Level Design
 4.Create a Low Level Design
 5.Create a Schema for the Database
-6.Think it as a Global Level Scalable Product
+6.Think it as a Global Level Scalable Product = done
