@@ -20,8 +20,8 @@ public class OtpService {
     private SmsService smsService; // 1. Injected SmsService
 
     public void sendOtp(String phoneNumber) {
-        // Generate a 6-digit OTP
-        String otp = String.valueOf(new Random().nextInt(900000) + 100000);
+        // Generate a 4-digit OTP
+        String otp = String.valueOf(new Random().nextInt(9000) + 1000);
 
         OtpEntity otpEntity = otpRepository.findByPhoneNumber(phoneNumber)
                 .orElse(new OtpEntity());
