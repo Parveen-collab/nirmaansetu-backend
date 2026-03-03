@@ -1,33 +1,15 @@
 NirmaanSetu-A Platform for connecting all aspects related with Construction Sectors.
 
 API List
-1. /api/auth/send-otp
-2. /api/auth/verify-otp
-3. /api/sms/send
+1. /api/auth/send-otp = done, ____, done, ____, ____
+2. /api/auth/verify-otp = done,____, done, ____, ____
+3. /api/sms/send = done, ____, done, ____, ____
 
 API Testing
-1️⃣ Unit Testing (Controller/Service Level)
-What it tests:
-Individual methods in isolation.
-
-2️⃣ Integration Testing
-What it tests:
-Controller + Service + Repository + Database together.
-
-Checks:
-Is data saved?
-Are validations working?
-Does DB connection work?
-
+1️⃣ Unit Testing (Controller/Service Level) = Individual methods in isolation.
+2️⃣ Integration Testing = Controller + Service + Repository + Database together.
 3️⃣ Functional Testing (Manual API Testing) = Does API behave correctly for different inputs?
-4️⃣ Security Testing
-You must test:
-SQL Injection
-JWT token tampering
-Brute force attack
-Rate limiting
-Unauthorized access
-
+4️⃣ Security Testing = SQL Injection, JWT token tampering, Brute force attack,Rate limiting, Unauthorized access.
 5️⃣ Performance Testing 🚀 = What happens with 10,000 requests?
 6️⃣ Contract Testing (Frontend ↔ Backend)
 
