@@ -20,3 +20,10 @@ TO DO
 4.Create a Low Level Design
 5.Create a Schema for the Database
 6.Think it as a Global Level Scalable Product = done
+
+feat(auth): implement global phone number validation using libphonenumber
+- Add spring-boot-starter-validation and google-libphonenumber dependencies
+- Create custom @ValidPhoneNumber annotation and PhoneNumberValidator for E.164 support
+- Implement OtpRequestDto and VerifyOtpRequestDto with global validation constraints
+- Update AuthController to use @Valid @RequestBody for standardized input validation
+- Add GlobalExceptionHandler to return structured validation error messages
