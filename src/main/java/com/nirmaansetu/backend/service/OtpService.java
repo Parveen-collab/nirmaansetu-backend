@@ -5,6 +5,7 @@ package com.nirmaansetu.backend.service;
 import com.nirmaansetu.backend.entity.OtpEntity;
 import com.nirmaansetu.backend.repository.OtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class OtpService {
         smsService.sendSms(phoneNumber, messageBody);
     }
 
+    @Cacheable(value = "otp", key = "#phoneNumber")
     public boolean verifyOtp(String phoneNumber, String otp) {
         return otpRepository.findByPhoneNumber(phoneNumber)
                 .map(entity -> entity.getOtp().equals(otp) &&
