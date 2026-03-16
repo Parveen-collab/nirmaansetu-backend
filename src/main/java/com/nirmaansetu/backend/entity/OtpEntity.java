@@ -2,10 +2,8 @@
 
 package com.nirmaansetu.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.nirmaansetu.backend.utility.EncryptionConverter;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -17,7 +15,10 @@ public class OtpEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Convert(converter = EncryptionConverter.class)
     private String phoneNumber;
+
     private String otp;
     private LocalDateTime expiryTime;
 }
