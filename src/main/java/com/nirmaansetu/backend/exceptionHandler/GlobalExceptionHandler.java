@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.nirmaansetu.backend.exception.RateLimitException;
+import org.springframework.http.HttpStatus;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,5 +19,13 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(RateLimitException.class)
+    public ResponseEntity<Map<String, String>> handleRateLimitException(RateLimitException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Too Many Requests");
+            error.put("message", ex.getMessage());
+    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
+}
 }
 

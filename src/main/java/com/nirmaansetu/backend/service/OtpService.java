@@ -2,6 +2,10 @@
 
 package com.nirmaansetu.backend.service;
 
+import com.nirmaansetu.backend.exception.RateLimitException;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import java.util.concurrent.TimeUnit;
 import com.nirmaansetu.backend.entity.OtpEntity;
 import com.nirmaansetu.backend.repository.OtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +19,27 @@ import java.util.Random;
 public class OtpService {
 
     @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    private static final int MAX_OTP_ATTEMPTS = 5;
+    private static final int LOCK_TIME_MINUTES = 10;
+
+    @Autowired
     private OtpRepository otpRepository;
 
     @Autowired
     private SmsService smsService; // 1. Injected SmsService
 
     public void sendOtp(String phoneNumber) {
+        String key = "otp_limit:" + phoneNumber;
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        String currentCount = ops.get(key);
+
+        if (currentCount != null && Integer.parseInt(currentCount) >= MAX_OTP_ATTEMPTS) {
+            throw new RateLimitException("OTP limit exceeded. Please try again after 10 minutes.");
+        }
+
         // Generate a 4-digit OTP
         String otp = String.valueOf(new Random().nextInt(9000) + 1000);
 
@@ -30,6 +49,13 @@ public class OtpService {
         otpEntity.setPhoneNumber(phoneNumber);
         otpEntity.setOtp(otp);
         otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(5));
+
+        // Universal Checking: Increment count in Redis
+        if (currentCount == null) {
+            ops.set(key, "1", LOCK_TIME_MINUTES, TimeUnit.MINUTES);
+        } else {
+            ops.increment(key);
+        }
 
         // Save OTP to database
         otpRepository.save(otpEntity);
