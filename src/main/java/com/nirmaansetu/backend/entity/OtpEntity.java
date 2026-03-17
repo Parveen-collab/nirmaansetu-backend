@@ -5,6 +5,7 @@ package com.nirmaansetu.backend.entity;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class OtpEntity {
     @Convert(converter = EncryptionConverter.class)
     private String phoneNumber;
 
+    @ToString.Exclude
     private String otp;
     private LocalDateTime expiryTime;
 }
