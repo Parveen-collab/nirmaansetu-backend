@@ -5,6 +5,8 @@ package com.nirmaansetu.backend.service;
 import com.nirmaansetu.backend.exception.RateLimitException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 import com.nirmaansetu.backend.entity.OtpEntity;
 import com.nirmaansetu.backend.repository.OtpRepository;
@@ -48,7 +50,7 @@ public class OtpService {
 
         otpEntity.setPhoneNumber(phoneNumber);
         otpEntity.setOtp(otp);
-        otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(5));
+        otpEntity.setExpiryTime(Instant.from(LocalDateTime.now().plusMinutes(5)));
 
         // Universal Checking: Increment count in Redis
         if (currentCount == null) {
@@ -69,7 +71,7 @@ public class OtpService {
     public boolean verifyOtp(String phoneNumber, String otp) {
         return otpRepository.findByPhoneNumber(phoneNumber)
                 .map(entity -> entity.getOtp().equals(otp) &&
-                        entity.getExpiryTime().isAfter(LocalDateTime.now()))
+                        entity.getExpiryTime().isAfter(Instant.from(LocalDateTime.now())))
                 .orElse(false);
     }
 }

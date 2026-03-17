@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+//import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -22,5 +23,6 @@ public class OtpEntity {
 
     @ToString.Exclude
     private String otp;
-    private LocalDateTime expiryTime;
+//    private LocalDateTime expiryTime;
+    private Instant expiryTime;
 }
