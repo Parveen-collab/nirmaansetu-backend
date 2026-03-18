@@ -1,25 +1,29 @@
 NirmaanSetu-A Platform for connecting all aspects related with Construction Sectors.
 
-API List
-1. /api/auth/send-otp = done, ____, done, done, ____
-2. /api/auth/verify-otp = done,____, done, done, ____
-3. /api/sms/send = done, ____, done, done, ____
+Users 
+for phase 1 = Employees(Mistry, Helper, Engineers, Carpenter and many more), Employers(Any Common man, Contractors, Builders), Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
-API Testing
-1️⃣ Unit Testing (Controller/Service Level) = Individual methods in isolation.
-2️⃣ Integration Testing = Controller + Service + Repository + Database together.
-3️⃣ Functional Testing (Manual API Testing) = Does API behave correctly for different inputs?
-4️⃣ Security Testing = SQL Injection, JWT token tampering, Brute force attack,Rate limiting, Unauthorized access.
-5️⃣ Performance Testing 🚀 = What happens with 10,000 requests?
-6️⃣ Contract Testing (Frontend ↔ Backend)
+API List
+1. /api/auth/send-otp
+2. /api/auth/verify-otp
+3. /api/sms/send
 
 TO DO
-1.Create a System Design for the Frontend and Backend of Nirmaansetu
-2.Create a UML Diagram
-3.Create a High Level Design
+1.Create a High Level Design = done
+2.Create a System Design for the Backend of Nirmaansetu
+3.Create a Schema for the Database
 4.Create a Low Level Design
-5.Create a Schema for the Database
+5.Create a UML Diagram
 6.Think it as a Global Level Scalable Product = done
+
+❌ Don’t jump directly into complex microservices infra
+✅ Design like microservices (HLD)
+✅ Implement as modular monolith
+
+🧩 Simple Strategy for You
+Step 1: Modular Monolith (NOW)
+Step 2: Add Redis + Queue
+Step 3: Break into microservices (LATER)
 
 SPRING STATE MACHINE
 Do use it for: Any business entity that has more than 3 states and specific rules about how it moves between them (e.g., a "Project" or an "Order").
