@@ -16,14 +16,38 @@ TO DO
 5.Create a UML Diagram
 6.Think it as a Global Level Scalable Product = done
 
-❌ Don’t jump directly into complex microservices infra
+7.❌ Don’t jump directly into complex microservices infra
 ✅ Design like microservices (HLD)
 ✅ Implement as modular monolith
 
-🧩 Simple Strategy for You
+8.🧩 Simple Strategy for You
 Step 1: Modular Monolith (NOW)
 Step 2: Add Redis + Queue
 Step 3: Break into microservices (LATER)
+
+9.You'll likely use
+HTTP for:
+Get contractors
+Post projects
+Login/auth
+
+WebSocket for:
+Live chat between users
+Real-time project updates
+Notifications (new bids, approvals)
+
+10. generate JWT token after verifying otp
+11. understand the concepts of refresh token 
+Current Issues
+12. Database Overload: Storing short-lived OTPs in a persistent database (SQL/NoSQL) adds unnecessary overhead and requires manual cleanup of expired records.
+13. No Session Management: Successful verification returns a string but no JWT or session token, meaning the user isn't actually "logged in" for subsequent requests.
+14. Incomplete Rate Limiting: You increment the counter in Redis, but your code doesn't appear to block the request if the limit is exceeded.
+
+Recommended Improvements
+15. Store OTP in Redis with TTL: Move the OTP storage from the database to Redis. Use the phoneNumber as the key and set an expiration (e.g., 5 minutes). Redis will automatically delete it when it expires.
+16. Generate JWT on Success: Modify verifyOtp to return a JWT token if the OTP is correct. This allows the frontend to authenticate future API calls.
+17. Enforce Rate Limiting: Check the Redis counter before sending the SMS. If it exceeds a threshold (e.g., 3 attempts per minute), return a 429 Too Many Requests error.
+18. Hash OTPs: For better security, store the hash of the OTP instead of the plain text, even in Redis.
 
 SPRING STATE MACHINE
 Do use it for: Any business entity that has more than 3 states and specific rules about how it moves between them (e.g., a "Project" or an "Order").
