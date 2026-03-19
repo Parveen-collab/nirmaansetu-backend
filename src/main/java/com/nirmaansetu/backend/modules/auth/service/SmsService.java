@@ -1,4 +1,4 @@
-package com.nirmaansetu.backend.service;
+package com.nirmaansetu.backend.modules.auth.service;
 
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;

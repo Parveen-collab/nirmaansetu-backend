@@ -1,10 +1,11 @@
 //Expose endpoints for requesting and verifying the OTP.
 
-package com.nirmaansetu.backend.controller;
+package com.nirmaansetu.backend.modules.auth.controller;
 
-import com.nirmaansetu.backend.dto.OtpRequestDto;
-import com.nirmaansetu.backend.dto.VerifyOtpRequestDto;
-import com.nirmaansetu.backend.service.OtpService;
+import com.nirmaansetu.backend.modules.auth.dto.OtpRequestDto;
+import com.nirmaansetu.backend.modules.auth.dto.VerifyOtpRequestDto;
+import com.nirmaansetu.backend.modules.auth.service.OtpService;
+import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,4 +33,19 @@ public class AuthController {
     }
 
 
+    @RestController
+    @RequestMapping("/api/sms")
+    public static class SmsController {
+
+        @Autowired
+        private SmsService smsService;
+
+        @PostMapping("/send")
+        public String sendSms(@RequestParam String phone) {
+
+            smsService.sendSms(phone, "Welcome to NirmaanSetu!");
+
+            return "SMS sent successfully";
+        }
+    }
 }

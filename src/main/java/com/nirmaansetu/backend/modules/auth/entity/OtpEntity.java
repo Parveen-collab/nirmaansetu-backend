@@ -1,6 +1,6 @@
 //an entity to store the OTP and its expiration time in the database.
 
-package com.nirmaansetu.backend.entity;
+package com.nirmaansetu.backend.modules.auth.entity;
 
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;

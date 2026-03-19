@@ -1,6 +1,6 @@
 //Implement logic to generate, send (via a third-party SMS provider like Twilio or Firebase), and validate OTPs.
 
-package com.nirmaansetu.backend.service;
+package com.nirmaansetu.backend.modules.auth.service;
 
 import com.nirmaansetu.backend.exception.RateLimitException;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -8,8 +8,8 @@ import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
-import com.nirmaansetu.backend.entity.OtpEntity;
-import com.nirmaansetu.backend.repository.OtpRepository;
+import com.nirmaansetu.backend.modules.auth.entity.OtpEntity;
+import com.nirmaansetu.backend.modules.auth.repository.OtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
