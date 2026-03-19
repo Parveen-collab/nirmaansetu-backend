@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.nirmaansetu.backend.exception.RateLimitException;
+import com.nirmaansetu.backend.modules.auth.exception.RateLimitException;
 import org.springframework.http.HttpStatus;
 
 @RestControllerAdvice

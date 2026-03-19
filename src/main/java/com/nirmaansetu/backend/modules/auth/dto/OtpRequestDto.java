@@ -1,6 +1,6 @@
 package com.nirmaansetu.backend.modules.auth.dto;
 
-import com.nirmaansetu.backend.globalNumberValidator.ValidPhoneNumber;
+import com.nirmaansetu.backend.modules.auth.globalNumberValidator.ValidPhoneNumber;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.nirmaansetu.backend.globalNumberValidator;
+package com.nirmaansetu.backend.modules.auth.globalNumberValidator;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;

@@ -2,7 +2,7 @@
 
 package com.nirmaansetu.backend.modules.auth.service;
 
-import com.nirmaansetu.backend.exception.RateLimitException;
+import com.nirmaansetu.backend.modules.auth.exception.RateLimitException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 

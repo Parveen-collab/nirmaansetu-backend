@@ -1,4 +1,4 @@
-package com.nirmaansetu.backend.globalNumberValidator;
+package com.nirmaansetu.backend.modules.auth.globalNumberValidator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

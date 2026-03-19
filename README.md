@@ -1,5 +1,9 @@
 NirmaanSetu-A Platform for connecting all aspects related with Construction Sectors.
 
+inspiration
+1. Upwork
+2. Fiverr
+
 Users 
 for phase 1 = Employees(Mistry, Helper, Engineers, Carpenter and many more), Employers(Any Common man, Contractors, Builders), Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
