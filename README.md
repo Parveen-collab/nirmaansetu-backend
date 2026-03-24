@@ -14,34 +14,29 @@ API List
 
 TO DO
 1.Create a High Level Design = done
-2.Create a System Design for the Backend of Nirmaansetu
-3.Create a Schema for the Database
-4.Create a Low Level Design
-5.Create a UML Diagram
+2.Create a System Design for the Backend of Nirmaansetu = done
+3.Create a Schema for the Database = done
+4.Create a Low Level Design = doing
+5.Create a UML Diagram = done
 6.Think it as a Global Level Scalable Product = done
-
-7.❌ Don’t jump directly into complex microservices infra
+7.❌ Don’t jump directly into complex microservices infra = done
 ✅ Design like microservices (HLD)
 ✅ Implement as modular monolith
 
-8.🧩 Simple Strategy for You
-Step 1: Modular Monolith (NOW)
-Step 2: Add Redis + Queue
-Step 3: Break into microservices (LATER)
-
 9.You'll likely use
-HTTP for:
+HTTP/HTTPS for:
 Get contractors
 Post projects
 Login/auth
 
-WebSocket for:
+and WebSocket for:
 Live chat between users
 Real-time project updates
 Notifications (new bids, approvals)
 
 10. generate JWT token after verifying otp
-11. understand the concepts of refresh token 
+11. understand the concepts of refresh token
+
 Current Issues
 12. Database Overload: Storing short-lived OTPs in a persistent database (SQL/NoSQL) adds unnecessary overhead and requires manual cleanup of expired records.
 13. No Session Management: Successful verification returns a string but no JWT or session token, meaning the user isn't actually "logged in" for subsequent requests.
@@ -52,6 +47,7 @@ Recommended Improvements
 16. Generate JWT on Success: Modify verifyOtp to return a JWT token if the OTP is correct. This allows the frontend to authenticate future API calls.
 17. Enforce Rate Limiting: Check the Redis counter before sending the SMS. If it exceeds a threshold (e.g., 3 attempts per minute), return a 429 Too Many Requests error.
 18. Hash OTPs: For better security, store the hash of the OTP instead of the plain text, even in Redis.
+
 
 SPRING STATE MACHINE
 Do use it for: Any business entity that has more than 3 states and specific rules about how it moves between them (e.g., a "Project" or an "Order").
