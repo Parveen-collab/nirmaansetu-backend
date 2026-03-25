@@ -2,10 +2,12 @@
 
 package com.nirmaansetu.backend.modules.auth.controller;
 
+import com.nirmaansetu.backend.modules.auth.dto.AuthResponseDto;
 import com.nirmaansetu.backend.modules.auth.dto.OtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.VerifyOtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
+import com.nirmaansetu.backend.shared.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,13 +26,26 @@ public class AuthController {
         return ResponseEntity.ok("OTP sent successfully");
     }
 
+//    @PostMapping("/verify-otp")
+//    public ResponseEntity<String> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request ) {
+//        if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
+//            return ResponseEntity.ok("Verification successful");
+//        }
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
+//    }
+
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request ) {
+    public ResponseEntity<?> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request) {
         if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
-            return ResponseEntity.ok("Verification successful");
+            JwtUtil jwtUtil = new JwtUtil();
+            String accessToken = jwtUtil.generateToken(request.getPhoneNumber(), false);
+            String refreshToken = jwtUtil.generateToken(request.getPhoneNumber(), true);
+
+            return ResponseEntity.ok(new AuthResponseDto(accessToken, refreshToken));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
     }
+
 
 
     @RestController

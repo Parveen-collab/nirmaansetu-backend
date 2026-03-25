@@ -23,7 +23,7 @@ TO DO
 ✅ Design like microservices (HLD)
 ✅ Implement as modular monolith
 
-9.You'll likely use
+9.You'll likely use = done
 HTTP/HTTPS for:
 Get contractors
 Post projects
@@ -34,19 +34,26 @@ Live chat between users
 Real-time project updates
 Notifications (new bids, approvals)
 
-10. generate JWT token after verifying otp
-11. understand the concepts of refresh token
+10. generate JWT token after verifying otp = done
+11. understand the concepts of refresh token = done
 
 Current Issues
-12. Database Overload: Storing short-lived OTPs in a persistent database (SQL/NoSQL) adds unnecessary overhead and requires manual cleanup of expired records.
+12. Database Overload: Storing short-lived OTPs in a persistent database (SQL/NoSQL) adds unnecessary overhead and requires manual cleanup of expired records. 
+solution = Store OTP in Redis with TTL: Move the OTP storage from the database to Redis. Use the phoneNumber as the key and set an expiration (e.g., 5 minutes). Redis will automatically delete it when it expires.
+
+
 13. No Session Management: Successful verification returns a string but no JWT or session token, meaning the user isn't actually "logged in" for subsequent requests.
+solution = Generate JWT on Success: Modify verifyOtp to return a JWT token if the OTP is correct. This allows the frontend to authenticate future API calls. = done
+
+
 14. Incomplete Rate Limiting: You increment the counter in Redis, but your code doesn't appear to block the request if the limit is exceeded.
+solution = 17. Enforce Rate Limiting: Check the Redis counter before sending the SMS. If it exceeds a threshold (e.g., 3 attempts per minute), return a 429 Too Many Requests error.
+
 
 Recommended Improvements
-15. Store OTP in Redis with TTL: Move the OTP storage from the database to Redis. Use the phoneNumber as the key and set an expiration (e.g., 5 minutes). Redis will automatically delete it when it expires.
-16. Generate JWT on Success: Modify verifyOtp to return a JWT token if the OTP is correct. This allows the frontend to authenticate future API calls.
-17. Enforce Rate Limiting: Check the Redis counter before sending the SMS. If it exceeds a threshold (e.g., 3 attempts per minute), return a 429 Too Many Requests error.
 18. Hash OTPs: For better security, store the hash of the OTP instead of the plain text, even in Redis.
+19. 3. Security Note
+       To fully protect your routes, you should eventually add spring-boot-starter-security and implement a JWT Filter that checks the Authorization: Bearer <token> header on every request. This filter would use your JwtUtil to validate the token before allowing access to the controller.
 
 
 SPRING STATE MACHINE
