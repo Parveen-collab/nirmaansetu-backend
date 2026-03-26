@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 @Service
 public class OtpService {
@@ -37,7 +40,8 @@ public class OtpService {
         String otp = String.valueOf(new Random().nextInt(9000) + 1000);
 
         // Save OTP to Redis
-        ops.set(otpKey, otp, OTP_EXPIRY_MINUTES, TimeUnit.MINUTES);
+        String hashedOtp = hashOtp(otp);
+        ops.set(otpKey, hashedOtp, OTP_EXPIRY_MINUTES, TimeUnit.MINUTES);
 
         // Rate limit handling
         if (currentCount == null) {
@@ -54,12 +58,22 @@ public class OtpService {
     public boolean verifyOtp(String phoneNumber, String otp) {
         String otpKey = "otp:" + phoneNumber;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
-        String storedOtp = ops.get(otpKey);
+        String storedOtpHash = ops.get(otpKey);
 
-        if (storedOtp != null && storedOtp.equals(otp)) {
+        if (storedOtpHash != null && storedOtpHash.equals(hashOtp(otp))) {
             redisTemplate.delete(otpKey); // Prevent reuse
             return true;
         }
         return false;
+    }
+
+    private String hashOtp(String otp) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(otp.getBytes());
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing OTP", e);
+        }
     }
 }

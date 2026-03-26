@@ -13,14 +13,8 @@ API List
 3. /api/sms/send
 
 TO DO
-Current Issues
-14. Incomplete Rate Limiting: You increment the counter in Redis, but your code doesn't appear to block the request if the limit is exceeded.
-solution = 17. Enforce Rate Limiting: Check the Redis counter before sending the SMS. If it exceeds a threshold (e.g., 3 attempts per minute), return a 429 Too Many Requests error.
-
-
 Recommended Improvements
-18. Hash OTPs: For better security, store the hash of the OTP instead of the plain text, even in Redis.
-19. 3. Security Note
+19. Security Note
        To fully protect your routes, you should eventually add spring-boot-starter-security and implement a JWT Filter that checks the Authorization: Bearer <token> header on every request. This filter would use your JwtUtil to validate the token before allowing access to the controller.
 
 
