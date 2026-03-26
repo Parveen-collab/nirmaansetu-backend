@@ -13,39 +13,7 @@ API List
 3. /api/sms/send
 
 TO DO
-1.Create a High Level Design = done
-2.Create a System Design for the Backend of Nirmaansetu = done
-3.Create a Schema for the Database = done
-4.Create a Low Level Design = doing
-5.Create a UML Diagram = done
-6.Think it as a Global Level Scalable Product = done
-7.❌ Don’t jump directly into complex microservices infra = done
-✅ Design like microservices (HLD)
-✅ Implement as modular monolith
-
-9.You'll likely use = done
-HTTP/HTTPS for:
-Get contractors
-Post projects
-Login/auth
-
-and WebSocket for:
-Live chat between users
-Real-time project updates
-Notifications (new bids, approvals)
-
-10. generate JWT token after verifying otp = done
-11. understand the concepts of refresh token = done
-
 Current Issues
-12. Database Overload: Storing short-lived OTPs in a persistent database (SQL/NoSQL) adds unnecessary overhead and requires manual cleanup of expired records. 
-solution = Store OTP in Redis with TTL: Move the OTP storage from the database to Redis. Use the phoneNumber as the key and set an expiration (e.g., 5 minutes). Redis will automatically delete it when it expires.
-
-
-13. No Session Management: Successful verification returns a string but no JWT or session token, meaning the user isn't actually "logged in" for subsequent requests.
-solution = Generate JWT on Success: Modify verifyOtp to return a JWT token if the OTP is correct. This allows the frontend to authenticate future API calls. = done
-
-
 14. Incomplete Rate Limiting: You increment the counter in Redis, but your code doesn't appear to block the request if the limit is exceeded.
 solution = 17. Enforce Rate Limiting: Check the Redis counter before sending the SMS. If it exceeds a threshold (e.g., 3 attempts per minute), return a 429 Too Many Requests error.
 

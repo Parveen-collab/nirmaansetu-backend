@@ -1,21 +1,13 @@
-//Implement logic to generate, send (via a third-party SMS provider like Twilio or Firebase), and validate OTPs.
-
 package com.nirmaansetu.backend.modules.auth.service;
 
 import com.nirmaansetu.backend.modules.auth.exception.RateLimitException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-
-import java.time.Instant;
-import java.util.concurrent.TimeUnit;
-import com.nirmaansetu.backend.modules.auth.entity.OtpEntity;
-import com.nirmaansetu.backend.modules.auth.repository.OtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class OtpService {
@@ -25,18 +17,17 @@ public class OtpService {
 
     private static final int MAX_OTP_ATTEMPTS = 5;
     private static final int LOCK_TIME_MINUTES = 10;
+    private static final int OTP_EXPIRY_MINUTES = 5;
 
     @Autowired
-    private OtpRepository otpRepository;
-
-    @Autowired
-    private SmsService smsService; // 1. Injected SmsService
+    private SmsService smsService;
 
     public void sendOtp(String phoneNumber) {
-        String key = "otp_limit:" + phoneNumber;
+        String limitKey = "otp_limit:" + phoneNumber;
+        String otpKey = "otp:" + phoneNumber;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        String currentCount = ops.get(key);
+        String currentCount = ops.get(limitKey);
 
         if (currentCount != null && Integer.parseInt(currentCount) >= MAX_OTP_ATTEMPTS) {
             throw new RateLimitException("OTP limit exceeded. Please try again after 10 minutes.");
@@ -45,33 +36,30 @@ public class OtpService {
         // Generate a 4-digit OTP
         String otp = String.valueOf(new Random().nextInt(9000) + 1000);
 
-        OtpEntity otpEntity = otpRepository.findByPhoneNumber(phoneNumber)
-                .orElse(new OtpEntity());
+        // Save OTP to Redis
+        ops.set(otpKey, otp, OTP_EXPIRY_MINUTES, TimeUnit.MINUTES);
 
-        otpEntity.setPhoneNumber(phoneNumber);
-        otpEntity.setOtp(otp);
-        otpEntity.setExpiryTime(Instant.from(LocalDateTime.now().plusMinutes(5)));
-
-        // Universal Checking: Increment count in Redis
+        // Rate limit handling
         if (currentCount == null) {
-            ops.set(key, "1", LOCK_TIME_MINUTES, TimeUnit.MINUTES);
+            ops.set(limitKey, "1", LOCK_TIME_MINUTES, TimeUnit.MINUTES);
         } else {
-            ops.increment(key);
+            ops.increment(limitKey);
         }
 
-        // Save OTP to database
-        otpRepository.save(otpEntity);
-
-        // 2. Call SmsService to send the actual SMS via Twilio
-        String messageBody = "Your NirmaanSetu OTP is: " + otp + ". Valid for 5 minutes.";
+        // Send SMS
+        String messageBody = "Your NirmaanSetu OTP is: " + otp + ". Valid for " + OTP_EXPIRY_MINUTES + " minutes.";
         smsService.sendSms(phoneNumber, messageBody);
     }
 
-    @Cacheable(value = "otp", key = "#phoneNumber")
     public boolean verifyOtp(String phoneNumber, String otp) {
-        return otpRepository.findByPhoneNumber(phoneNumber)
-                .map(entity -> entity.getOtp().equals(otp) &&
-                        entity.getExpiryTime().isAfter(Instant.from(LocalDateTime.now())))
-                .orElse(false);
+        String otpKey = "otp:" + phoneNumber;
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        String storedOtp = ops.get(otpKey);
+
+        if (storedOtp != null && storedOtp.equals(otp)) {
+            redisTemplate.delete(otpKey); // Prevent reuse
+            return true;
+        }
+        return false;
     }
 }
