@@ -40,3 +40,77 @@ public class User {
 
 // upload live photo
 
+//request body after hitting the /api/user/register
+//{
+//  "phoneNumber": "string",
+//  "name": "string",
+//  "email": "string",
+//  "aadhaarNumber": "string",
+//  "role": "EMPLOYEE | EMPLOYER | SUPPLIER",
+//  "profileImageUrl": "string",
+//  "addresses": [
+//    {
+//      "type": "PERMANENT | CURRENT",
+//      "state": "string",
+//      "district": "string",
+//      "wardNumber": "string",
+//      "landmark": "string",
+//      "pincode": "string",
+//      "areaVillage": "string",
+//      "building": "string"
+//    }
+//  ],
+//  "employeeProfile": {
+//    "serviceCategory": "string",
+//    "serviceSpeciality": "string",
+//    "experienceYears": number
+//  },
+//  "employerProfile": {
+//    "companyName": "string",
+//    "companyAddress": "string",
+//    "companyPhotos": ["string"]
+//  },
+//  "supplierProfile": {
+//    "shopName": "string",
+//    "shopCategory": "string",
+//    "shopSpeciality": "string",
+//    "shopType": "RETAIL | BULK | BOTH",
+//    "shopAddress": "string"
+//  }
+//}
+
+//response after hitting the /api/user/register
+//{
+//  "id": number,
+//  "phoneNumber": "string",
+//  "name": "string",
+//  "role": "string",
+//  "message": "User registered successfully"
+//}
+
+//corrected request body format
+//{
+//  "phoneNumber": "string",
+//  "name": "string",
+//  "email": "string",
+//  "aadhaarNumber": "string",
+//  "role": "EMPLOYEE | EMPLOYER | SUPPLIER",
+//  "profileImageUrl": "string",
+//  "addresses": [
+//    {
+//      "type": "PERMANENT | CURRENT",
+//      "state": "string",
+//      "district": "string",
+//      "wardNumber": "string",
+//      "landmark": "string",
+//      "pincode": "string",
+//      "areaVillage": "string",
+//      "building": "string"
+//    }
+//  ],
+//  // Include ONLY the one that matches the role:
+//  "employeeProfile": { ... },
+//  "employerProfile": { ... },
+//  "supplierProfile": { ... }
+//}
+

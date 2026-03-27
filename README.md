@@ -73,6 +73,57 @@ Suggested Improvements for users module
    Audit Fields: Implement Spring Data JPA Auditing (e.g., @CreatedDate, @LastModifiedDate) to track when user records are created or updated.
 6. Role-Specific Logic
    Polymorphism: If role-specific behavior becomes complex, consider using a strategy pattern in the service layer to handle logic different for Employees vs. Employers.
+7. Note: The exact nesting depends on how you handle MultipartFile for the live photo and company photos in your UserController.java.
+8. Note: Your current UserService.java needs to be updated to handle these nested objects, as it currently only saves phoneNumber, name, and email.
+9. Based on the current state of the **Users Module**, here is a comprehensive checklist for robust, production-ready development:
+
+### 10. Edge Cases to Test for users module
+- **Duplicate Registration**: Registering with a `phoneNumber` that already exists.
+- **Inconsistent Profile**: Providing `employeeProfile` data while the `role` is `EMPLOYER`.
+- **Address Limits**: Users with only one address type (missing `CURRENT` or `PERMANENT`) or multiple same-type addresses.
+- **Malformed Aadhaar**: Aadhaar numbers that aren't 12 digits or fail checksum.
+- **Image Upload Failures**: Providing a `profileImageUrl` that is inaccessible or malformed.
+- **Null/Empty Fields**: Sending an empty `name`, `phoneNumber`, or nested profile objects.
+
+### 2. Input Validation (Requires `@Valid` in `UserController`)
+- **PhoneNumber**: Use `@Pattern` or `libphonenumber` to ensure valid country codes and length.
+- **Aadhaar**: `@Pattern(regexp = "^[2-9]{1}[0-9]{11}$")` for basic structure validation.
+- **Role**: Use `@NotNull` and ensure it matches the `Role` enum.
+- **Nested Objects**: Use `@Valid` on `employeeProfile`, `employerProfile`, etc., to validate their specific fields (e.g., `experienceYears > 0`).
+
+### 3. Rate Limiting
+- **OTP/Registration**: Implement a bucket-per-IP or bucket-per-phone-number limit (e.g., max 3 registration attempts per hour) using **Redis** (already in `pom.xml`) or **Bucket4j**.
+- **Global API Limit**: Limit requests to `/api/user/**` to prevent DoS attacks.
+
+### 4. Data Encryption
+- **PII Protection**: Encrypt `aadhaarNumber` in the database (using JPA Attribute Converters with AES-256).
+- **Communication**: Ensure all API traffic is over **HTTPS** (TLS 1.3).
+- **Secrets**: Use **Spring Cloud Config** or Environment Variables for DB credentials and Twilio keys.
+
+### 5. Performance Checklist
+- **Database Indexing**: Ensure `phoneNumber` and `aadhaarNumber` are indexed for fast lookup.
+- **Caching**: Use **Redis** to cache user profiles that are frequently accessed but rarely changed.
+- **Lazy Loading**: Use `FetchType.LAZY` for profile associations in [./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java](./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java) to avoid "N+1" query issues.
+
+### 6. Error Handling Checklist
+- **Global Exception Handler**: Create a `@ControllerAdvice` to handle `MethodArgumentNotValidException`, `DataIntegrityViolationException`, and custom `UserNotFoundException`.
+- **Standardized Response**: Ensure error responses always return a consistent JSON format with an error code and message.
+
+### 7. Logging & Monitoring Checklist
+- **Audit Logs**: Log sensitive actions (e.g., "User [ID] updated their Aadhaar").
+- **Metrics**: Use **Actuator** and **Prometheus** (in `pom.xml`) to monitor registration success rates and API latency.
+- **ELK/Splunk**: Ship logs to a central system for troubleshooting production issues.
+
+### 8. Scalability Checklist (Global Ready)
+- **Stateless Auth**: Use **JWT** (already in `pom.xml`) so the backend can scale horizontally.
+- **Read-Write Splitting**: Use a read replica for GET requests if traffic increases.
+- **CDN**: Serve `profileImageUrl` and company photos via a CDN (like CloudFront or Cloudinary).
+
+### 9. DevOps & Deployment Checklist
+- **Docker**: The project has a `Dockerfile`; ensure it uses a multi-stage build to keep the image small.
+- **CI/CD**: Set up a pipeline (GitHub Actions/Jenkins) to run tests (`mvn test`) and linting on every push.
+- **Health Checks**: Configure Kubernetes Liveness/Readiness probes using `/actuator/health`.
+- **Database Migrations**: Use **Flyway** or **Liquibase** instead of `hibernate.ddl-auto=update`.
 
 
 SPRING STATE MACHINE
