@@ -26,14 +26,6 @@ public class AuthController {
         return ResponseEntity.ok("OTP sent successfully");
     }
 
-//    @PostMapping("/verify-otp")
-//    public ResponseEntity<String> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request ) {
-//        if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
-//            return ResponseEntity.ok("Verification successful");
-//        }
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
-//    }
-
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request) {
         if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
