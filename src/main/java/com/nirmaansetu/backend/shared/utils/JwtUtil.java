@@ -1,16 +1,29 @@
 package com.nirmaansetu.backend.shared.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
+import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    private final String secret = "your-very-secure-secret-key-that-is-at-least-256-bits-long";
-    private final long accessExpiration = 3600000; // 1 hour
-    private final long refreshExpiration = 604800000; // 7 days
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration.access}")
+    private long accessExpiration;
+
+    @Value("${jwt.expiration.refresh}")
+    private long refreshExpiration;
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(String phoneNumber, boolean isRefresh) {
         long expiry = isRefresh ? refreshExpiration : accessExpiration;
@@ -18,7 +31,37 @@ public class JwtUtil {
                 .setSubject(phoneNumber)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiry))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(getSigningKey())
                 .compact();
+    }
+
+    public String extractPhoneNumber(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    public Boolean validateToken(String token, String phoneNumber) {
+        final String extractedPhoneNumber = extractPhoneNumber(token);
+        return (extractedPhoneNumber.equals(phoneNumber) && !isTokenExpired(token));
     }
 }

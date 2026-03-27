@@ -13,7 +13,7 @@ API list to be created
 /api/auth/verify-otp (public)
 /api/sms/send (public
 
-3. registration api (accessible only by mobile-verified users)
+3. registration api = /api/user/register (accessible only by mobile-verified users)
 
 2. login api (accessible only by registered/existed users)
 
@@ -44,12 +44,6 @@ flow = (click on chnage/forgot/reset=>resetpassword screen=>mobile/email otp ver
 26. apply work api
 27. add material api
 28. apply for material api
-
-
-Created API List
-1. /api/auth/send-otp (public)
-2. /api/auth/verify-otp (public)
-3. /api/sms/send (public)
 
 TO DO
 Recommended Improvements

@@ -20,6 +20,9 @@ public class AuthController {
     @Autowired
     private OtpService otpService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp(@Valid @RequestBody OtpRequestDto request) {
         otpService.sendOtp(request.getPhoneNumber());
@@ -29,7 +32,6 @@ public class AuthController {
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request) {
         if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
-            JwtUtil jwtUtil = new JwtUtil();
             String accessToken = jwtUtil.generateToken(request.getPhoneNumber(), false);
             String refreshToken = jwtUtil.generateToken(request.getPhoneNumber(), true);
 
