@@ -45,12 +45,14 @@ flow = (click on chnage/forgot/reset=>resetpassword screen=>mobile/email otp ver
 27. add material api
 28. apply for material api
 
+important URLs
+1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+3. - Postman: Import `swagger-docs.json` from the root directory.
+
 TO DO
 Recommended Improvements
-19. Security Note: To fully protect your routes, you should eventually add spring-boot-starter-security and implement a JWT Filter that checks the Authorization: Bearer <token> header on every request. This filter would use your JwtUtil to validate the token before allowing access to the controller.
-
-Suggested Improvements for users module
-1. Service Layer Logic
+2. Service Layer Logic
    Automated Profile Creation: The UserService should automatically instantiate the correct profile entity (e.g., EmployeeProfile) based on the Role provided during registration.
    Transactional Integrity: Wrap registration in @Transactional to ensure that if saving a profile fails, the User record is also rolled back.
 2. Validation & Security
@@ -118,6 +120,18 @@ Suggested Improvements for users module
 - **CI/CD**: Set up a pipeline (GitHub Actions/Jenkins) to run tests (`mvn test`) and linting on every push.
 - **Health Checks**: Configure Kubernetes Liveness/Readiness probes using `/actuator/health`.
 - **Database Migrations**: Use **Flyway** or **Liquibase** instead of `hibernate.ddl-auto=update`.
+
+10. Right now:
+Enable Swagger locally
+Document all APIs
+
+Before deployment:
+Add JWT in Swagger
+Add API versioning
+
+After deployment:
+Disable OR secure Swagger
+Share API docs via Postman
 
 
 SPRING STATE MACHINE
