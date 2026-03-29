@@ -52,13 +52,6 @@ important URLs
 
 TO DO
 Recommended Improvements
-2. Validation & Security
-   Input Validation: Add Jakarta Validation constraints (e.g., @Size, @NotBlank, @Email) to UserRequestDto to catch bad data early.
-   Unique Constraints: Ensure email and aadhaarNumber are marked as @Column(unique = true) in the database.
-   Data Encryption: Since the project has an EncryptionConverter, apply it to sensitive fields like aadhaarNumber in the User entity.
-3. API & DTO Enhancements
-   Mapping Libraries: Use MapStruct to replace manual mapping code in UserService, reducing boilerplate and potential bugs.
-   Unified Registration: Update UserRequestDto to include nested objects for Address and Profile data so users can register in a single request.
 4. Address Management
    Cascade Persistence: Use CascadeType.ALL in the User -> Address relationship so addresses are saved/updated automatically when the user is saved.
 5. Technical Debt

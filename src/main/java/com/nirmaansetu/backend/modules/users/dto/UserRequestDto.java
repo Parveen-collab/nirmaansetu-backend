@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class UserRequestDto {
     @NotBlank(message = "Phone number is required")
@@ -25,6 +27,8 @@ public class UserRequestDto {
 
     @NotNull(message = "Role is required")
     private Role role;
+
+    private List<AddressDto> addresses;
 
     // Profile specific data (could be separate DTOs)
     private EmployeeProfileDto employeeProfile;
@@ -51,6 +55,18 @@ public class UserRequestDto {
         private String shopSpeciality;
         private String shopType;
         private String shopAddress;
+    }
+
+    @Data
+    public static class AddressDto {
+        private String type; // PERMANENT | CURRENT
+        private String state;
+        private String district;
+        private String wardNumber;
+        private String landmark;
+        private String pincode;
+        private String areaVillage;
+        private String building;
     }
 }
 
