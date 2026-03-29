@@ -52,9 +52,6 @@ important URLs
 
 TO DO
 Recommended Improvements
-2. Service Layer Logic
-   Automated Profile Creation: The UserService should automatically instantiate the correct profile entity (e.g., EmployeeProfile) based on the Role provided during registration.
-   Transactional Integrity: Wrap registration in @Transactional to ensure that if saving a profile fails, the User record is also rolled back.
 2. Validation & Security
    Input Validation: Add Jakarta Validation constraints (e.g., @Size, @NotBlank, @Email) to UserRequestDto to catch bad data early.
    Unique Constraints: Ensure email and aadhaarNumber are marked as @Column(unique = true) in the database.

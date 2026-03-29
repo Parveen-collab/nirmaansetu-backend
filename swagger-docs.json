@@ -19,9 +19,9 @@
     "/api/auth/send-otp": {
       "post": {
         "tags": [
-          "auth-controller"
+          "auth"
         ],
-        "operationId": "sendOtp",
+        "operationId": "send-otp",
         "requestBody": {
           "content": {
             "application/json": {
@@ -49,9 +49,9 @@
     "/api/auth/verify-otp": {
       "post": {
         "tags": [
-          "auth-controller"
+          "auth"
         ],
-        "operationId": "verifyOtp",
+        "operationId": "verify-otp",
         "requestBody": {
           "content": {
             "application/json": {
@@ -79,9 +79,9 @@
     "/api/sms/send": {
       "post": {
         "tags": [
-          "auth-controller"
+          "sms"
         ],
-        "operationId": "sendSms",
+        "operationId": "send-sms",
         "parameters": [
           {
             "name": "phone",
@@ -109,7 +109,7 @@
     "/api/user/register": {
       "post": {
         "tags": [
-          "user-controller"
+          "user"
         ],
         "operationId": "register",
         "requestBody": {

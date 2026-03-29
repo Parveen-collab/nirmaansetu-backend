@@ -8,6 +8,7 @@ import com.nirmaansetu.backend.modules.auth.dto.VerifyOtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.shared.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "auth")
 public class AuthController {
     @Autowired
     private OtpService otpService;
@@ -44,6 +46,7 @@ public class AuthController {
 
     @RestController
     @RequestMapping("/api/sms")
+    @Tag(name = "sms")
     public static class SmsController {
 
         @Autowired

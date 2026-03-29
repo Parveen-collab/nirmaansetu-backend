@@ -1,5 +1,7 @@
 package com.nirmaansetu.backend.modules.users.entity;
 
+import com.nirmaansetu.backend.modules.users.entity.Role;
+import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,8 +23,12 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     private String name;
+
+    @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
+    @Convert(converter = EncryptionConverter.class)
     private String aadhaarNumber;
 
     @Enumerated(EnumType.STRING)
