@@ -1,28 +1,40 @@
 package com.nirmaansetu.backend.modules.users.dto;
 
+import com.nirmaansetu.backend.modules.users.entity.Role;
+import lombok.Data;
+
+@Data
 public class UserRequestDto {
     private String phoneNumber;
     private String name;
     private String email;
+    private Role role;
 
-    public UserRequestDto(String phoneNumber, String name, String email) {
-        this.phoneNumber = phoneNumber;
-        this.name = name;
-        this.email = email;
+    // Profile specific data (could be separate DTOs)
+    private EmployeeProfileDto employeeProfile;
+    private EmployerProfileDto employerProfile;
+    private SupplierProfileDto supplierProfile;
+
+    @Data
+    public static class EmployeeProfileDto {
+        private String serviceCategory;
+        private String serviceSpeciality;
+        private int experienceYears;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    @Data
+    public static class EmployerProfileDto {
+        private String companyName;
+        private String companyAddress;
     }
 
-    public String getName() {
-        return name;
+    @Data
+    public static class SupplierProfileDto {
+        private String shopName;
+        private String shopCategory;
+        private String shopSpeciality;
+        private String shopType;
+        private String shopAddress;
     }
-
-    public String getEmail() {
-        return email;
-    }
-
-    // Getters and Setters
 }
 
