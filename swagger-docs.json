@@ -135,7 +135,37 @@
           }
         }
       }
+    },
+    "/api/user/{id}": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete a user by ID",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
     }
+
   },
   "components": {
     "schemas": {
