@@ -18,6 +18,7 @@ public class EmployeeProfile extends BaseEntity {
     private String serviceCategory;
     private String serviceSpeciality;
     private int experienceYears;
+    private String photoUrl;
 
     @OneToOne
     @JoinColumn(name = "user_id")

@@ -23,6 +23,7 @@ public class SupplierProfile extends BaseEntity {
     private ShopType shopType;
 
     private String shopAddress;
+    private String photoUrl;
 
     @OneToOne
     @JoinColumn(name = "user_id")

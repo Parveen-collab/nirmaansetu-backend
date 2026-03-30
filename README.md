@@ -51,13 +51,7 @@ important URLs
 2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
-TO DO
-Recommended Improvements
-6. Role-Specific Logic
-   Polymorphism: If role-specific behavior becomes complex, consider using a strategy pattern in the service layer to handle logic different for Employees vs. Employers.
-7. Note: The exact nesting depends on how you handle MultipartFile for the live photo and company photos in your UserController.java.
-
-
+TO DO LIST
 9. Based on the current state of the **Users Module**, here is a comprehensive checklist for robust, production-ready development:
 ### 10. Edge Cases to Test for users module
 - **Duplicate Registration**: Registering with a `phoneNumber` that already exists.

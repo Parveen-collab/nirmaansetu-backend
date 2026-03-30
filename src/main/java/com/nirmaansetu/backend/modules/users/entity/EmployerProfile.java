@@ -17,6 +17,7 @@ public class EmployerProfile extends BaseEntity {
 
     private String companyName;
     private String companyAddress;
+    private String photoUrl;
 
     @OneToOne
     @JoinColumn(name = "user_id")
