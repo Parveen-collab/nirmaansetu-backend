@@ -53,9 +53,6 @@ important URLs
 
 TO DO
 Recommended Improvements
-5. Technical Debt
-   Audit Fields: Implement Spring Data JPA Auditing (e.g., @CreatedDate, @LastModifiedDate) to track when user records are created or updated.
-
 6. Role-Specific Logic
    Polymorphism: If role-specific behavior becomes complex, consider using a strategy pattern in the service layer to handle logic different for Employees vs. Employers.
 7. Note: The exact nesting depends on how you handle MultipartFile for the live photo and company photos in your UserController.java.

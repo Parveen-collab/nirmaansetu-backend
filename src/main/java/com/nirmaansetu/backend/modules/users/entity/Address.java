@@ -1,12 +1,15 @@
 package com.nirmaansetu.backend.modules.users.entity;
 
+import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "addresses")
 @Data
-public class Address {
+@EqualsAndHashCode(callSuper = true)
+public class Address extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

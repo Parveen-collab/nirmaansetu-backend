@@ -1,9 +1,11 @@
 package com.nirmaansetu.backend.modules.users.entity;
 
 import com.nirmaansetu.backend.modules.users.entity.Role;
+import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,9 +19,10 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SQLDelete(sql = "UPDATE users SET deleted = true, deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted = false")
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,12 +1,15 @@
 package com.nirmaansetu.backend.modules.users.entity;
 
+import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "supplier_profiles")
 @Data
-public class SupplierProfile {
+@EqualsAndHashCode(callSuper = true)
+public class SupplierProfile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
