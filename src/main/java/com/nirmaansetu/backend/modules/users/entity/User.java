@@ -44,6 +44,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private EmployeeProfile employeeProfile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private EmployerProfile employerProfile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private SupplierProfile supplierProfile;
+
     private boolean deleted = false;
 
     private LocalDateTime deletedAt;

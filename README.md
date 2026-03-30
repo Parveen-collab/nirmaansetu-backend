@@ -7,14 +7,15 @@ inspiration
 Users 
 for phase 1 = Employees(Mistry, Helper, Engineers, Carpenter and many more), Employers(Any Common man, Contractors, Builders), Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
-API list to be created
+API list created
 1. mobile otp verification api (public) = done
 /api/auth/send-otp (public)
 /api/auth/verify-otp (public)
 /api/sms/send (public
-
 3. registration api = /api/user/register (accessible only by mobile-verified users)
+4. DELETE /api/user/{id}
 
+API list to be created
 2. login api (accessible only by registered/existed users)
 
 4. change/forgot password api 
@@ -120,11 +121,6 @@ Add API versioning
 After deployment:
 Disable OR secure Swagger
 Share API docs via Postman
-
-11. in the user module create
-    1. api to get user details with address, photo,and all
-    2. api to update details (it should be like if user filled one detail to edit then all other fields must be same)
-    3. api to delete user and user details
 
 
 SPRING STATE MACHINE
