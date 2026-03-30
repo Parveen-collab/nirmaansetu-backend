@@ -52,17 +52,15 @@ important URLs
 
 TO DO
 Recommended Improvements
-4. Address Management
-   Cascade Persistence: Use CascadeType.ALL in the User -> Address relationship so addresses are saved/updated automatically when the user is saved.
 5. Technical Debt
-   Soft Deletes: Add a deleted flag or status enum to the User entity to allow soft deletes instead of permanent record removal.
    Audit Fields: Implement Spring Data JPA Auditing (e.g., @CreatedDate, @LastModifiedDate) to track when user records are created or updated.
+
 6. Role-Specific Logic
    Polymorphism: If role-specific behavior becomes complex, consider using a strategy pattern in the service layer to handle logic different for Employees vs. Employers.
 7. Note: The exact nesting depends on how you handle MultipartFile for the live photo and company photos in your UserController.java.
-8. Note: Your current UserService.java needs to be updated to handle these nested objects, as it currently only saves phoneNumber, name, and email.
-9. Based on the current state of the **Users Module**, here is a comprehensive checklist for robust, production-ready development:
 
+
+9. Based on the current state of the **Users Module**, here is a comprehensive checklist for robust, production-ready development:
 ### 10. Edge Cases to Test for users module
 - **Duplicate Registration**: Registering with a `phoneNumber` that already exists.
 - **Inconsistent Profile**: Providing `employeeProfile` data while the `role` is `EMPLOYER`.
@@ -122,6 +120,11 @@ Add API versioning
 After deployment:
 Disable OR secure Swagger
 Share API docs via Postman
+
+11. in the user module create
+    1. api to get user details with address, photo,and all
+    2. api to update details (it should be like if user filled one detail to edit then all other fields must be same)
+    3. api to delete user and user details
 
 
 SPRING STATE MACHINE

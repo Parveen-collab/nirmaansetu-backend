@@ -4,16 +4,21 @@ import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Data
+@SQLDelete(sql = "UPDATE users SET deleted = true, deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted = false")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +40,28 @@ public class User implements UserDetails {
     private Role role;
 
     private String profileImageUrl;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses;
+
+    private boolean deleted = false;
+
+    private LocalDateTime deletedAt;
+
+    public void addAddress(Address address) {
+        if (addresses == null) {
+            addresses = new java.util.ArrayList<>();
+        }
+        addresses.add(address);
+        address.setUser(this);
+    }
+
+    public void removeAddress(Address address) {
+        if (addresses != null) {
+            addresses.remove(address);
+            address.setUser(null);
+        }
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

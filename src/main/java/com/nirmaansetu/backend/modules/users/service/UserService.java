@@ -3,6 +3,7 @@ package com.nirmaansetu.backend.modules.users.service;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
 import com.nirmaansetu.backend.modules.users.entity.*;
+import com.nirmaansetu.backend.modules.users.mapper.UserMapper;
 import com.nirmaansetu.backend.modules.users.repository.EmployeeProfileRepository;
 import com.nirmaansetu.backend.modules.users.repository.EmployerProfileRepository;
 import com.nirmaansetu.backend.modules.users.repository.SupplierProfileRepository;
@@ -25,48 +26,40 @@ public class UserService {
     @Autowired
     private SupplierProfileRepository supplierProfileRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Transactional
     public UserResponseDto registerUser(UserRequestDto request) {
-        User user = new User();
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setRole(request.getRole());
+        User user = userMapper.toUser(request);
+
+        // Ensure bidirectional relationship for addresses
+        if (user.getAddresses() != null) {
+            user.getAddresses().forEach(address -> address.setUser(user));
+        }
 
         User savedUser = userRepository.save(user);
 
         // Automate Profile Creation based on Role
         if (request.getRole() == Role.EMPLOYEE && request.getEmployeeProfile() != null) {
-            EmployeeProfile employeeProfile = new EmployeeProfile();
+            EmployeeProfile employeeProfile = userMapper.toEmployeeProfile(request.getEmployeeProfile());
             employeeProfile.setUser(savedUser);
-            employeeProfile.setServiceCategory(request.getEmployeeProfile().getServiceCategory());
-            employeeProfile.setServiceSpeciality(request.getEmployeeProfile().getServiceSpeciality());
-            employeeProfile.setExperienceYears(request.getEmployeeProfile().getExperienceYears());
             employeeProfileRepository.save(employeeProfile);
         } else if (request.getRole() == Role.EMPLOYER && request.getEmployerProfile() != null) {
-            EmployerProfile employerProfile = new EmployerProfile();
+            EmployerProfile employerProfile = userMapper.toEmployerProfile(request.getEmployerProfile());
             employerProfile.setUser(savedUser);
-            employerProfile.setCompanyName(request.getEmployerProfile().getCompanyName());
-            employerProfile.setCompanyAddress(request.getEmployerProfile().getCompanyAddress());
             employerProfileRepository.save(employerProfile);
         } else if (request.getRole() == Role.SUPPLIER && request.getSupplierProfile() != null) {
-            SupplierProfile supplierProfile = new SupplierProfile();
+            SupplierProfile supplierProfile = userMapper.toSupplierProfile(request.getSupplierProfile());
             supplierProfile.setUser(savedUser);
-            supplierProfile.setShopName(request.getSupplierProfile().getShopName());
-            supplierProfile.setShopCategory(request.getSupplierProfile().getShopCategory());
-            supplierProfile.setShopSpeciality(request.getSupplierProfile().getShopSpeciality());
-            supplierProfile.setShopType(ShopType.valueOf(request.getSupplierProfile().getShopType()));
-            supplierProfile.setShopAddress(request.getSupplierProfile().getShopAddress());
             supplierProfileRepository.save(supplierProfile);
         }
 
-        return new UserResponseDto(
-                savedUser.getId(),
-                savedUser.getPhoneNumber(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getRole(),
-                "User registered successfully"
-        );
+        return userMapper.toUserResponseDto(savedUser);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }
