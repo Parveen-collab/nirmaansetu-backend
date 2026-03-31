@@ -52,58 +52,45 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-9. Based on the current state of the **Users Module**, here is a comprehensive checklist for robust, production-ready development:
+9. comprehensive checklist for robust, production-ready development:
 ### 10. Edge Cases to Test for users module
-- **Duplicate Registration**: Registering with a `phoneNumber` that already exists.
-- **Inconsistent Profile**: Providing `employeeProfile` data while the `role` is `EMPLOYER`.
-- **Address Limits**: Users with only one address type (missing `CURRENT` or `PERMANENT`) or multiple same-type addresses.
-- **Malformed Aadhaar**: Aadhaar numbers that aren't 12 digits or fail checksum.
-- **Image Upload Failures**: Providing a `profileImageUrl` that is inaccessible or malformed.
-- **Null/Empty Fields**: Sending an empty `name`, `phoneNumber`, or nested profile objects.
+-  Null/Empty Fields : Sending an empty `name`, `phoneNumber`, or nested profile objects.(how to check if it is already implemented and if not to implement)
+- check that required fields are treating like required one .(how to check if it is already implemented and if not to implement)
+- Duplicate registration with same photoUrl/uploaded photo/live photo
+    Use hash-based uniqueness (mandatory)
+    Keep URL check as secondary validation
+    Later upgrade to AI fraud detection
 
-### 2. Input Validation (Requires `@Valid` in `UserController`)
-- **PhoneNumber**: Use `@Pattern` or `libphonenumber` to ensure valid country codes and length.
-- **Aadhaar**: `@Pattern(regexp = "^[2-9]{1}[0-9]{11}$")` for basic structure validation.
-- **Role**: Use `@NotNull` and ensure it matches the `Role` enum.
-- **Nested Objects**: Use `@Valid` on `employeeProfile`, `employerProfile`, etc., to validate their specific fields (e.g., `experienceYears > 0`).
-
-### 3. Rate Limiting
-- **OTP/Registration**: Implement a bucket-per-IP or bucket-per-phone-number limit (e.g., max 3 registration attempts per hour) using **Redis** (already in `pom.xml`) or **Bucket4j**.
-- **Global API Limit**: Limit requests to `/api/user/**` to prevent DoS attacks.
+### 2. Input Validation (Requires `@Valid` in `UserController`).
+-  PhoneNumber : Use `@Pattern` or `libphonenumber` to ensure valid country codes and length.(how to check if it is already implemented and if not to implement)
+-  Role : Use `@NotNull` and ensure it matches the `Role` enum. (universal) (how to check if it is already implemented and if not to implement)
+-  Nested Objects : Use `@Valid` on `employeeProfile`, `employerProfile`, etc., to validate their specific fields (e.g., `experienceYears > 0`).(how to check if it is already implemented and if not to implement)
 
 ### 4. Data Encryption
-- **PII Protection**: Encrypt `aadhaarNumber` in the database (using JPA Attribute Converters with AES-256).
-- **Communication**: Ensure all API traffic is over **HTTPS** (TLS 1.3).
-- **Secrets**: Use **Spring Cloud Config** or Environment Variables for DB credentials and Twilio keys.
+-  PII Protection : Encrypt `aadhaarNumber` in the database.(how to check if it is already implemented and if not to implement)
+-  Communication : Ensure all API traffic is over  HTTPS  (TLS 1.3).(how to check if it is already implemented and if not to implement)
+-  Secrets : Use  Spring Cloud Config  or Environment Variables for DB credentials and Twilio keys.(how to check if it is already implemented and if not to implement)
 
 ### 5. Performance Checklist
-- **Database Indexing**: Ensure `phoneNumber` and `aadhaarNumber` are indexed for fast lookup.
-- **Caching**: Use **Redis** to cache user profiles that are frequently accessed but rarely changed.
-- **Lazy Loading**: Use `FetchType.LAZY` for profile associations in [./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java](./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java) to avoid "N+1" query issues.
+-  Database Indexing : Ensure `phoneNumber` and `aadhaarNumber` are indexed for fast lookup.(how to check if it is already implemented and if not to implement)
+-  Caching : Use  Redis  to cache user profiles that are frequently accessed but rarely changed.(how to check if it is already implemented and if not to implement)
+-  Lazy Loading : Use `FetchType.LAZY` for profile associations in [./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java](./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java) to avoid "N+1" query issues.(how to check if it is already implemented and if not to implement)
 
 ### 6. Error Handling Checklist
-- **Global Exception Handler**: Create a `@ControllerAdvice` to handle `MethodArgumentNotValidException`, `DataIntegrityViolationException`, and custom `UserNotFoundException`.
-- **Standardized Response**: Ensure error responses always return a consistent JSON format with an error code and message.
+-  Global Exception Handler : Create a `@ControllerAdvice` to handle `MethodArgumentNotValidException`, `DataIntegrityViolationException`, and custom `UserNotFoundException`.(how to check if it is already implemented and if not to implement)
+-  Standardized Response : Ensure error responses always return a consistent JSON format with an error code and message.(how to check if it is already implemented and if not to implement)
 
 ### 7. Logging & Monitoring Checklist
-- **Audit Logs**: Log sensitive actions (e.g., "User [ID] updated their Aadhaar").
-- **Metrics**: Use **Actuator** and **Prometheus** (in `pom.xml`) to monitor registration success rates and API latency.
-- **ELK/Splunk**: Ship logs to a central system for troubleshooting production issues.
+-  Audit Logs (universal): Log sensitive actions (e.g., "User [ID] updated their Aadhaar").(how to check if it is already implemented and if not to implement)
+-  ELK/Splunk : Ship logs to a central system for troubleshooting production issues.(how to check if it is already implemented and if not to implement)
 
-### 8. Scalability Checklist (Global Ready)
-- **Stateless Auth**: Use **JWT** (already in `pom.xml`) so the backend can scale horizontally.
-- **Read-Write Splitting**: Use a read replica for GET requests if traffic increases.
-- **CDN**: Serve `profileImageUrl` and company photos via a CDN (like CloudFront or Cloudinary).
-
-### 9. DevOps & Deployment Checklist
-- **Docker**: The project has a `Dockerfile`; ensure it uses a multi-stage build to keep the image small.
-- **CI/CD**: Set up a pipeline (GitHub Actions/Jenkins) to run tests (`mvn test`) and linting on every push.
-- **Health Checks**: Configure Kubernetes Liveness/Readiness probes using `/actuator/health`.
-- **Database Migrations**: Use **Flyway** or **Liquibase** instead of `hibernate.ddl-auto=update`.
+### 8. Scalability Checklist (Global Ready) (universal)
+-  Stateless Auth : Use  JWT  (already in `pom.xml`) so the backend can scale horizontally.(how to check if it is already implemented and if not to implement)
+-  Read-Write Splitting : Use a read replica for GET requests if traffic increases.(how to check if it is already implemented and if not to implement)
+-  CDN : Serve `profileImageUrl` and company photos via a CDN (like CloudFront or Cloudinary).(how to check if it is already implemented and if not to implement)
 
 10. Right now:
 Enable Swagger locally
-Document all APIs
 
 Before deployment:
 Add JWT in Swagger

@@ -28,6 +28,8 @@ public class UserRequestDto {
     @NotNull(message = "Role is required")
     private Role role;
 
+    private String profileImageUrl;
+
     private List<AddressDto> addresses;
 
     // Profile specific data (could be separate DTOs)

@@ -14,6 +14,11 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhoneNumber(String phoneNumber);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByEmail(String email);
+    boolean existsByAadhaarNumber(String aadhaarNumber);
+    boolean existsByProfileImageUrl(String profileImageUrl);
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM users WHERE deleted = true AND deleted_at <= :date", nativeQuery = true)
