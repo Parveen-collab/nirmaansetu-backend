@@ -57,13 +57,8 @@ TO DO LIST
 ### 2. Input Validation
 ### 4. Data Encryption
 ### 5. Performance Checklist
--  Lazy Loading : Use `FetchType.LAZY` for profile associations in [./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java](./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java) to avoid "N+1" query issues.(how to check if it is already implemented and if not to implement)
-
 ### 6. Error Handling Checklist
 ### 7. Logging & Monitoring Checklist
--  Audit Logs (universal): Log sensitive actions (e.g., "User [ID] updated their Aadhaar").(how to check if it is already implemented and if not to implement)
--  ELK/Splunk : Ship logs to a central system for troubleshooting production issues.(how to check if it is already implemented and if not to implement)
-
 ### 8. Scalability Checklist (Global Ready) (universal)
 -  Stateless Auth : Use  JWT  (already in `pom.xml`) so the backend can scale horizontally.(how to check if it is already implemented and if not to implement)
 -  Read-Write Splitting : Use a read replica for GET requests if traffic increases.(how to check if it is already implemented and if not to implement)
