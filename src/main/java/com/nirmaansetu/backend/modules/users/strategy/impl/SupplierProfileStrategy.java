@@ -53,7 +53,7 @@ public class SupplierProfileStrategy implements ProfileStrategy {
                 if (request.getSupplierProfile().getShopAddress() != null)
                     profile.setShopAddress(request.getSupplierProfile().getShopAddress());
                 if (request.getSupplierProfile().getShopType() != null)
-                    profile.setShopType(userMapper.stringToShopType(request.getSupplierProfile().getShopType()));
+                    profile.setShopType(request.getSupplierProfile().getShopType());
             }
         }
         if (photoUrl != null) {
