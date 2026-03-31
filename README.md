@@ -60,9 +60,9 @@ TO DO LIST
 ### 6. Error Handling Checklist
 ### 7. Logging & Monitoring Checklist
 ### 8. Scalability Checklist (Global Ready) (universal)
--  Stateless Auth : Use  JWT  (already in `pom.xml`) so the backend can scale horizontally.(how to check if it is already implemented and if not to implement)
--  Read-Write Splitting : Use a read replica for GET requests if traffic increases.(how to check if it is already implemented and if not to implement)
--  CDN : Serve `profileImageUrl` and company photos via a CDN (like CloudFront or Cloudinary).(how to check if it is already implemented and if not to implement)
+-  Stateless Auth : Use  JWT  (already in `pom.xml`) so the backend can scale horizontally.
+-  Read-Write Splitting : Use a read replica for GET requests if traffic increases.
+-  CDN : Serve `profileImageUrl` and company photos via a CDN (like CloudFront or Cloudinary).
 
 10. Right now:
 Enable Swagger locally
