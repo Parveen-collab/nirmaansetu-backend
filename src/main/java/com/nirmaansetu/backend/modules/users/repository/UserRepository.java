@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     boolean existsByAadhaarNumber(String aadhaarNumber);
     boolean existsByProfileImageUrl(String profileImageUrl);
+    boolean existsByPhotoHash(String photoHash);
+    boolean existsByPhotoHashAndIdNot(String photoHash, Long id);
 
     @Modifying
     @Transactional

@@ -30,6 +30,9 @@ public class UserService {
     private FileService fileService;
 
     @Autowired
+    private PhotoHashService photoHashService;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Transactional
@@ -47,6 +50,18 @@ public class UserService {
 
         User user = userMapper.toUser(request);
 
+        // Calculate and check photo hash for uniqueness
+        String photoHash = null;
+        if (photo != null && !photo.isEmpty()) {
+            photoHash = photoHashService.calculateHash(photo);
+        } else if (request.getProfileImageUrl() != null && !request.getProfileImageUrl().isEmpty()) {
+            photoHash = photoHashService.calculateHashFromUrl(request.getProfileImageUrl());
+        }
+
+        if (photoHash != null && userRepository.existsByPhotoHash(photoHash)) {
+            throw new RuntimeException("Profile photo already exists");
+        }
+
         // Ensure bidirectional relationship for addresses
         if (user.getAddresses() != null) {
             user.getAddresses().forEach(address -> address.setUser(user));
@@ -60,11 +75,8 @@ public class UserService {
             photoUrl = request.getProfileImageUrl();
         }
 
-        if (photoUrl != null && userRepository.existsByProfileImageUrl(photoUrl)) {
-            throw new RuntimeException("Profile photo already exists");
-        }
-
         savedUser.setProfileImageUrl(photoUrl);
+        savedUser.setPhotoHash(photoHash);
         userRepository.save(savedUser);
 
         // Automate Profile Creation based on Role using Strategy Pattern
@@ -193,6 +205,18 @@ public class UserService {
 
         userMapper.updateUserFromDto(request, user);
 
+        // Calculate and check photo hash for uniqueness
+        String photoHash = null;
+        if (photo != null && !photo.isEmpty()) {
+            photoHash = photoHashService.calculateHash(photo);
+        } else if (request.getProfileImageUrl() != null && !request.getProfileImageUrl().isEmpty()) {
+            photoHash = photoHashService.calculateHashFromUrl(request.getProfileImageUrl());
+        }
+
+        if (photoHash != null && userRepository.existsByPhotoHashAndIdNot(photoHash, id)) {
+            throw new RuntimeException("Profile photo already exists");
+        }
+
         String photoUrl = fileService.saveProfilePhoto(photo);
 
         if (photoUrl == null && request.getProfileImageUrl() != null) {
@@ -201,6 +225,7 @@ public class UserService {
 
         if (photoUrl != null) {
             user.setProfileImageUrl(photoUrl);
+            user.setPhotoHash(photoHash);
         }
 
         // Handle profile updates based on role using Strategy Pattern

@@ -54,11 +54,6 @@ important URLs
 TO DO LIST
 9. comprehensive checklist for robust, production-ready development:
 ### 10. Edge Cases to Test for users module
-- Duplicate registration with same photoUrl/uploaded photo/live photo
-    Use hash-based uniqueness (mandatory)
-    Keep URL check as secondary validation
-    Later upgrade to AI fraud detection
-
 ### 2. Input Validation (Requires `@Valid` in `UserController`).
 -  PhoneNumber : Use `@Pattern` or `libphonenumber` to ensure valid country codes and length.(how to check if it is already implemented and if not to implement)
 -  Role : Use `@NotNull` and ensure it matches the `Role` enum. (universal) (how to check if it is already implemented and if not to implement)
@@ -97,6 +92,8 @@ Add API versioning
 After deployment:
 Disable OR secure Swagger
 Share API docs via Postman
+
+11. create a CI/CD pipeline for every git push to check test cases 
 
 
 SPRING STATE MACHINE
