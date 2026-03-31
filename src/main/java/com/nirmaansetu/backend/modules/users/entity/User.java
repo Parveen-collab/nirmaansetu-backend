@@ -4,6 +4,8 @@ import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.SQLDelete;
@@ -28,18 +30,24 @@ public class User extends BaseEntity implements UserDetails {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 
+    @Column(nullable = false)
+    @NotBlank(message = "Name is required")
     private String name;
 
     @Column(unique = true)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Aadhaar number is required")
     @Convert(converter = EncryptionConverter.class)
     private String aadhaarNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull(message = "Role is required")
     private Role role;
 
     private String profileImageUrl;

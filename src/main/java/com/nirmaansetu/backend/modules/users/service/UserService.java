@@ -75,6 +75,19 @@ public class UserService {
     }
 
     private void validateRequest(UserRequestDto request) {
+        if (request.getPhoneNumber() == null || request.getPhoneNumber().trim().isEmpty()) {
+            throw new RuntimeException("Null/Empty Fields : Phone number is required");
+        }
+        if (request.getName() == null || request.getName().trim().isEmpty()) {
+            throw new RuntimeException("Null/Empty Fields : Name is required");
+        }
+        if (request.getAadhaarNumber() == null || request.getAadhaarNumber().trim().isEmpty()) {
+            throw new RuntimeException("Null/Empty Fields : Aadhaar number is required");
+        }
+        if (request.getRole() == null) {
+            throw new RuntimeException("Null/Empty Fields : Role is required");
+        }
+
         // 1. Inconsistent Profile
         validateProfileConsistency(request);
 
@@ -88,14 +101,23 @@ public class UserService {
     private void validateProfileConsistency(UserRequestDto request) {
         Role role = request.getRole();
         if (role == Role.EMPLOYEE) {
+            if (request.getEmployeeProfile() == null) {
+                throw new RuntimeException("Null/Empty Fields : Employee profile data is required for role EMPLOYEE");
+            }
             if (request.getEmployerProfile() != null || request.getSupplierProfile() != null) {
                 throw new RuntimeException("Inconsistent Profile : Providing employer or supplier profile data while role is EMPLOYEE");
             }
         } else if (role == Role.EMPLOYER) {
+            if (request.getEmployerProfile() == null) {
+                throw new RuntimeException("Null/Empty Fields : Employer profile data is required for role EMPLOYER");
+            }
             if (request.getEmployeeProfile() != null || request.getSupplierProfile() != null) {
                 throw new RuntimeException("Inconsistent Profile : Providing employee or supplier profile data while role is EMPLOYER");
             }
         } else if (role == Role.SUPPLIER) {
+            if (request.getSupplierProfile() == null) {
+                throw new RuntimeException("Null/Empty Fields : Supplier profile data is required for role SUPPLIER");
+            }
             if (request.getEmployeeProfile() != null || request.getEmployerProfile() != null) {
                 throw new RuntimeException("Inconsistent Profile : Providing employee or employer profile data while role is SUPPLIER");
             }

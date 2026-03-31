@@ -54,8 +54,6 @@ important URLs
 TO DO LIST
 9. comprehensive checklist for robust, production-ready development:
 ### 10. Edge Cases to Test for users module
--  Null/Empty Fields : Sending an empty `name`, `phoneNumber`, or nested profile objects.(how to check if it is already implemented and if not to implement)
-- check that required fields are treating like required one .(how to check if it is already implemented and if not to implement)
 - Duplicate registration with same photoUrl/uploaded photo/live photo
     Use hash-based uniqueness (mandatory)
     Keep URL check as secondary validation

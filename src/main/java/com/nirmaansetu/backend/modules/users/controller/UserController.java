@@ -30,9 +30,9 @@ public class UserController {
 
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserResponseDto> updateDetails(
-            @PathVariable Long id,
-            @RequestPart("user") UserRequestDto request,
-            @RequestPart(value = "photo", required = false) MultipartFile photo) {
+        @PathVariable Long id,
+        @Valid @RequestPart("user") UserRequestDto request,
+        @RequestPart(value = "photo", required = false) MultipartFile photo) {
         return ResponseEntity.ok(userService.updateUser(id, request, photo));
     }
 

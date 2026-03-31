@@ -2,6 +2,7 @@ package com.nirmaansetu.backend.modules.users.entity;
 
 import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,8 +16,15 @@ public class EmployeeProfile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank(message = "Service category is required")
     private String serviceCategory;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Service speciality is required")
     private String serviceSpeciality;
+
+    @Column(nullable = false)
     private int experienceYears;
     private String photoUrl;
 
