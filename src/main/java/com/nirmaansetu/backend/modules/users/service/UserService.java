@@ -7,9 +7,12 @@ import com.nirmaansetu.backend.modules.users.mapper.UserMapper;
 import com.nirmaansetu.backend.modules.users.repository.UserRepository;
 import com.nirmaansetu.backend.modules.users.strategy.ProfileStrategyFactory;
 import com.nirmaansetu.backend.shared.service.FileService;
+import com.nirmaansetu.backend.shared.service.PhotoHashService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.HttpURLConnection;
@@ -19,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@Validated
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -36,7 +40,7 @@ public class UserService {
     private UserMapper userMapper;
 
     @Transactional
-    public UserResponseDto registerUser(UserRequestDto request, MultipartFile photo) {
+    public UserResponseDto registerUser(@Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new RuntimeException("Phone number already exists");
@@ -150,14 +154,14 @@ public class UserService {
                 throw new RuntimeException("Address Limits : Address type is required");
             }
 
-            String type = address.getType().toUpperCase();
+            String type = address.getType().name();
             if (types.contains(type)) {
                 throw new RuntimeException("Address Limits : Multiple " + type + " addresses are not allowed");
             }
             types.add(type);
 
-            if ("CURRENT".equals(type)) currentExists = true;
-            if ("PERMANENT".equals(type)) permanentExists = true;
+            if (AddressType.CURRENT.equals(address.getType())) currentExists = true;
+            if (AddressType.PERMANENT.equals(address.getType())) permanentExists = true;
         }
 
         if (!currentExists || !permanentExists) {
@@ -198,7 +202,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto updateUser(Long id, UserRequestDto request, MultipartFile photo) {
+    public UserResponseDto updateUser(Long id, @Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));

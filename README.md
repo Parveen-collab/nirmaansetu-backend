@@ -54,13 +54,9 @@ important URLs
 TO DO LIST
 9. comprehensive checklist for robust, production-ready development:
 ### 10. Edge Cases to Test for users module
-### 2. Input Validation (Requires `@Valid` in `UserController`).
--  PhoneNumber : Use `@Pattern` or `libphonenumber` to ensure valid country codes and length.(how to check if it is already implemented and if not to implement)
--  Role : Use `@NotNull` and ensure it matches the `Role` enum. (universal) (how to check if it is already implemented and if not to implement)
--  Nested Objects : Use `@Valid` on `employeeProfile`, `employerProfile`, etc., to validate their specific fields (e.g., `experienceYears > 0`).(how to check if it is already implemented and if not to implement)
-
+### 2. Input Validation
 ### 4. Data Encryption
--  PII Protection : Encrypt `aadhaarNumber` in the database.(how to check if it is already implemented and if not to implement)
+-  PII Protection : Encrypt `aadhaarNumber` in the database.
 -  Communication : Ensure all API traffic is over  HTTPS  (TLS 1.3).(how to check if it is already implemented and if not to implement)
 -  Secrets : Use  Spring Cloud Config  or Environment Variables for DB credentials and Twilio keys.(how to check if it is already implemented and if not to implement)
 

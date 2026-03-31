@@ -2,7 +2,7 @@ package com.nirmaansetu.backend.modules.users.entity;
 
 import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,7 +25,9 @@ public class EmployeeProfile extends BaseEntity {
     private String serviceSpeciality;
 
     @Column(nullable = false)
-    private int experienceYears;
+    @NotNull(message = "Experience years is required")
+    @Min(value = 1, message = "Experience years must be greater than 0")
+    private Integer experienceYears;
     private String photoUrl;
 
     @OneToOne

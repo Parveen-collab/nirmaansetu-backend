@@ -1,11 +1,10 @@
 package com.nirmaansetu.backend.modules.users.dto;
 
+import com.nirmaansetu.backend.modules.users.entity.AddressType;
 import com.nirmaansetu.backend.modules.users.entity.Role;
+import com.nirmaansetu.backend.modules.users.entity.ShopType;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.List;
@@ -49,7 +48,8 @@ public class UserRequestDto {
         @NotBlank(message = "Service speciality is required")
         private String serviceSpeciality;
         @NotNull(message = "Experience years is required")
-        private int experienceYears;
+        @Min(value = 1, message = "Experience years must be greater than 0")
+        private Integer experienceYears;
     }
 
     @Data
@@ -68,16 +68,16 @@ public class UserRequestDto {
         private String shopCategory;
         @NotBlank(message = "Shop speciality is required")
         private String shopSpeciality;
-        @NotBlank(message = "Shop type is required")
-        private String shopType;
+        @NotNull(message = "Shop type is required")
+        private ShopType shopType;
         @NotBlank(message = "Shop address is required")
         private String shopAddress;
     }
 
     @Data
     public static class AddressDto {
-        @NotBlank(message = "Address type is required")
-        private String type; // PERMANENT | CURRENT
+        @NotNull(message = "Address type is required")
+        private AddressType type; // PERMANENT | CURRENT
         @NotBlank(message = "State is required")
         private String state;
         @NotBlank(message = "District is required")

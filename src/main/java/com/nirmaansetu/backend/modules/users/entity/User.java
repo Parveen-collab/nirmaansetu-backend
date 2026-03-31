@@ -4,6 +4,7 @@ import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -56,15 +57,19 @@ public class User extends BaseEntity implements UserDetails {
     private String photoHash;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Valid
     private List<Address> addresses;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @Valid
     private EmployeeProfile employeeProfile;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @Valid
     private EmployerProfile employerProfile;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @Valid
     private SupplierProfile supplierProfile;
 
     private boolean deleted = false;
