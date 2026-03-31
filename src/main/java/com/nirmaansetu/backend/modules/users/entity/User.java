@@ -20,7 +20,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_phone_number", columnList = "phoneNumber"),
+        @Index(name = "idx_aadhaar_number", columnList = "aadhaarNumber")
+})
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SQLDelete(sql = "UPDATE users SET deleted = true, deleted_at = NOW() WHERE id = ?")

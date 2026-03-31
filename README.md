@@ -56,19 +56,10 @@ TO DO LIST
 ### 10. Edge Cases to Test for users module
 ### 2. Input Validation
 ### 4. Data Encryption
--  PII Protection : Encrypt `aadhaarNumber` in the database.
--  Communication : Ensure all API traffic is over  HTTPS  (TLS 1.3).(how to check if it is already implemented and if not to implement)
--  Secrets : Use  Spring Cloud Config  or Environment Variables for DB credentials and Twilio keys.(how to check if it is already implemented and if not to implement)
-
 ### 5. Performance Checklist
--  Database Indexing : Ensure `phoneNumber` and `aadhaarNumber` are indexed for fast lookup.(how to check if it is already implemented and if not to implement)
--  Caching : Use  Redis  to cache user profiles that are frequently accessed but rarely changed.(how to check if it is already implemented and if not to implement)
 -  Lazy Loading : Use `FetchType.LAZY` for profile associations in [./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java](./src/main/java/com/nirmaansetu/backend/modules/users/entity/User.java) to avoid "N+1" query issues.(how to check if it is already implemented and if not to implement)
 
 ### 6. Error Handling Checklist
--  Global Exception Handler : Create a `@ControllerAdvice` to handle `MethodArgumentNotValidException`, `DataIntegrityViolationException`, and custom `UserNotFoundException`.(how to check if it is already implemented and if not to implement)
--  Standardized Response : Ensure error responses always return a consistent JSON format with an error code and message.(how to check if it is already implemented and if not to implement)
-
 ### 7. Logging & Monitoring Checklist
 -  Audit Logs (universal): Log sensitive actions (e.g., "User [ID] updated their Aadhaar").(how to check if it is already implemented and if not to implement)
 -  ELK/Splunk : Ship logs to a central system for troubleshooting production issues.(how to check if it is already implemented and if not to implement)

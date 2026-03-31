@@ -10,6 +10,8 @@ import com.nirmaansetu.backend.shared.service.FileService;
 import com.nirmaansetu.backend.shared.service.PhotoHashService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -191,10 +193,12 @@ public class UserService {
     }
 
     @Transactional
+    @CacheEvict(value = "users", key = "#id")
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
+    @Cacheable(value = "users", key = "#id")
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -202,6 +206,7 @@ public class UserService {
     }
 
     @Transactional
+    @CacheEvict(value = "users", key = "#id")
     public UserResponseDto updateUser(Long id, @Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
         User user = userRepository.findById(id)
