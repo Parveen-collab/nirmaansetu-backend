@@ -56,15 +56,15 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
+13. do a complete all possible postman test of each and every api end points developed till now and verify them in MySQL database.
+14. do a complete senior level engineer tests till now of development
 10. Right now:
-Enable Swagger locally
-
+   Enable Swagger locally
 Before deployment:
-Add JWT in Swagger
-Add API versioning
-
+   Add JWT in Swagger
+   Add API versioning
 After deployment:
-Disable OR secure Swagger
-Share API docs via Postman
-
-11. create a CI/CD pipeline for every git push to check test cases 
+   Disable OR secure Swagger
+   Share API docs via Postman
+11. create a CI/CD pipeline for every git push to check test cases
+12. No OTP Link: Currently, the /api/user/register endpoint is open to everyone (permitAll) and does not check if the phone number being registered was actually verified via OTP

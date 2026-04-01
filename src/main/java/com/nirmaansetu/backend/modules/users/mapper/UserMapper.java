@@ -6,6 +6,7 @@ import com.nirmaansetu.backend.modules.users.entity.*;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
@@ -21,19 +22,32 @@ public interface UserMapper {
 
     default List<Address> updateAddresses(User user, UserRequestDto dto) {
         if (dto.getAddresses() == null) return user.getAddresses();
-        // For simplicity, replacing addresses if provided in the update DTO
+        
+        List<Address> currentAddresses = user.getAddresses();
         List<Address> newAddresses = mapAddresses(dto.getAddresses());
-        if (newAddresses != null) {
-            newAddresses.forEach(address -> address.setUser(user));
+        
+        if (currentAddresses == null) {
+            currentAddresses = new java.util.ArrayList<>();
+            // Since we're using @MappingTarget, we can't easily set it back here if it's null,
+            // but usually it's initialized. User entity initializes it in addAddress.
+        } else {
+            currentAddresses.clear();
         }
-        return newAddresses;
+
+        if (newAddresses != null) {
+            for (Address address : newAddresses) {
+                address.setUser(user);
+                currentAddresses.add(address);
+            }
+        }
+        return currentAddresses;
     }
 
     default List<Address> mapAddresses(List<UserRequestDto.AddressDto> addressDtos) {
         if (addressDtos == null) return null;
         return addressDtos.stream()
                 .map(this::toAddress)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Mapping(target = "id", ignore = true)

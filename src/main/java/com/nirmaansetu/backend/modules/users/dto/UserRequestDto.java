@@ -3,16 +3,19 @@ package com.nirmaansetu.backend.modules.users.dto;
 import com.nirmaansetu.backend.modules.users.entity.AddressType;
 import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.modules.users.entity.ShopType;
+import com.nirmaansetu.backend.modules.auth.globalNumberValidator.ValidPhoneNumber;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class UserRequestDto {
+public class UserRequestDto implements Serializable {
+    private static final long serialVersionUID = 1L;
     @NotBlank(message = "Phone number is required")
-    @Size(min = 7, max = 15, message = "Phone number must be between 7 and 15 characters")
+    @ValidPhoneNumber
     private String phoneNumber;
 
     @NotBlank(message = "Name is required")
@@ -42,7 +45,8 @@ public class UserRequestDto {
     private SupplierProfileDto supplierProfile;
 
     @Data
-    public static class EmployeeProfileDto {
+    public static class EmployeeProfileDto implements Serializable {
+        private static final long serialVersionUID = 1L;
         @NotBlank(message = "Service category is required")
         private String serviceCategory;
         @NotBlank(message = "Service speciality is required")
@@ -53,7 +57,8 @@ public class UserRequestDto {
     }
 
     @Data
-    public static class EmployerProfileDto {
+    public static class EmployerProfileDto implements Serializable {
+        private static final long serialVersionUID = 1L;
         @NotBlank(message = "Company name is required")
         private String companyName;
         @NotBlank(message = "Company address is required")
@@ -61,7 +66,8 @@ public class UserRequestDto {
     }
 
     @Data
-    public static class SupplierProfileDto {
+    public static class SupplierProfileDto implements Serializable {
+        private static final long serialVersionUID = 1L;
         @NotBlank(message = "Shop name is required")
         private String shopName;
         @NotBlank(message = "Shop category is required")
@@ -75,7 +81,8 @@ public class UserRequestDto {
     }
 
     @Data
-    public static class AddressDto {
+    public static class AddressDto implements Serializable {
+        private static final long serialVersionUID = 1L;
         @NotNull(message = "Address type is required")
         private AddressType type; // PERMANENT | CURRENT
         @NotBlank(message = "State is required")
