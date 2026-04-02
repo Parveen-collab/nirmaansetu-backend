@@ -5,7 +5,10 @@ inspiration
 2. Fiverr
 
 Users 
-for phase 1 = Employees(Mistry, Helper, Engineers, Carpenter and many more), Employers(Any Common man, Contractors, Builders), Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
+for phase 1 
+   Employees = Mistry, Helper, Engineers, Carpenter and many more), 
+   Employers(Any Common man, Contractors, Builders), 
+   Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
 API list created
 1. mobile otp verification api
@@ -56,15 +59,19 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-13. do a complete all possible postman test of each and every api end points developed till now and verify them in MySQL database.
-14. do a complete senior level engineer tests till now of development
-10. Right now:
-   Enable Swagger locally
-Before deployment:
-   Add JWT in Swagger
-   Add API versioning
-After deployment:
-   Disable OR secure Swagger
-   Share API docs via Postman
 11. create a CI/CD pipeline for every git push to check test cases
 12. No OTP Link: Currently, the /api/user/register endpoint is open to everyone (permitAll) and does not check if the phone number being registered was actually verified via OTP
+13. check why spring boot checks userByMobileNumber when i pass access token
+14. soft delete things should get seen by ADMIN
+15. how do we restore the soft deleted data within the time
+16. create a proper documentation of the API = from the documentation anyone who is reading it must get to know that how backend is working, which fields are optional/required, which API requires Auth and which does not.
+17. do a complete all possible postman test of each and every api end points developed till now and verify them in MySQL database.
+14. do a complete senior level engineer tests till now of development
+15. Right now: (only for me on my own computer)
+        Enable Swagger locally
+        Before deployment: (for Frontend team and QA testing)
+        Add JWT in Swagger
+        Add API versioning
+        After deployment: (for real world users)
+        Disable OR secure Swagger
+        Share API docs via Postman
