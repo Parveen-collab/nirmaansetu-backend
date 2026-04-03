@@ -59,7 +59,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-11. create a CI/CD pipeline for every git push to check test cases
 12. No OTP Link: Currently, the /api/user/register endpoint is open to everyone (permitAll) and does not check if the phone number being registered was actually verified via OTP
 13. check why spring boot checks userByMobileNumber when i pass access token
 14. soft delete things should get seen by ADMIN
