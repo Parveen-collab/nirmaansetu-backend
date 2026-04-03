@@ -21,6 +21,7 @@ public class OtpService {
     private static final int MAX_OTP_ATTEMPTS = 5;
     private static final int LOCK_TIME_MINUTES = 10;
     private static final int OTP_EXPIRY_MINUTES = 5;
+    private static final int VERIFIED_PHONE_EXPIRY_MINUTES = 10;
 
     @Autowired
     private SmsService smsService;
@@ -57,14 +58,27 @@ public class OtpService {
 
     public boolean verifyOtp(String phoneNumber, String otp) {
         String otpKey = "otp:" + phoneNumber;
+        String verifiedKey = "verified_phone:" + phoneNumber;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         String storedOtpHash = ops.get(otpKey);
 
         if (storedOtpHash != null && storedOtpHash.equals(hashOtp(otp))) {
             redisTemplate.delete(otpKey); // Prevent reuse
+            // Store verification status for registration
+            ops.set(verifiedKey, "true", VERIFIED_PHONE_EXPIRY_MINUTES, TimeUnit.MINUTES);
             return true;
         }
         return false;
+    }
+
+    public boolean isPhoneNumberVerified(String phoneNumber) {
+        String verifiedKey = "verified_phone:" + phoneNumber;
+        return redisTemplate.hasKey(verifiedKey);
+    }
+
+    public void clearVerification(String phoneNumber) {
+        String verifiedKey = "verified_phone:" + phoneNumber;
+        redisTemplate.delete(verifiedKey);
     }
 
     private String hashOtp(String otp) {

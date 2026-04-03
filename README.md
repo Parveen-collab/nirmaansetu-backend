@@ -10,6 +10,12 @@ for phase 1
    Employers(Any Common man, Contractors, Builders), 
    Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
+Run These commands before push
+1. mvnw clean install -DskipTests = mvnw clean install -DskipTests
+2. mvnw test = Run this command to ensure all unit and integration tests pass.
+3. mvnw clean install = Run the following combined command for a comprehensive check.
+
+
 API list created
 1. mobile otp verification api
 /api/auth/send-otp
@@ -59,8 +65,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-12. No OTP Link: Currently, the /api/user/register endpoint is open to everyone (permitAll) and does not check if the phone number being registered was actually verified via OTP
-13. check why spring boot checks userByMobileNumber when i pass access token
 14. soft delete things should get seen by ADMIN
 15. how do we restore the soft deleted data within the time
 16. create a proper documentation of the API = from the documentation anyone who is reading it must get to know that how backend is working, which fields are optional/required, which API requires Auth and which does not.
