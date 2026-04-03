@@ -2,6 +2,7 @@ package com.nirmaansetu.backend.modules.users.service;
 
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
+import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.users.entity.*;
 import com.nirmaansetu.backend.modules.users.mapper.UserMapper;
 import com.nirmaansetu.backend.modules.users.repository.UserRepository;
@@ -41,9 +42,15 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private OtpService otpService;
+
     @Transactional
     public UserResponseDto registerUser(@Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
+        if (!otpService.isPhoneNumberVerified(request.getPhoneNumber())) {
+            throw new RuntimeException("Phone number not verified via OTP");
+        }
         if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new RuntimeException("Phone number already exists");
         }
@@ -88,6 +95,9 @@ public class UserService {
         // Automate Profile Creation based on Role using Strategy Pattern
         profileStrategyFactory.getStrategy(request.getRole())
                 .createProfile(savedUser, request, photoUrl);
+
+        // Clear verification status after successful registration
+        otpService.clearVerification(request.getPhoneNumber());
 
         return userMapper.toUserResponseDto(savedUser);
     }
