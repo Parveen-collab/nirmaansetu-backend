@@ -4,6 +4,7 @@ import com.nirmaansetu.backend.modules.auth.globalNumberValidator.ValidPhoneNumb
 import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +31,8 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE users SET deleted = true, deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted = false")
 public class User extends BaseEntity implements UserDetails {
+
+    @Schema(description = "Unique ID", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,6 +42,7 @@ public class User extends BaseEntity implements UserDetails {
     @ValidPhoneNumber
     private String phoneNumber;
 
+    @Schema(description = "User name", example = "Parveen", required = true)
     @Column(nullable = false)
     @NotBlank(message = "Name is required")
     private String name;

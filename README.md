@@ -65,11 +65,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-14. soft delete things should get seen by ADMIN
-15. how do we restore the soft deleted data within the time
-16. create a proper documentation of the API = from the documentation anyone who is reading it must get to know that how backend is working, which fields are optional/required, which API requires Auth and which does not.
-17. do a complete all possible postman test of each and every api end points developed till now and verify them in MySQL database.
-14. do a complete senior level engineer tests till now of development
 15. Right now: (only for me on my own computer)
         Enable Swagger locally
         Before deployment: (for Frontend team and QA testing)
@@ -78,3 +73,11 @@ TO DO LIST
         After deployment: (for real world users)
         Disable OR secure Swagger
         Share API docs via Postman
+17. create a role named "Super_Admin" with whole app access
+
+2. create an API to restore the deleted data within 24 hours
+
+3. refactor soft delete logic to automatically gets deleted permanently after 24 hours
+
+4. deleting user means = after deleting an user with a particular id the all data get deleted from the system and after 24 hours it get deleted permanently
+5. company address should be like user address details. now it is in a single line. and user address fields are separated.

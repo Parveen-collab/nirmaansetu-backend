@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "auth")
+@Tag(name = "Auth APIs", description = "Operations related to auth")
 public class AuthController {
     @Autowired
     private OtpService otpService;

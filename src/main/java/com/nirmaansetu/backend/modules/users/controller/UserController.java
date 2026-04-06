@@ -3,6 +3,8 @@ package com.nirmaansetu.backend.modules.users.controller;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
 import com.nirmaansetu.backend.modules.users.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,10 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/user")
+@Tag(name = "User APIs", description = "Operations related to users")
 public class UserController {
     @Autowired
     private UserService userService;
 
+    @Operation(
+            summary = "Create user with a specific role.",
+            description = "You can create user with a specific role and you have to provide role specific details too.")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserResponseDto> register(
             @Valid @RequestPart("user") UserRequestDto request,
@@ -23,11 +29,17 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(request, photo));
     }
 
+    @Operation(
+            summary = "Get users by id",
+            description = "Returns only users where deleted = false. Requires USER or ADMIN role.")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserDetails(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @Operation(
+            summary = "Update user by id",
+            description = "You can update a particular field and can keep all other the same or you can update as many fields as you have passed.")
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserResponseDto> updateDetails(
         @PathVariable Long id,
@@ -36,6 +48,9 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, request, photo));
     }
 
+    @Operation(
+            summary = "Delete user by id",
+            description = "You can soft delete the user, user can be restored within 24 hours by Super Admin only and after 24 hours data will be deleted permanently. then even Super Admin could not restore the data.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.deleteUser(id);
