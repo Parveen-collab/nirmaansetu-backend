@@ -65,14 +65,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-15. Right now: (only for me on my own computer)
-        Enable Swagger locally
-        Before deployment: (for Frontend team and QA testing)
-        Add JWT in Swagger
-        Add API versioning
-        After deployment: (for real world users)
-        Disable OR secure Swagger
-        Share API docs via Postman
 17. create a role named "Super_Admin" with whole app access
 
 2. create an API to restore the deleted data within 24 hours
@@ -81,3 +73,5 @@ TO DO LIST
 
 4. deleting user means = after deleting an user with a particular id the all data get deleted from the system and after 24 hours it get deleted permanently
 5. company address should be like user address details. now it is in a single line. and user address fields are separated.
+6. create API to get all users, to get all users by role (by employee, by employer, by supplier)
+7. Configured CORS properly
