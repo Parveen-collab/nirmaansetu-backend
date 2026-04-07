@@ -8,6 +8,8 @@ import com.nirmaansetu.backend.modules.auth.dto.VerifyOtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.shared.utils.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @Tag(name = "Auth APIs", description = "Operations related to auth")
 public class AuthController {
     @Autowired
@@ -42,6 +44,10 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
     }
 
+    @Operation(
+            summary = "Create a refresh token when access token get expired.",
+            description = "You can create refresh token to extend the expiration time of the access token.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestParam String refreshToken) {
         String phoneNumber = jwtUtil.extractPhoneNumber(refreshToken);
