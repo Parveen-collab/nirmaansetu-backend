@@ -15,6 +15,11 @@ Run These commands before push
 2. mvnw test = Run this command to ensure all unit and integration tests pass.
 3. mvnw clean install = Run the following combined command for a comprehensive check.
 
+Run the following command to run nirmaansetu docker image
+1. docker run -p 8080:8080 parveendockerhub/nirmaansetu:latest
+2. Your backend is now globally usable
+Your image URL:parveendockerhub/nirmaansetu:latest
+
 
 API list created
 1. mobile otp verification api
@@ -73,7 +78,6 @@ TO DO LIST
       In your UserService.java, you must strictly validate that the SUPER_ADMIN role cannot be requested through the public register API. And even we must not give the option of Super_Admin role to select.
 10. "Only Admin Can Create Admin" Rule
        If you want to allow more Super_Admins to be added later:
-
 Create a separate, protected endpoint (e.g., /api/admin/create-admin).
 Apply Role-Based Access Control (RBAC) to this endpoint so only someone who already has the SUPER_ADMIN role can access it.
 11. create a role named "Super_Admin" with whole app access so that we can create a admin dashboard
