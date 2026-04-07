@@ -65,13 +65,19 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-17. create a role named "Super_Admin" with whole app access
-
-2. create an API to restore the deleted data within 24 hours
-
-3. refactor soft delete logic to automatically gets deleted permanently after 24 hours
-
-4. deleting user means = after deleting an user with a particular id the all data get deleted from the system and after 24 hours it get deleted permanently
 5. company address should be like user address details. now it is in a single line. and user address fields are separated.
 6. create API to get all users, to get all users by role (by employee, by employer, by supplier)
 7. Configured CORS properly
+8. on successful user registration process there must be username and password to login in the response and it must be sent to the user's verified mobile number.
+9. Role Restriction in Registration
+      In your UserService.java, you must strictly validate that the SUPER_ADMIN role cannot be requested through the public register API. And even we must not give the option of Super_Admin role to select.
+10. "Only Admin Can Create Admin" Rule
+       If you want to allow more Super_Admins to be added later:
+
+Create a separate, protected endpoint (e.g., /api/admin/create-admin).
+Apply Role-Based Access Control (RBAC) to this endpoint so only someone who already has the SUPER_ADMIN role can access it.
+11. create a role named "Super_Admin" with whole app access so that we can create a admin dashboard
+12. create an API to restore the deleted data within 24 hours and it must be done by only Super_Admin role
+
+
+
