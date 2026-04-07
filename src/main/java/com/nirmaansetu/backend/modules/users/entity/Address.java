@@ -6,11 +6,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "addresses")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@SQLDelete(sql = "UPDATE addresses SET deleted = true, deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted = false")
 public class Address extends BaseEntity {
 
     @Id
@@ -46,4 +52,8 @@ public class Address extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private boolean deleted = false;
+
+    private LocalDateTime deletedAt;
 }

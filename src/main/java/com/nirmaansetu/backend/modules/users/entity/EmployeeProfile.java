@@ -5,11 +5,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "employee_profiles")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@SQLDelete(sql = "UPDATE employee_profiles SET deleted = true, deleted_at = NOW() WHERE id = ?")
+@Where(clause = "deleted = false")
 public class EmployeeProfile extends BaseEntity {
 
     @Id
@@ -33,4 +39,8 @@ public class EmployeeProfile extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private boolean deleted = false;
+
+    private LocalDateTime deletedAt;
 }
