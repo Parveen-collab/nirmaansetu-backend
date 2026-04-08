@@ -61,8 +61,18 @@ public class UserRequestDto implements Serializable {
         private static final long serialVersionUID = 1L;
         @NotBlank(message = "Company name is required")
         private String companyName;
-        @NotBlank(message = "Company address is required")
-        private String companyAddress;
+
+        @NotBlank(message = "State is required")
+        private String state;
+        @NotBlank(message = "District is required")
+        private String district;
+        private String wardNumber;
+        private String landmark;
+        @NotBlank(message = "Pincode is required")
+        private String pincode;
+        @NotBlank(message = "Area/Village is required")
+        private String areaVillage;
+        private String building;
     }
 
     @Data
@@ -76,8 +86,18 @@ public class UserRequestDto implements Serializable {
         private String shopSpeciality;
         @NotNull(message = "Shop type is required")
         private ShopType shopType;
-        @NotBlank(message = "Shop address is required")
-        private String shopAddress;
+
+        @NotBlank(message = "State is required")
+        private String state;
+        @NotBlank(message = "District is required")
+        private String district;
+        private String wardNumber;
+        private String landmark;
+        @NotBlank(message = "Pincode is required")
+        private String pincode;
+        @NotBlank(message = "Area/Village is required")
+        private String areaVillage;
+        private String building;
     }
 
     @Data

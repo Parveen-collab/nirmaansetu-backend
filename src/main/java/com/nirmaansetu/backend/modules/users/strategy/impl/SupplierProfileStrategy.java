@@ -44,16 +44,7 @@ public class SupplierProfileStrategy implements ProfileStrategy {
                 profile.setUser(user);
                 user.setSupplierProfile(profile);
             } else {
-                if (request.getSupplierProfile().getShopName() != null)
-                    profile.setShopName(request.getSupplierProfile().getShopName());
-                if (request.getSupplierProfile().getShopCategory() != null)
-                    profile.setShopCategory(request.getSupplierProfile().getShopCategory());
-                if (request.getSupplierProfile().getShopSpeciality() != null)
-                    profile.setShopSpeciality(request.getSupplierProfile().getShopSpeciality());
-                if (request.getSupplierProfile().getShopAddress() != null)
-                    profile.setShopAddress(request.getSupplierProfile().getShopAddress());
-                if (request.getSupplierProfile().getShopType() != null)
-                    profile.setShopType(request.getSupplierProfile().getShopType());
+                userMapper.updateSupplierProfileFromDto(request.getSupplierProfile(), profile);
             }
         }
         if (photoUrl != null) {

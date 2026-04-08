@@ -27,8 +27,25 @@ public class EmployerProfile extends BaseEntity {
     private String companyName;
 
     @Column(nullable = false)
-    @NotBlank(message = "Company address is required")
-    private String companyAddress;
+    @NotBlank(message = "State is required")
+    private String state;
+
+    @Column(nullable = false)
+    @NotBlank(message = "District is required")
+    private String district;
+
+    private String wardNumber;
+    private String landmark;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Pincode is required")
+    private String pincode;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Area/Village is required")
+    private String areaVillage;
+
+    private String building;
 
     private String photoUrl;
 

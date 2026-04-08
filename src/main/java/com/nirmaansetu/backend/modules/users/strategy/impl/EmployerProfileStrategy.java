@@ -44,10 +44,7 @@ public class EmployerProfileStrategy implements ProfileStrategy {
                 profile.setUser(user);
                 user.setEmployerProfile(profile);
             } else {
-                if (request.getEmployerProfile().getCompanyName() != null)
-                    profile.setCompanyName(request.getEmployerProfile().getCompanyName());
-                if (request.getEmployerProfile().getCompanyAddress() != null)
-                    profile.setCompanyAddress(request.getEmployerProfile().getCompanyAddress());
+                userMapper.updateEmployerProfileFromDto(request.getEmployerProfile(), profile);
             }
         }
         if (photoUrl != null) {

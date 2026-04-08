@@ -134,6 +134,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>nirmaansetu</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

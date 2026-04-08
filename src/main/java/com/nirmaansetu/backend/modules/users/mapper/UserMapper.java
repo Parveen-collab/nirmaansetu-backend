@@ -78,6 +78,17 @@ public interface UserMapper {
     @Mapping(target = "shopType", source = "shopType", qualifiedByName = "shopTypeToString")
     UserRequestDto.SupplierProfileDto toSupplierProfileDto(SupplierProfile profile);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    void updateEmployerProfileFromDto(UserRequestDto.EmployerProfileDto dto, @MappingTarget EmployerProfile profile);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "shopType", source = "shopType", qualifiedByName = "stringToShopType")
+    void updateSupplierProfileFromDto(UserRequestDto.SupplierProfileDto dto, @MappingTarget SupplierProfile profile);
+
     @Mapping(target = "message", constant = "Success")
     UserResponseDto toUserResponseDto(User user);
 
