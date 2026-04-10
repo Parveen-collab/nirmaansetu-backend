@@ -81,7 +81,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-8. Configured CORS properly
 7. create API to get all users, 
 7. create API to get all users by role (by employee, by employer, by supplier)
 9. Role Restriction in Registration
