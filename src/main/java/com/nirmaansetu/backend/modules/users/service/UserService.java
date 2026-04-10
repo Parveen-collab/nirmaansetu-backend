@@ -3,6 +3,7 @@ package com.nirmaansetu.backend.modules.users.service;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
+import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.modules.users.entity.*;
 import com.nirmaansetu.backend.modules.users.mapper.UserMapper;
 import com.nirmaansetu.backend.modules.users.repository.UserRepository;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -45,6 +47,12 @@ public class UserService {
     @Autowired
     private OtpService otpService;
 
+    @Autowired
+    private SmsService smsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional
     public UserResponseDto registerUser(@Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
@@ -62,6 +70,10 @@ public class UserService {
         }
 
         User user = userMapper.toUser(request);
+        
+        // Generate a random password
+        String plainPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+        user.setPassword(passwordEncoder.encode(plainPassword));
 
         // Calculate and check photo hash for uniqueness
         String photoHash = null;
@@ -99,7 +111,14 @@ public class UserService {
         // Clear verification status after successful registration
         otpService.clearVerification(request.getPhoneNumber());
 
-        return userMapper.toUserResponseDto(savedUser);
+        // Send SMS with username and password
+        String messageBody = String.format("Welcome to NirmaanSetu! Your username is %s and your password is %s. Please login to continue.", 
+            savedUser.getPhoneNumber(), plainPassword);
+        smsService.sendSms(savedUser.getPhoneNumber(), messageBody);
+
+        UserResponseDto response = userMapper.toUserResponseDto(savedUser);
+        response.setPassword(plainPassword);
+        return response;
     }
 
     private void validateRequest(UserRequestDto request) {

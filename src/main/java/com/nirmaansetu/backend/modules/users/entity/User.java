@@ -64,6 +64,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(unique = true)
     private String photoHash;
+    
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Valid
@@ -107,7 +109,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return ""; // Since we use OTP or other methods, password is not used
+        return password;
     }
 
     @Override

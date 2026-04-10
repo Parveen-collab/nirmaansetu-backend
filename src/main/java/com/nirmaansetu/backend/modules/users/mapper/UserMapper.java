@@ -90,6 +90,8 @@ public interface UserMapper {
     void updateSupplierProfileFromDto(UserRequestDto.SupplierProfileDto dto, @MappingTarget SupplierProfile profile);
 
     @Mapping(target = "message", constant = "Success")
+    @Mapping(target = "username", source = "phoneNumber")
+    @Mapping(target = "password", ignore = true)
     UserResponseDto toUserResponseDto(User user);
 
     @Named("stringToAddressType")
