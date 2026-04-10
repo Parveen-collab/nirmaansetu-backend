@@ -3,5 +3,7 @@ package com.nirmaansetu.backend.modules.users.entity;
 public enum Role {
     EMPLOYEE,
     EMPLOYER,
-    SUPPLIER
+    SUPPLIER,
+    ADMIN,
+    SUPER_ADMIN
 }

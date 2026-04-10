@@ -81,8 +81,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-7. create API to get all users, 
-7. create API to get all users by role (by employee, by employer, by supplier)
 9. Role Restriction in Registration
       In your UserService.java, you must strictly validate that the SUPER_ADMIN role cannot be requested through the public register API. And even we must not give the option of Super_Admin role to select.
 10. "Only Admin Can Create Admin" Rule

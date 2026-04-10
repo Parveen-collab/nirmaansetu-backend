@@ -2,6 +2,7 @@ package com.nirmaansetu.backend.modules.users.controller;
 
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
+import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.modules.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -12,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -38,6 +41,16 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserDetails(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @Operation(
+            summary = "Get all users except super admin",
+            description = "Returns all users except those with SUPER_ADMIN role. Can filter by role.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/all")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(
+            @RequestParam(required = false) Role role) {
+        return ResponseEntity.ok(userService.getAllUsersExceptSuperAdmin(role));
     }
 
     @Operation(

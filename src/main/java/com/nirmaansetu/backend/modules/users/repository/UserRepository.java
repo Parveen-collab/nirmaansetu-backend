@@ -9,10 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhoneNumber(String phoneNumber);
+
+    List<User> findByRoleNot(com.nirmaansetu.backend.modules.users.entity.Role role);
+    List<User> findByRole(com.nirmaansetu.backend.modules.users.entity.Role role);
 
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByEmail(String email);

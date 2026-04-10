@@ -139,7 +139,7 @@
         }
       }
     },
-    "/api/user/register": {
+    "/api/v1/user/register": {
       "post": {
         "tags": [
           "user"
@@ -147,9 +147,18 @@
         "operationId": "register",
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserRequestDto"
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserRequestDto"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           },
@@ -159,17 +168,61 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserResponseDto"
                 }
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/api/user/{id}": {
+    "/api/v1/user/all": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all users except super admin",
+        "operationId": "getAllUsers",
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Role"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/user/{id}": {
       "get": {
         "tags": [
           "user"
@@ -202,7 +255,12 @@
           "404": {
             "description": "User not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -224,9 +282,18 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UserRequestDto"
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/UserRequestDto"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
@@ -245,7 +312,12 @@
           "404": {
             "description": "User not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -272,7 +344,12 @@
           "404": {
             "description": "User not found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -316,6 +393,12 @@
           },
           "email": {
             "type": "string"
+          },
+          "aadhaarNumber": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
           }
         }
       },
@@ -332,6 +415,23 @@
             "type": "string"
           }
         }
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "EMPLOYEE",
+          "EMPLOYER",
+          "SUPPLIER",
+          "ADMIN",
+          "SUPER_ADMIN"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

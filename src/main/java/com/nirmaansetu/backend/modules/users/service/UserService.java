@@ -24,7 +24,9 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -232,6 +234,18 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toUserResponseDto(user);
+    }
+
+    public List<UserResponseDto> getAllUsersExceptSuperAdmin(Role role) {
+        List<User> users;
+        if (role != null) {
+            users = userRepository.findByRole(role);
+        } else {
+            users = userRepository.findByRoleNot(Role.SUPER_ADMIN);
+        }
+        return users.stream()
+                .map(userMapper::toUserResponseDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
