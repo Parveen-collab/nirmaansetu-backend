@@ -81,9 +81,9 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-6. create API to get all users, to get all users by role (by employee, by employer, by supplier)
-7. Configured CORS properly
-8. on successful user registration process there must be username and password to login in the response and it must be sent to the user's verified mobile number.
+8. Configured CORS properly
+7. create API to get all users, 
+7. create API to get all users by role (by employee, by employer, by supplier)
 9. Role Restriction in Registration
       In your UserService.java, you must strictly validate that the SUPER_ADMIN role cannot be requested through the public register API. And even we must not give the option of Super_Admin role to select.
 10. "Only Admin Can Create Admin" Rule
