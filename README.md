@@ -46,15 +46,11 @@ If using Render / Railway:
 /api/user/{id}
 6. GET
 /api/user/{id}
+7. GET
+/api/user/all
 
 API list to be created
-2. login api (accessible only by registered/existed users)
-
-4. change/forgot password api 
-flow = (click on chnage/forgot/reset=>resetpassword screen=>mobile/email otp verification=>type 5. 5. password=>retype password=>done)
-
 5. create work api
-6. send enquiry api
 7. send feedback api
 8. get all employees
 10. get all employers
@@ -81,14 +77,11 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-9. Role Restriction in Registration
-      In your UserService.java, you must strictly validate that the SUPER_ADMIN role cannot be requested through the public register API. And even we must not give the option of Super_Admin role to select.
-10. "Only Admin Can Create Admin" Rule
-       If you want to allow more Super_Admins to be added later:
-Create a separate, protected endpoint (e.g., /api/admin/create-admin).
-Apply Role-Based Access Control (RBAC) to this endpoint so only someone who already has the SUPER_ADMIN role can access it.
-11. create a role named "Super_Admin" with whole app access so that we can create a admin dashboard
-12. create an API to restore the deleted data within 24 hours and it must be done by only Super_Admin role
+2. create send enquiry api 
+3. create an API to get all enquiries (all enquiries data will get deleted automatically after 48 hours permanently) (it will be accessed by only Admin, super_Admin role)
+3. create login api (accessible only by registered/existed users)
+4. create change/forgot password api
+   flow = (click on change/forgot/reset⇒reset password screen ⇒ mobile/email otp verification⇒type 5. 5. password⇒retype password⇒done)
 
 
 
