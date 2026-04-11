@@ -3,10 +3,13 @@
 package com.nirmaansetu.backend.modules.auth.controller;
 
 import com.nirmaansetu.backend.modules.auth.dto.AuthResponseDto;
+import com.nirmaansetu.backend.modules.auth.dto.LoginRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.OtpRequestDto;
+import com.nirmaansetu.backend.modules.auth.dto.ResetPasswordRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.VerifyOtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
+import com.nirmaansetu.backend.modules.users.service.UserService;
 import com.nirmaansetu.backend.shared.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,6 +29,33 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
+        userService.login(request);
+        String accessToken = jwtUtil.generateToken(request.getPhoneNumber(), false);
+        String refreshToken = jwtUtil.generateToken(request.getPhoneNumber(), true);
+
+        return ResponseEntity.ok(new AuthResponseDto(accessToken, refreshToken));
+    }
+
+    @PostMapping("/send-otp-forgot")
+    public ResponseEntity<String> sendOtpForgot(@Valid @RequestBody OtpRequestDto request) {
+        if (!userService.existsByPhoneNumber(request.getPhoneNumber())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this phone number");
+        }
+        otpService.sendOtp(request.getPhoneNumber());
+        return ResponseEntity.ok("OTP sent successfully for password reset");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequestDto request) {
+        userService.resetPassword(request);
+        return ResponseEntity.ok("Password reset successfully");
+    }
 
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp(@Valid @RequestBody OtpRequestDto request) {

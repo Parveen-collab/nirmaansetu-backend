@@ -77,9 +77,6 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-3. create login api (accessible only by registered/existed users)
-4. create change/forgot password api
-   flow = (click on change/forgot/reset⇒reset password screen ⇒ mobile/email otp verification⇒type 5. 5. password⇒retype password⇒done)
 5. after the completion of user module understand the concepts applied till here.
 
 
