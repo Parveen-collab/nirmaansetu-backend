@@ -18,6 +18,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRoleNot(com.nirmaansetu.backend.modules.users.entity.Role role);
     List<User> findByRole(com.nirmaansetu.backend.modules.users.entity.Role role);
 
+    @Query("SELECT DISTINCT u FROM User u JOIN u.addresses a WHERE u.role != 'SUPER_ADMIN' AND " +
+            "(a.pincode LIKE %:keyword% OR a.landmark LIKE %:keyword% OR a.areaVillage LIKE %:keyword%)")
+    List<User> findByKeyword(@Param("keyword") String keyword);
+
+    @Query("SELECT DISTINCT u FROM User u JOIN u.addresses a WHERE u.role = :role AND " +
+            "(a.pincode LIKE %:keyword% OR a.landmark LIKE %:keyword% OR a.areaVillage LIKE %:keyword%)")
+    List<User> findByRoleAndKeyword(@Param("role") com.nirmaansetu.backend.modules.users.entity.Role role, @Param("keyword") String keyword);
+
     boolean existsByPhoneNumber(String phoneNumber);
     boolean existsByEmail(String email);
     boolean existsByAadhaarNumber(String aadhaarNumber);

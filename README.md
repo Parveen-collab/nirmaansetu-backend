@@ -77,7 +77,9 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-5. after the completion of user module understand the concepts applied till here.
-
+5. Test all APIs work flow in backend code, in Postman. do a complete test till now.
+6. Test what is the flow of reset password
+6. after the completion of user module understand the concepts applied till here.
+7. next work on Project module
 
 
