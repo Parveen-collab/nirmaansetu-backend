@@ -49,8 +49,9 @@ public class UserController {
             security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/all")
     public ResponseEntity<List<UserResponseDto>> getAllUsers(
-            @RequestParam(required = false) Role role) {
-        return ResponseEntity.ok(userService.getAllUsersExceptSuperAdmin(role));
+            @RequestParam(required = false) Role role,
+            @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(userService.getAllUsersExceptSuperAdmin(role, keyword));
     }
 
     @Operation(

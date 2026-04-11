@@ -314,12 +314,20 @@ public class UserService {
         return userMapper.toUserResponseDto(user);
     }
 
-    public List<UserResponseDto> getAllUsersExceptSuperAdmin(Role role) {
+    public List<UserResponseDto> getAllUsersExceptSuperAdmin(Role role, String keyword) {
         List<User> users;
         if (role != null) {
-            users = userRepository.findByRole(role);
+            if (keyword != null && !keyword.isEmpty()) {
+                users = userRepository.findByRoleAndKeyword(role, keyword);
+            } else {
+                users = userRepository.findByRole(role);
+            }
         } else {
-            users = userRepository.findByRoleNot(Role.SUPER_ADMIN);
+            if (keyword != null && !keyword.isEmpty()) {
+                users = userRepository.findByKeyword(keyword);
+            } else {
+                users = userRepository.findByRoleNot(Role.SUPER_ADMIN);
+            }
         }
         return users.stream()
                 .map(userMapper::toUserResponseDto)
