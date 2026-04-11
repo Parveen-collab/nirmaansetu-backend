@@ -2,6 +2,8 @@ package com.nirmaansetu.backend.modules.users.service;
 
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
+import com.nirmaansetu.backend.modules.auth.dto.LoginRequestDto;
+import com.nirmaansetu.backend.modules.auth.dto.ResetPasswordRequestDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.modules.users.entity.*;
@@ -364,5 +366,43 @@ public class UserService {
         UserResponseDto response = userMapper.toUserResponseDto(updatedUser);
         response.setMessage("User updated successfully");
         return response;
+    }
+
+    public UserResponseDto login(@Valid LoginRequestDto request) {
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        return userMapper.toUserResponseDto(user);
+    }
+
+    @Transactional
+    public void resetPassword(@Valid ResetPasswordRequestDto request) {
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
+        if (!otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
+            throw new RuntimeException("Invalid or expired OTP");
+        }
+
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        // Clear verification status after password reset
+        otpService.clearVerification(request.getPhoneNumber());
+
+        // Send confirmation SMS
+        smsService.sendSms(user.getPhoneNumber(), "Your NirmaanSetu password has been successfully reset.");
+    }
+
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }

@@ -24,8 +24,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleRateLimitException(RateLimitException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Too Many Requests");
-            error.put("message", ex.getMessage());
-    return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
-}
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Bad Request");
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
 
