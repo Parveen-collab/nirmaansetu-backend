@@ -25,6 +25,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhotoHash(String photoHash);
     boolean existsByPhotoHashAndIdNot(String photoHash, Long id);
 
+    @Query(value = "SELECT * FROM users WHERE id = :id AND deleted = true", nativeQuery = true)
+    Optional<User> findDeletedUserById(@Param("id") Long id);
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM users WHERE deleted = true AND deleted_at <= :date", nativeQuery = true)

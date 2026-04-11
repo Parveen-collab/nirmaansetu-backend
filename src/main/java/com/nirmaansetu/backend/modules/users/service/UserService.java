@@ -56,6 +56,79 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
+    public UserResponseDto registerAdmin(@Valid UserRequestDto request, MultipartFile photo) {
+        if (request.getPhoneNumber() == null || request.getPhoneNumber().trim().isEmpty()) {
+            throw new RuntimeException("Null/Empty Fields : Phone number is required");
+        }
+        if (request.getName() == null || request.getName().trim().isEmpty()) {
+            throw new RuntimeException("Null/Empty Fields : Name is required");
+        }
+        if (request.getAadhaarNumber() == null || request.getAadhaarNumber().trim().isEmpty()) {
+            throw new RuntimeException("Null/Empty Fields : Aadhaar number is required");
+        }
+        if (request.getRole() == null) {
+            throw new RuntimeException("Null/Empty Fields : Role is required");
+        }
+
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new RuntimeException("Phone number already exists");
+        }
+        if (request.getEmail() != null && !request.getEmail().isEmpty() && userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        if (request.getAadhaarNumber() != null && !request.getAadhaarNumber().isEmpty() && userRepository.existsByAadhaarNumber(request.getAadhaarNumber())) {
+            throw new RuntimeException("Aadhaar number already exists");
+        }
+
+        User user = userMapper.toUser(request);
+        
+        // Generate a random password
+        String plainPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+        user.setPassword(passwordEncoder.encode(plainPassword));
+
+        // Calculate and check photo hash for uniqueness
+        String photoHash = null;
+        if (photo != null && !photo.isEmpty()) {
+            photoHash = photoHashService.calculateHash(photo);
+        } else if (request.getProfileImageUrl() != null && !request.getProfileImageUrl().isEmpty()) {
+            photoHash = photoHashService.calculateHashFromUrl(request.getProfileImageUrl());
+        }
+
+        if (photoHash != null && userRepository.existsByPhotoHash(photoHash)) {
+            throw new RuntimeException("Profile photo already exists");
+        }
+
+        // Ensure bidirectional relationship for addresses
+        if (user.getAddresses() != null) {
+            user.getAddresses().forEach(address -> address.setUser(user));
+        }
+
+        User savedUser = userRepository.save(user);
+
+        String photoUrl = fileService.saveProfilePhoto(photo);
+
+        if (photoUrl == null) {
+            photoUrl = request.getProfileImageUrl();
+        }
+
+        savedUser.setProfileImageUrl(photoUrl);
+        savedUser.setPhotoHash(photoHash);
+        userRepository.save(savedUser);
+
+        // Clear verification status after successful registration (in case they tried)
+        otpService.clearVerification(request.getPhoneNumber());
+
+        // Send SMS with username and password
+        String messageBody = String.format("Welcome to NirmaanSetu! Your username is %s and your password is %s. Please login to continue.", 
+            savedUser.getPhoneNumber(), plainPassword);
+        smsService.sendSms(savedUser.getPhoneNumber(), messageBody);
+
+        UserResponseDto response = userMapper.toUserResponseDto(savedUser);
+        response.setPassword(plainPassword);
+        return response;
+    }
+
+    @Transactional
     public UserResponseDto registerUser(@Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
         if (!otpService.isPhoneNumberVerified(request.getPhoneNumber())) {
@@ -135,6 +208,9 @@ public class UserService {
         }
         if (request.getRole() == null) {
             throw new RuntimeException("Null/Empty Fields : Role is required");
+        }
+        if (request.getRole() == Role.SUPER_ADMIN) {
+            throw new RuntimeException("Role Restriction : SUPER_ADMIN role cannot be requested through public registration");
         }
 
         // 1. Inconsistent Profile
