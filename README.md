@@ -77,11 +77,10 @@ important URLs
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-2. create send enquiry api 
-3. create an API to get all enquiries (all enquiries data will get deleted automatically after 48 hours permanently) (it will be accessed by only Admin, super_Admin role)
 3. create login api (accessible only by registered/existed users)
 4. create change/forgot password api
    flow = (click on change/forgot/reset⇒reset password screen ⇒ mobile/email otp verification⇒type 5. 5. password⇒retype password⇒done)
+5. after the completion of user module understand the concepts applied till here.
 
 
 
