@@ -16,7 +16,7 @@
     }
   ],
   "paths": {
-    "/api/auth/send-otp": {
+    "/api/v1/auth/send-otp": {
       "post": {
         "tags": [
           "auth"
@@ -46,7 +46,7 @@
         }
       }
     },
-    "/api/auth/verify-otp": {
+    "/api/v1/auth/verify-otp": {
       "post": {
         "tags": [
           "auth"
@@ -76,7 +76,7 @@
         }
       }
     },
-    "/api/auth/refresh": {
+    "/api/v1/auth/refresh": {
       "post": {
         "tags": [
           "auth"
