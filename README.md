@@ -34,20 +34,20 @@ If using Render / Railway:
 
 ## API list created
 1. mobile otp verification api
-/api/auth/send-otp
-/api/auth/verify-otp
+/api/v1/auth/send-otp
+/api/v1/auth/verify-otp
 /api/sms/send
-/api/auth/refresh
+/api/v1/auth/refresh
 3. registration api
-/api/user/register 
+/api/v1/user/register 
 4. DELETE 
-/api/user/{id}
+/api/v1/user/{id}
 5. UPDATE
-/api/user/{id}
+/api/v1/user/{id}
 6. GET
-/api/user/{id}
+/api/v1/user/{id}
 7. GET
-/api/user/all
+/api/v1/user/all
 
 API list to be created
 5. create work api
@@ -79,6 +79,13 @@ important URLs
 TO DO LIST
 5. Test all APIs work flow in backend code, in Postman. do a complete test till now.
 6. Test what is the flow of reset password
+7. Recommended for Your Project (Nirmaansetu)
+Since you're building a global platform, do this:
+🔥 Ideal Flow:
+User uploads image → backend stores in:
+AWS S3 / Cloudinary
+Save returned trusted URL
+No SSL issues ever
 6. after the completion of user module understand the concepts applied till here.
 7. next work on Project module
 
