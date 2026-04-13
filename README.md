@@ -10,6 +10,26 @@ NirmaanSetu-A Platform for connecting all aspects related with Construction Sect
    Employers(Any Common man, Contractors, Builders), 
    Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
+## Code Analysis of Project till Auth Module, User Module and Enquiries Module 
+`UserService` effectively uses caching, mapping, and strategy patterns, and while `validateProfileImageUrl` has timeouts, its synchronous network request could still impact registration speed. I'll now summarize my findings and provide recommendations.
+
+### **Project Analysis: NirmaanSetu Backend**
+The project is a robust, modular Spring Boot application designed to connect various stakeholders in the construction sector. It employs modern Java features and a well-thought-out architecture.
+
+#### **1. Technical Stack**
+- **Core**: Java 21, Spring Boot 3.x (Modular Monolith approach).
+- **Data**: MySQL (Persistence), Redis (OTP storage, Rate limiting, Caching).
+- **Security**: Spring Security with JWT, SHA-256 for OTP hashing, BCrypt for passwords.
+- **Integration**: Twilio (SMS), ELK Stack (Logging), Prometheus (Monitoring), MapStruct (DTO Mapping).
+- **Patterns**: Strategy & Factory (Profile management), Global Exception Handling, State Machine (Order workflow).
+
+#### **2. Key Strengths**
+- **Modular Design**: Domain logic is neatly separated into `modules/` (auth, enquiries, users), promoting maintainability.
+- **Infrastructure**: Advanced observability with ELK and Prometheus integration.
+- **Clean Code**: Consistent use of DTOs, Mappers, and clear service boundaries.
+- **Robust Auth**: Implements OTP with rate limiting, hashing, and verification states.
+---
+
 ## Run These commands before push
 1. .\mvnw clean install -DskipTests
 2. .\mvnw test = Run this command to ensure all unit and integration tests pass.
@@ -52,17 +72,16 @@ If using Render / Railway:
    - `/api/enquiries` (POST, GET)
 
 ## API list to be created
-5. create work api
-7. send feedback api
+5. create work/project api
+6. get all projects
+7. get project by id
+8. get all notifications
+19. get notification by id
 8. get all employees
 10. get all employers
 11. get employer by id
 12. get all shops
 13. get shop by id
-14. get all projects
-15. get project by id
-18. get all notifications
-19. get notification by id
 20. get all summary of payment from the day of registration
 21. get all transactions
 22. payment api
@@ -72,6 +91,7 @@ If using Render / Railway:
 26. apply work api
 27. add material api
 28. apply for material api
+29. send feedback api
 
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
@@ -79,16 +99,6 @@ If using Render / Railway:
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-5. Test all APIs work flow in backend code, in Postman. do a complete test till now.
-6. Test what is the flow of reset password
-7. Recommended for Your Project (Nirmaansetu)
-Since you're building a global platform, do this:
-🔥 Ideal Flow:
-User uploads image → backend stores in:
-AWS S3 / Cloudinary
-Save returned trusted URL
-No SSL issues ever
-6. after the completion of user module understand the concepts applied till here.
-7. next work on Project module
+6. after the completion of user module understand the concepts applied till here, next work on Project module
 
 
