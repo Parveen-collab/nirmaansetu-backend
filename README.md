@@ -33,23 +33,25 @@ If using Render / Railway:
 
 
 ## API list created
-1. mobile otp verification api
-/api/v1/auth/send-otp
-/api/v1/auth/verify-otp
-/api/sms/send
-/api/v1/auth/refresh
-3. registration api
-/api/v1/user/register 
-4. DELETE 
-/api/v1/user/{id}
-5. UPDATE
-/api/v1/user/{id}
-6. GET
-/api/v1/user/{id}
-7. GET
-/api/v1/user/all
+1. **Auth APIs**
+   - `/api/v1/auth/login` (POST)
+   - `/api/v1/auth/send-otp` (POST)
+   - `/api/v1/auth/verify-otp` (POST)
+   - `/api/v1/auth/send-otp-forgot` (POST)
+   - `/api/v1/auth/reset-password` (POST)
+   - `/api/v1/auth/refresh` (POST)
+2. **SMS APIs**
+   - `/api/sms/send` (POST)
+3. **User APIs**
+   - `/api/v1/user/register` (POST - multipart)
+   - `/api/v1/user/{id}` (GET, PATCH - multipart, DELETE)
+   - `/api/v1/user/all` (GET)
+4. **Admin APIs**
+   - `/api/admin/create-admin` (POST - multipart)
+5. **Enquiry APIs**
+   - `/api/enquiries` (POST, GET)
 
-API list to be created
+## API list to be created
 5. create work api
 7. send feedback api
 8. get all employees
@@ -71,7 +73,7 @@ API list to be created
 27. add material api
 28. apply for material api
 
-important URLs
+## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 3. - Postman: Import `swagger-docs.json` from the root directory.
