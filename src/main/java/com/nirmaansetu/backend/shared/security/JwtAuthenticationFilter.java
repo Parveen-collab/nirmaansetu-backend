@@ -16,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+//This class is the core of your JWT authentication system 🔐
+//It acts like a security gatekeeper that checks every incoming request.
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

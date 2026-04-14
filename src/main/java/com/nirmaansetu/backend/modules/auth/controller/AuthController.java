@@ -1,4 +1,4 @@
-//Expose endpoints for requesting and verifying the OTP.
+//Expose endpoints for requesting and verifying the OTP, Login.
 
 package com.nirmaansetu.backend.modules.auth.controller;
 

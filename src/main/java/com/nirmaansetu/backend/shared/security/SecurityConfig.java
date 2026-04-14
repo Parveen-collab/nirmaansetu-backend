@@ -24,6 +24,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+//This is your main Spring Security configuration 🔐 — the place where you define:
+//Which API is public?
+//Which API is protected?
+//How JWT will act?
+//How Password will verify?
+//will Session be there or not?
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

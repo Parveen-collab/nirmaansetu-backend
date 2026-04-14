@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+//This class is your file upload service 📂 — it handles saving profile images to your server and returning a URL to access them.
 @Service
 public class FileService {
 

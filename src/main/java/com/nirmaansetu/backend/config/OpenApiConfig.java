@@ -8,6 +8,10 @@ import io.swagger.v3.oas.models.info.Contact;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+//This class is Swagger / OpenAPI configuration for the backend. It defines:
+//API documentation details (title, version, contact)
+//Security configuration (JWT authentication in Swagger UI)
 @Configuration
 @SecurityScheme(
         name = "bearerAuth",

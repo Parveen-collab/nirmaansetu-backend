@@ -10,6 +10,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
+//This class defines a State Machine for handling the lifecycle of an order in the backend.
+//In simple terms:
+//It controls how an order moves from one state to another based on events.
 @Configuration
 @EnableStateMachine
 public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderState, OrderEvent> {

@@ -11,6 +11,8 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+//This class is a utility service for generating a unique fingerprint (hash) of images/files 🔐.
+//It uses SHA-256 hashing to identify files — very useful for duplicate detection, integrity checks, and security.
 @Service
 public class PhotoHashService {
 

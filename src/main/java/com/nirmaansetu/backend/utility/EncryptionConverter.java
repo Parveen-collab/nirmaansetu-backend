@@ -8,6 +8,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
+//This class is a JPA Attribute Converter that automatically encrypts data before saving to the database and decrypts it when reading from the database.
+
 @Converter
 public class EncryptionConverter implements AttributeConverter<String, String> {
 
