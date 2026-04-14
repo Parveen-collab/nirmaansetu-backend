@@ -11,6 +11,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
+//Any entity that extends this class will get:
+//createdAt → when data is inserted
+//updatedAt → when data is updated
+//No need to write manual code
+//Fully automatic via Spring Data JPA
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @Getter

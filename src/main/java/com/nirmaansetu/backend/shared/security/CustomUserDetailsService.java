@@ -13,6 +13,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+//This class is part of your Spring Security authentication system.
+//It tells Spring how to load a user from the database during login.
     @Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
         return userRepository.findByPhoneNumber(phoneNumber)

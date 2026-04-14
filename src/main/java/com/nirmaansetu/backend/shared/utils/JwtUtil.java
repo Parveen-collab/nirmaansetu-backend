@@ -10,6 +10,10 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
+//This class is the core JWT utility 🔐 of the backend — it handles:
+//Token generation
+//Token parsing
+//Token validation
 @Component
 public class JwtUtil {
     @Value("${jwt.secret}")
