@@ -10,32 +10,31 @@ NirmaanSetu-A Platform for connecting all aspects related with Construction Sect
    Employers(Any Common man, Contractors, Builders), 
    Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
-## Code Analysis of Project till Auth Module, User Module and Enquiries Module 
-`UserService` effectively uses caching, mapping, and strategy patterns, and while `validateProfileImageUrl` has timeouts, its synchronous network request could still impact registration speed. I'll now summarize my findings and provide recommendations.
+## Analysis of Project till Auth, User and Enquiries Module 
 
-### **Project Analysis: NirmaanSetu Backend**
+## Project Analysis: NirmaanSetu Backend
 The project is a robust, modular Spring Boot application designed to connect various stakeholders in the construction sector. It employs modern Java features and a well-thought-out architecture.
 
-#### **1. Technical Stack**
-- **Core**: Java 21, Spring Boot 3.x (Modular Monolith approach).
-- **Data**: MySQL (Persistence), Redis (OTP storage, Rate limiting, Caching).
-- **Security**: Spring Security with JWT, SHA-256 for OTP hashing, BCrypt for passwords.
-- **Integration**: Twilio (SMS), ELK Stack (Logging), Prometheus (Monitoring), MapStruct (DTO Mapping).
-- **Patterns**: Strategy & Factory (Profile management), Global Exception Handling, State Machine (Order workflow).
+## 1. Technical Stack
+- Core: Java 21, Spring Boot 3.5.10 (Modular Monolith approach).
+- Data: MySQL (Persistence), Redis (OTP storage, Rate limiting, Caching).
+- Security: Spring Security with JWT, SHA-256 for OTP hashing, Bcrypt for passwords.
+- Integration: Twilio (SMS), ELK Stack (Logging), Prometheus (Monitoring), MapStruct (DTO Mapping).
+- Patterns: Strategy & Factory (Profile management), Global Exception Handling, State Machine (Order workflow).
 
-#### **2. Key Strengths**
-- **Modular Design**: Domain logic is neatly separated into `modules/` (auth, enquiries, users), promoting maintainability.
-- **Infrastructure**: Advanced observability with ELK and Prometheus integration.
-- **Clean Code**: Consistent use of DTOs, Mappers, and clear service boundaries.
-- **Robust Auth**: Implements OTP with rate limiting, hashing, and verification states.
+## 2. Key Strengths
+- Modular Design: Domain logic is neatly separated into `modules/` (auth, enquiries, users), promoting maintainability.
+- Infrastructure: Advanced observability with ELK and Prometheus integration.
+- Clean Code: Consistent use of DTOs, Mappers, and clear service boundaries.
+- Robust Auth: Implements OTP with rate limiting, hashing, and verification states.
 ---
 
-## Concepts used till Auth module, User module and Enquiries module
+## Concepts used till Auth, User and Enquiries module
 Based on the analysis of the codebase, here is a list of the key software engineering concepts and patterns implemented:
 
-### **1. Architectural Patterns**
-- **Modular Monolith**: The application is organized into distinct domain-specific modules (`auth`, `users`, `enquiries`) to maintain high cohesion and low coupling.
-- **Layered Architecture**: Standard separation into **Controller**, **Service**, **Repository**, and **DTO/Entity** layers.
+## 1. Architectural Patterns
+- Modular Monolith: The application is organized into distinct domain-specific modules (`auth`, `users`, `enquiries`) to maintain high cohesion and low coupling.
+- Layered Architecture: Standard separation into Controller, Service, Repository, and DTO/Entity layers.
 
 ### **2. Design Patterns**
 - **Strategy Pattern**: Used for handling different user profile types (Employee, Employer, Supplier) dynamically.
@@ -61,39 +60,6 @@ Based on the analysis of the codebase, here is a list of the key software engine
 - **Declarative Validation**: Uses **Bean Validation (JSR-303)** for request DTOs.
 - **Automated Tasks**: Uses `@Scheduled` for periodic data cleanup (e.g., `UserCleanupTask`).
 - **External Service Integration**: Integrated with **Twilio** for SMS notifications and **OpenAPI (Swagger)** for API documentation.
-
-## Points to be remembered for code consistency in other modules
-To ensure consistency across your new modules, you can use the following **Prompt Template**. It is designed to enforce the architectural patterns, naming conventions, and best practices already established in your `auth`, `users`, and `enquiries` modules.
-
-### **Zencoder/Coding Agent Prompt Template**
-
-> **Task**: Implement the `[Module Name, e.g., Projects]` module.
->
-> **Requirements & Consistency Rules**:
-> 1. **Module Structure**: Create the module under `com.nirmaansetu.backend.modules.[module_name]` with sub-packages: `controller`, `service`, `repository`, `entity`, `dto`, `mapper`, and `task` (if needed).
-> 2. **Base Entity**: All entities MUST extend `com.nirmaansetu.backend.shared.utils.BaseEntity` to support soft deletes and common metadata.
-> 3. **DTO Pattern**: Use separate `[Entity]RequestDto` and `[Entity]ResponseDto`. Apply `@Valid` and Bean Validation (e.g., `@NotBlank`, `@Size`) for all request inputs.
-> 4. **Mapping**: Use **MapStruct** for conversions between Entities and DTOs. Ensure the mapper interface is named `[Entity]Mapper`.
-> 5. **Service Layer**:
-     >    - Use `@Service` and `@Validated` annotations.
->    - Implement business logic here, keeping controllers thin.
->    - Use `@Transactional` for all write operations.
->    - Follow the existing pattern for exception handling (e.g., `throw new RuntimeException("Specific Error Message")` for the `GlobalExceptionHandler` to catch).
-> 6. **Design Patterns**:
-     >    - If the logic varies by user role, use the **Strategy Pattern** with a **Factory**, mimicking the `ProfileStrategy` implementation.
->    - Use **Constructor Injection** (or `@Autowired` on fields to match existing style) for dependencies.
-> 7. **Caching**: Apply `@Cacheable` and `@CacheEvict` using **Redis** for frequently accessed data (e.g., `getById`).
-> 8. **Documentation**: Add **OpenAPI/Swagger** annotations (`@Operation`, `@ApiResponse`) to all controller methods.
-> 9. **Scheduled Tasks**: If the module requires data cleanup (e.g., final deletion of soft-deleted records), create a `[Module]CleanupTask` using `@Scheduled`, similar to `UserCleanupTask`.
-> 10. **File/Shared Services**: Leverage existing shared services like `FileService` for uploads or `OtpService` for verification if applicable.
->
-> **Please analyze the existing `modules/users` and `modules/auth` packages first to ensure the code style and imports match exactly.**
-
-### **How to use this:**
-1. **Copy the text above.**
-2. **Replace `[Module Name]`** with `Projects`, `Employee`, etc.
-3. **Paste it** whenever you start a new feature or module.
-This template forces the AI to look at your `BaseEntity`, `MapStruct` mappers, and `Strategy` patterns before writing a single line of new code.
 
 ## flow of /api/v1/auth/send-otp
 The flow of the `/api/v1/auth/send-otp` endpoint is managed by the `AuthController`, `OtpRequestDto`, `RateLimitingException`,`PhoneNumberValidator`, `ValidPhoneNumber`, `application.properties`, `OtpService` and `SmsService`. Here is the step-by-step process:
@@ -163,11 +129,11 @@ If using Render / Railway:
    - `/api/admin/create-admin` (POST - multipart)
 5. **Enquiry APIs**
    - `/api/enquiries` (POST, GET)
+6. **Project APIs**
+   - `/api/v1/projects` (POST, GET)
+   - `/api/v1/projects/{id}` (GET, PATCH, DELETE)
 
 ## API list to be created
-5. create work/project api
-6. get all projects
-7. get project by id
 8. get all notifications
 19. get notification by id
 8. get all employees
@@ -192,9 +158,7 @@ If using Render / Railway:
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-7. learn the use of all files/folders in main folder (21 April)
-8. learn the readme file. (21 April)
-8. learn the codes of /api/v1/auth/send-otp, (21 April)
-7. next work on Project module (23 April)
+7. Project module - Basic CRUD and proximity notifications implemented.
+8. after completing projects module work on payment module
 
 
