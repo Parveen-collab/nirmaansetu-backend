@@ -61,34 +61,6 @@ Based on the analysis of the codebase, here is a list of the key software engine
 - **Automated Tasks**: Uses `@Scheduled` for periodic data cleanup (e.g., `UserCleanupTask`).
 - **External Service Integration**: Integrated with **Twilio** for SMS notifications and **OpenAPI (Swagger)** for API documentation.
 
-## flow of /api/v1/auth/send-otp
-The flow of the `/api/v1/auth/send-otp` endpoint is managed by the `AuthController`, `OtpRequestDto`, `RateLimitingException`,`PhoneNumberValidator`, `ValidPhoneNumber`, `application.properties`, `OtpService` and `SmsService`. Here is the step-by-step process:
-
-### 1. Request Handling
-The `AuthController` receives a POST request at `/api/v1/auth/send-otp` with a JSON body containing the `phoneNumber`.
-
-### 2. Rate Limiting Check
-The `OtpService` first checks Redis for the key `otp_limit:<phoneNumber>` to prevent abuse.
-- If the number of attempts exceeds 5, it throws a `RateLimitException`.
-- The rate limit is reset after 10 minutes.
-
-### 3. OTP Generation
-A random 4-digit OTP (between 1000 and 9999) is generated.
-
-### 4. Storage in Redis
-To verify the OTP later, the service:
-- Hashes the OTP using SHA-256 for security.
-- Stores the hashed OTP in Redis with the key `otp:<phoneNumber>`.
-- The OTP is set to expire in 5 minutes.
-
-### 5. SMS Delivery
-The `OtpService` calls the `SmsService` to send the plain-text OTP to the user's phone number.
-- Message format: `"Your NirmaanSetu OTP is: {otp}. Valid for 5 minutes."`
-
-### 6. Response
-If all steps succeed, the API returns a `200 OK` status with the message `"OTP sent successfully"`.
-
-
 ## Run These commands before push
 1. .\mvnw clean install -DskipTests
 2. .\mvnw test = Run this command to ensure all unit and integration tests pass.
@@ -133,32 +105,12 @@ If using Render / Railway:
    - `/api/v1/projects` (POST, GET)
    - `/api/v1/projects/{id}` (GET, PATCH, DELETE)
 
-## API list to be created
-8. get all notifications
-19. get notification by id
-8. get all employees
-10. get all employers
-11. get employer by id
-12. get all shops
-13. get shop by id
-20. get all summary of payment from the day of registration
-21. get all transactions
-22. payment api
-23. get all orders
-24. get order by id
-25. Hire api
-26. apply work api
-27. add material api
-28. apply for material api
-29. send feedback api
-
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-7. Project module - Basic CRUD and proximity notifications implemented.
-8. after completing projects module work on payment module
+8. test the all created APIs and fix the issues
 
 
