@@ -2,726 +2,503 @@
   "openapi": "3.0.1",
   "info": {
     "title": "NirmaanSetu API",
-    "description": "Backend API for NirmaanSetu - A Platform for connecting all aspects of Construction Sector.",
-    "contact": {
-      "name": "NirmaanSetu Team",
-      "email": "support@nirmaansetu.com"
-    },
-    "version": "v0.0.1"
+    "description": "Complete Backend API for NirmaanSetu Platform",
+    "version": "v1.0.0"
   },
   "servers": [
     {
-      "url": "http://localhost:8080",
-      "description": "Local server"
+      "url": "http://localhost:8080"
     }
   ],
   "paths": {
-    "/api/v1/auth/send-otp": {
+
+    "/api/v1/auth/login": {
       "post": {
-        "tags": [
-          "auth"
-        ],
-        "operationId": "send-otp",
+        "tags": ["Auth APIs"],
+        "summary": "Login user",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OtpRequestDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/LoginRequestDto" }
             }
           }
-        }
-      }
-    },
-    "/api/v1/auth/verify-otp": {
-      "post": {
-        "tags": [
-          "auth"
-        ],
-        "operationId": "verify-otp",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerifyOtpRequestDto"
-              }
-            }
-          },
-          "required": true
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Login success",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/AuthResponseDto" }
               }
             }
           }
         }
       }
     },
+
+    "/api/v1/auth/send-otp": {
+      "post": {
+        "tags": ["Auth APIs"],
+        "summary": "Send OTP",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OtpRequestDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "OTP sent" } }
+      }
+    },
+
+    "/api/v1/auth/verify-otp": {
+      "post": {
+        "tags": ["Auth APIs"],
+        "summary": "Verify OTP",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VerifyOtpRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verified",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthResponseDto" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/auth/send-otp-forgot": {
+      "post": {
+        "tags": ["Auth APIs"],
+        "summary": "Send OTP for password reset",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OtpRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP sent" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "tags": ["Auth APIs"],
+        "summary": "Reset password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ResetPasswordRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Password reset successful" }
+        }
+      }
+    },
+
     "/api/v1/auth/refresh": {
       "post": {
-        "tags": [
-          "auth"
-        ],
-        "operationId": "refresh-token",
+        "tags": ["Auth APIs"],
+        "summary": "Refresh token",
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
             "name": "refreshToken",
             "in": "query",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Token refreshed",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid refresh token"
-          }
-        }
-      }
-    },
-    "/api/sms/send": {
-      "post": {
-        "tags": [
-          "sms"
-        ],
-        "operationId": "send-sms",
-        "parameters": [
-          {
-            "name": "phone",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
+                "schema": { "$ref": "#/components/schemas/AuthResponseDto" }
               }
             }
           }
         }
       }
     },
+
     "/api/v1/user/register": {
       "post": {
-        "tags": [
-          "user"
-        ],
-        "operationId": "register",
+        "tags": ["User APIs"],
+        "summary": "Register user",
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "user": {
-                    "$ref": "#/components/schemas/UserRequestDto"
-                  },
-                  "photo": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "user": { "$ref": "#/components/schemas/UserRequestDto" },
+                  "photo": { "type": "string", "format": "binary" }
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "User created",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/UserResponseDto" }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
+
     "/api/v1/user/all": {
       "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get all users except super admin",
-        "operationId": "getAllUsers",
+        "tags": ["User APIs"],
+        "summary": "Get all users",
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
-          {
-            "name": "role",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/Role"
-            }
-          }
+          { "name": "role", "in": "query", "schema": { "$ref": "#/components/schemas/Role" } },
+          { "name": "keyword", "in": "query", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "List",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserResponseDto"
-                  }
+                  "items": { "$ref": "#/components/schemas/UserResponseDto" }
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
+
     "/api/v1/user/{id}": {
       "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get user details by ID",
-        "operationId": "getUser",
+        "tags": ["User APIs"],
+        "summary": "Get user",
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of the user to get details of",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
         ],
         "responses": {
           "200": {
-            "description": "User details retrieved successfully",
+            "description": "Success",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
+                "schema": { "$ref": "#/components/schemas/UserResponseDto" }
               }
             }
-          },
-          "404": {
-            "description": "User not found"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "patch": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Update a user by ID",
-        "operationId": "updateUser",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of the user to update",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+        "tags": ["User APIs"],
+        "summary": "Update user",
+        "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "user": {
-                    "$ref": "#/components/schemas/UserRequestDto"
-                  },
-                  "photo": {
-                    "type": "string",
-                    "format": "binary"
-                  }
+                  "user": { "$ref": "#/components/schemas/UserRequestDto" },
+                  "photo": { "type": "string", "format": "binary" }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "User updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponseDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User not found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+          "200": { "description": "Updated" }
+        }
       },
       "delete": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Delete a user by ID",
-        "operationId": "deleteUser",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of the user to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+        "tags": ["User APIs"],
+        "summary": "Delete user",
+        "security": [{ "bearerAuth": [] }],
         "responses": {
-          "200": {
-            "description": "User deleted successfully"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+          "204": { "description": "Deleted" }
+        }
       }
     },
-    "/api/v1/projects": {
+
+    "/api/v1/employees": {
       "get": {
-        "tags": [
-          "projects"
-        ],
-        "summary": "Get all projects",
-        "description": "Returns a list of all active construction projects.",
-        "operationId": "getAllProjects",
+        "tags": ["Employee APIs"],
+        "summary": "Get all employees",
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProjectResponseDto"
-                  }
+                  "items": { "$ref": "#/components/schemas/EmployeeResponseDto" }
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "projects"
-        ],
-        "summary": "Create a new project",
-        "description": "Creates a new construction project and triggers proximity notifications to nearby users.",
-        "operationId": "createProject",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProjectRequestDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
-    "/api/v1/projects/{id}": {
+
+    "/api/v1/employers": {
       "get": {
-        "tags": [
-          "projects"
-        ],
-        "summary": "Get project by ID",
-        "description": "Returns details of a specific project by its unique identifier.",
-        "operationId": "getProjectById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+        "tags": ["Employer APIs"],
+        "summary": "Get all employers",
+        "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectResponseDto"
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/EmployerResponseDto" }
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "projects"
-        ],
-        "summary": "Delete project by ID",
-        "description": "Allows the creator to soft delete a project. Only the creator can delete the project.",
-        "operationId": "deleteProject",
+        }
+      }
+    },
+
+    "/api/v1/employers/{id}": {
+      "get": {
+        "tags": ["Employer APIs"],
+        "summary": "Get employer by ID",
+        "security": [{ "bearerAuth": [] }],
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "patch": {
-        "tags": [
-          "projects"
-        ],
-        "summary": "Update project by ID",
-        "description": "Allows the creator to update project details. Only the creator can modify the project.",
-        "operationId": "updateProject",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EmployerResponseDto" }
+              }
             }
           }
-        ],
+        }
+      }
+    },
+
+    "/api/v1/enquiries": {
+      "post": {
+        "tags": ["Enquiry APIs"],
+        "summary": "Send enquiry",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProjectRequestDto"
-              }
+              "schema": { "$ref": "#/components/schemas/EnquiryRequestDto" }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EnquiryResponseDto" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Enquiry APIs"],
+        "summary": "Get enquiries",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectResponseDto"
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/EnquiryResponseDto" }
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
+        }
+      }
+    },
+
+    "/api/v1/notifications": {
+      "get": {
+        "tags": ["Notification APIs"],
+        "summary": "Get notifications",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/NotificationResponseDto" }
+                }
+              }
+            }
           }
-        ]
+        }
+      }
+    },
+
+    "/api/v1/orders": {
+      "get": {
+        "tags": ["Order APIs"],
+        "summary": "Get all orders",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/OrderResponseDto" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/orders/{id}": {
+      "get": {
+        "tags": ["Order APIs"],
+        "summary": "Get order by ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrderResponseDto" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/payments": {
+      "post": {
+        "tags": ["Payment APIs"],
+        "summary": "Process payment",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PaymentDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Success" } }
+      },
+      "get": {
+        "tags": ["Payment APIs"],
+        "summary": "Get payments",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+
+    "/api/v1/projects": {
+      "get": {
+        "tags": ["Project APIs"],
+        "summary": "Get projects",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "post": {
+        "tags": ["Project APIs"],
+        "summary": "Create project",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Created" } }
+      }
+    },
+
+    "/api/v1/shops": {
+      "get": {
+        "tags": ["Shop APIs"],
+        "summary": "Get shops",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "post": {
+        "tags": ["Shop APIs"],
+        "summary": "Create shop",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Created" } }
+      }
+    },
+
+    "/api/v1/shops/{shopId}/materials": {
+      "post": {
+        "tags": ["Shop APIs"],
+        "summary": "Add material",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Added" } }
       }
     }
+
   },
+
   "components": {
     "schemas": {
-      "OtpRequestDto": {
-        "required": [
-          "phoneNumber"
-        ],
-        "type": "object",
-        "properties": {
-          "phoneNumber": {
-            "type": "string"
-          }
-        }
-      },
-      "VerifyOtpRequestDto": {
-        "required": [
-          "otp",
-          "phoneNumber"
-        ],
-        "type": "object",
-        "properties": {
-          "phoneNumber": {
-            "type": "string"
-          },
-          "otp": {
-            "pattern": "^[0-9]{4}$",
-            "type": "string"
-          }
-        }
-      },
-      "UserRequestDto": {
-        "type": "object",
-        "properties": {
-          "phoneNumber": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "aadhaarNumber": {
-            "type": "string"
-          },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          }
-        }
-      },
-      "UserResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "phoneNumber": {
-            "type": "string"
-          },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          }
-        }
-      },
-      "AuthResponseDto": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string"
-          },
-          "refreshToken": {
-            "type": "string"
-          }
-        }
-      },
-      "ProjectRequestDto": {
-        "required": [
-          "description",
-          "latitude",
-          "locationName",
-          "longitude",
-          "roles",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "locationName": {
-            "type": "string"
-          },
-          "latitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProjectRoleDto"
-            }
-          }
-        }
-      },
-      "ProjectRoleDto": {
-        "required": [
-          "roleName",
-          "totalRequired"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "roleName": {
-            "type": "string"
-          },
-          "totalRequired": {
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "occupiedCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "ProjectResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "locationName": {
-            "type": "string"
-          },
-          "latitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "createdBy": {
-            "$ref": "#/components/schemas/UserResponseDto"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProjectRoleDto"
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
+      "LoginRequestDto": { "type": "object" },
+      "ResetPasswordRequestDto": { "type": "object" },
+      "OtpRequestDto": { "type": "object" },
+      "VerifyOtpRequestDto": { "type": "object" },
+      "AuthResponseDto": { "type": "object" },
+      "UserRequestDto": { "type": "object" },
+      "UserResponseDto": { "type": "object" },
+      "EmployeeResponseDto": { "type": "object" },
+      "EmployerResponseDto": { "type": "object" },
+      "EnquiryRequestDto": { "type": "object" },
+      "EnquiryResponseDto": { "type": "object" },
+      "NotificationResponseDto": { "type": "object" },
+      "OrderResponseDto": { "type": "object" },
+      "PaymentDto": { "type": "object" },
+      "ProjectRequestDto": { "type": "object" },
+      "ProjectResponseDto": { "type": "object" },
+      "ShopRequestDto": { "type": "object" },
+      "ShopResponseDto": { "type": "object" },
+      "MaterialRequestDto": { "type": "object" },
+      "MaterialResponseDto": { "type": "object" },
       "Role": {
         "type": "string",
-        "enum": [
-          "EMPLOYEE",
-          "EMPLOYER",
-          "SUPPLIER",
-          "ADMIN",
-          "SUPER_ADMIN"
-        ]
+        "enum": ["EMPLOYEE", "EMPLOYER", "SUPPLIER", "ADMIN", "SUPER_ADMIN"]
       }
     },
     "securitySchemes": {
