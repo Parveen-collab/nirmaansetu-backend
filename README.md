@@ -104,6 +104,14 @@ If using Render / Railway:
 6. **Project APIs**
    - `/api/v1/projects` (POST, GET)
    - `/api/v1/projects/{id}` (GET, PATCH, DELETE)
+7. **Notification APIs**
+   - `/api/v1/notifications` (GET)
+   - `/api/v1/notifications/{id}` (GET)
+8. **Employee APIs**
+   - `/api/v1/employees` (GET)
+9. **Employer APIs**
+   - `/api/v1/employers` (GET)
+   - `/api/v1/employers/{id}` (GET)
 
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
