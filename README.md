@@ -112,6 +112,10 @@ If using Render / Railway:
 9. **Employer APIs**
    - `/api/v1/employers` (GET)
    - `/api/v1/employers/{id}` (GET)
+10. **Shop APIs**
+    - `/api/v1/shops` (POST, GET)
+    - `/api/v1/shops/{id}` (GET)
+    - `/api/v1/shops/{shopId}/materials` (POST)
 
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
@@ -120,5 +124,21 @@ If using Render / Railway:
 
 TO DO LIST
 8. test the all created APIs and fix the issues
+### **1. Critical Runtime/Test Errors**
+- **H2 Syntax Error in Tests**: The test suite encountered an `org.h2.jdbc.JdbcSQLSyntaxErrorException` because it tried to drop a foreign key on the `SUPPLIER_PROFILES` table before the table was created. This indicates an issue with the JPA schema generation order or Hibernate's interaction with the H2 database in the `test` profile.
+
+### **2. Compiler Warnings (Potential Logic Errors)**
+- **Lombok `@Builder` Initialization Issues**:
+   - **`Notification.java`**: The field `isRead` is initialized to `false`, but Lombok's `@Builder` will ignore this default value. You should use `@Builder.Default`.
+   - **`ProjectApplication.java`**: The field `status` is initialized to `ApplicationStatus.PENDING`, which is also ignored by `@Builder`.
+
+### **3. Deprecation and Configuration Warnings**
+- **Spring Security Deprecations**:`AntPathRequestMatcher.antMatcher()` is flagged as deprecated. The modern approach is to use `requestMatchers("/path")` directly within the `authorizeHttpRequests` block.
+- **Hibernate `@Where` Deprecation**: the `@Where` annotation used for soft deletes is deprecated in Hibernate 6.3+ (standard in Spring Boot 3.x). It should be replaced with `@SoftDelete`.
+- **Global AuthenticationManager Warning**: Spring Security warns that configuring a `Global AuthenticationManager` with an `AuthenticationProvider` bean prevents it from automatically using `UserDetailsService` beans.
+
+### **4. Infrastructure Warnings**
+- **Spring Data Redis Store Assignment**: Multiple warnings indicate that Spring Data Redis cannot safely identify store assignments for several JPA repositories (e.g., `ProjectApplicationRepository`, `EnquiryRepository`). This happens because both JPA and Redis modules are on the classpath, and the repositories aren't explicitly restricted to JPA.
+- **Open-In-View Warning**: `spring.jpa.open-in-view` is enabled by default, which can lead to performance issues and "n+1" query problems if not managed carefully.
 
 
