@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/enquiries")
+@RequestMapping("/api/v1/enquiries")
 @RequiredArgsConstructor
 @Tag(name = "Enquiry APIs", description = "Operations related to enquiries")
 public class EnquiryController {

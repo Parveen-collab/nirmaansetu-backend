@@ -14,21 +14,25 @@ public class SmsService {
 
     @Async
     public void sendSms(String toPhoneNumber, String messageBody) {
+        try {
+            // remove spaces
+            toPhoneNumber = toPhoneNumber.trim().replaceAll(" ", "");
 
-        // remove spaces
-        toPhoneNumber = toPhoneNumber.trim().replaceAll(" ", "");
+            // add + if missing
+            if (!toPhoneNumber.startsWith("+")) {
+                toPhoneNumber = "+" + toPhoneNumber;
+            }
 
-        // add + if missing
-        if (!toPhoneNumber.startsWith("+")) {
-            toPhoneNumber = "+" + toPhoneNumber;
+            Message message = Message.creator(
+                    new PhoneNumber(toPhoneNumber),
+                    new PhoneNumber(fromPhoneNumber),
+                    messageBody
+            ).create();
+
+            System.out.println("SMS sent: " + message.getSid());
+        } catch (Exception e) {
+            System.err.println("Failed to send SMS to " + toPhoneNumber + ": " + e.getMessage());
+            e.printStackTrace();
         }
-
-        Message message = Message.creator(
-                new PhoneNumber(toPhoneNumber),
-                new PhoneNumber(fromPhoneNumber),
-                messageBody
-        ).create();
-
-        System.out.println("SMS sent: " + message.getSid());
     }
 }
