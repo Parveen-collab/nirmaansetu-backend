@@ -73,6 +73,8 @@ public class UserRequestDto implements Serializable {
         @NotBlank(message = "Area/Village is required")
         private String areaVillage;
         private String building;
+        private Double latitude;
+        private Double longitude;
     }
 
     @Data
@@ -98,6 +100,8 @@ public class UserRequestDto implements Serializable {
         @NotBlank(message = "Area/Village is required")
         private String areaVillage;
         private String building;
+        private Double latitude;
+        private Double longitude;
     }
 
     @Data
@@ -116,6 +120,8 @@ public class UserRequestDto implements Serializable {
         @NotBlank(message = "Area/Village is required")
         private String areaVillage;
         private String building;
+        private Double latitude;
+        private Double longitude;
     }
 }
 

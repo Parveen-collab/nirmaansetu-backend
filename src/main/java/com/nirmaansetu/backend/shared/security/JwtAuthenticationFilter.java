@@ -1,6 +1,7 @@
 package com.nirmaansetu.backend.shared.security;
 
 import com.nirmaansetu.backend.shared.utils.JwtUtil;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +42,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        phoneNumber = jwtUtil.extractPhoneNumber(jwt);
+        try {
+            phoneNumber = jwtUtil.extractPhoneNumber(jwt);
+        } catch (JwtException | IllegalArgumentException e) {
+            logger.warn("Invalid JWT token: " + e.getMessage());
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {

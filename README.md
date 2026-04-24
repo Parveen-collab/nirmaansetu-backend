@@ -124,6 +124,14 @@ If using Render / Railway:
 
 TO DO LIST
 8. test the all created APIs and fix the issues
+9. analyse the logic of shop and supplier
+10. shop can be created by only user with supplier role
+11. notification should get sent after project creation
+12. how to create Admin to get all enquiries
+13. how to create super admin to manage the main dashboard
+14. analyse the working of notification API
+15. what is the APi end point to create orders
+16. understand the working of payment API
 ### **1. Critical Runtime/Test Errors**
 - **H2 Syntax Error in Tests**: The test suite encountered an `org.h2.jdbc.JdbcSQLSyntaxErrorException` because it tried to drop a foreign key on the `SUPPLIER_PROFILES` table before the table was created. This indicates an issue with the JPA schema generation order or Hibernate's interaction with the H2 database in the `test` profile.
 

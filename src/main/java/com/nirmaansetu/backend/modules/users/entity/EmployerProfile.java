@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -47,10 +48,15 @@ public class EmployerProfile extends BaseEntity {
 
     private String building;
 
+    private Double latitude;
+    private Double longitude;
+
     private String photoUrl;
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private User user;
 
     private boolean deleted = false;
