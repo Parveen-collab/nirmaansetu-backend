@@ -125,7 +125,7 @@ If using Render / Railway:
 TO DO LIST
 8. test the all created APIs and fix the issues
 9. analyse the logic of shop and supplier
-10. shop can be created by only user with supplier role
+10. shop can be created by user only with supplier role
 11. notification should get sent after project creation
 12. how to create Admin to get all enquiries
 13. how to create super admin to manage the main dashboard

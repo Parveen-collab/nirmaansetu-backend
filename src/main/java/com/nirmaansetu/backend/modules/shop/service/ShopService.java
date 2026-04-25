@@ -9,6 +9,7 @@ import com.nirmaansetu.backend.modules.shop.entity.Shop;
 import com.nirmaansetu.backend.modules.shop.mapper.ShopMapper;
 import com.nirmaansetu.backend.modules.shop.repository.MaterialRepository;
 import com.nirmaansetu.backend.modules.shop.repository.ShopRepository;
+import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.modules.users.entity.User;
 import com.nirmaansetu.backend.modules.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,10 @@ public class ShopService {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
+        if (currentUser.getRole() != Role.SUPPLIER) {
+            throw new RuntimeException("Unauthorized: Only users with the SUPPLIER role can create a shop");
+        }
 
         Shop shop = shopMapper.toShop(dto);
         shop.setOwner(currentUser);
