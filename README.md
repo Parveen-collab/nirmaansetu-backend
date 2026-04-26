@@ -13,7 +13,7 @@ NirmaanSetu-A Platform for connecting all aspects related with Construction Sect
 In this project, a default Super Admin is automatically created when the application starts if one doesn't already exist.
 1. Default Super Admin Credentials
    The DataInitializer.java class seeds the first Super Admin with the following credentials:
-Phone Number: +910000000000
+Phone Number: +919999999999
 Password: Admin@123
 Aadhaar Number: 000000000000
 

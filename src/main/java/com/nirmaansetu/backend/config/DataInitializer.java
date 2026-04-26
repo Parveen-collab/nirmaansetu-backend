@@ -21,14 +21,14 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (userRepository.findByRole(Role.SUPER_ADMIN).isEmpty()) {
             User superAdmin = new User();
-            superAdmin.setPhoneNumber("+910000000000");
+            superAdmin.setPhoneNumber("+919999999999");
             superAdmin.setName("Super Admin");
             superAdmin.setAadhaarNumber("000000000000");
             superAdmin.setRole(Role.SUPER_ADMIN);
             superAdmin.setPassword(passwordEncoder.encode("Admin@123"));
             
             userRepository.save(superAdmin);
-            log.info("Default SUPER_ADMIN user created with phone: +910000000000 and password: Admin@123");
+            log.info("Default SUPER_ADMIN user created with phone: +919999999999 and password: Admin@123");
         }
     }
 }
