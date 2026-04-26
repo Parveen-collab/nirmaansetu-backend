@@ -10,6 +10,20 @@ NirmaanSetu-A Platform for connecting all aspects related with Construction Sect
    Employers(Any Common man, Contractors, Builders), 
    Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
+In this project, a default Super Admin is automatically created when the application starts if one doesn't already exist.
+1. Default Super Admin Credentials
+   The DataInitializer.java class seeds the first Super Admin with the following credentials:
+Phone Number: +919999999999
+Password: Admin@123
+Aadhaar Number: 000000000000
+
+2. Creating Additional Super Admins
+   Once logged in as a Super Admin, you can create more by calling the following endpoint:
+Endpoint: POST /api/v1/admin/create-admin
+Authorization: Requires a Bearer token from an existing SUPER_ADMIN.
+Payload: A multipart request containing a UserRequestDto (where role is set to SUPER_ADMIN) and an optional photo.
+
+
 ## Analysis of Project till Auth, User and Enquiries Module 
 
 ## Project Analysis: NirmaanSetu Backend
@@ -125,10 +139,7 @@ If using Render / Railway:
 TO DO LIST
 8. test the all created APIs and fix the issues
 9. analyse the logic of shop and supplier
-10. shop can be created by user only with supplier role
 11. notification should get sent after project creation
-12. how to create Admin to get all enquiries
-13. how to create super admin to manage the main dashboard
 14. analyse the working of notification API
 15. what is the APi end point to create orders
 16. understand the working of payment API
