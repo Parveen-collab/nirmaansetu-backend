@@ -1,6 +1,7 @@
 package com.nirmaansetu.backend.modules.projects.service;
 
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
+import com.nirmaansetu.backend.modules.notifications.service.NotificationService;
 import com.nirmaansetu.backend.modules.projects.dto.ProjectRequestDto;
 import com.nirmaansetu.backend.modules.projects.dto.ProjectResponseDto;
 import com.nirmaansetu.backend.modules.projects.entity.Project;
@@ -31,6 +32,9 @@ public class ProjectService {
     @Autowired
     private SmsService smsService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public ProjectResponseDto createProject(ProjectRequestDto dto) {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -58,12 +62,14 @@ public class ProjectService {
         List<User> nearbyUsers = projectRepository.findUsersWithinRadius(
                 project.getLatitude(), project.getLongitude(), 5000.0);
 
+        String title = "New Project Nearby";
         String message = String.format("New construction project near you: %s at %s. Apply now on NirmaanSetu!",
                 project.getTitle(), project.getLocationName());
 
         nearbyUsers.forEach(user -> {
             if (!user.getId().equals(project.getCreatedBy().getId())) {
                 smsService.sendSms(user.getPhoneNumber(), message);
+                notificationService.createNotification(user, title, message);
             }
         });
     }

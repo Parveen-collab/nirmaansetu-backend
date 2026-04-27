@@ -45,6 +45,17 @@ public class NotificationService {
         return toDto(notification);
     }
 
+    @Transactional
+    public void createNotification(User user, String title, String message) {
+        Notification notification = Notification.builder()
+                .user(user)
+                .title(title)
+                .message(message)
+                .isRead(false)
+                .build();
+        notificationRepository.save(notification);
+    }
+
     private User getCurrentUser() {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByPhoneNumber(phoneNumber)

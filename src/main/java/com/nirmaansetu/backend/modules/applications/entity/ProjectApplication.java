@@ -28,10 +28,14 @@ public class ProjectApplication extends BaseEntity {
     @JoinColumn(name = "project_role_id", nullable = false)
     private ProjectRole projectRole;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApplicationStatus status = ApplicationStatus.PENDING;
 
     @Column(columnDefinition = "TEXT")
     private String coverLetter;
+
+    @Builder.Default
+    private boolean isDirectOffer = false;
 }
