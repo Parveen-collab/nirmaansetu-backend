@@ -97,7 +97,7 @@ public class ProjectApplicationService {
         
         String title = "New Job Application";
         String message = String.format("User %s has applied for the role of %s in your project '%s'.",
-                application.getUser().getFullName(),
+                application.getUser().getName(),
                 application.getProjectRole().getRoleName(),
                 project.getTitle());
 
