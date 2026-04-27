@@ -34,4 +34,6 @@ public class ProjectApplication extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String coverLetter;
+
+    private boolean isDirectOffer = false;
 }
