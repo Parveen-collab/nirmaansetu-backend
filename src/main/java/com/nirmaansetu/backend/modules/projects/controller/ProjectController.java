@@ -2,6 +2,7 @@ package com.nirmaansetu.backend.modules.projects.controller;
 
 import com.nirmaansetu.backend.modules.projects.dto.ProjectRequestDto;
 import com.nirmaansetu.backend.modules.projects.dto.ProjectResponseDto;
+import com.nirmaansetu.backend.modules.projects.entity.ProjectStatus;
 import com.nirmaansetu.backend.modules.projects.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -46,6 +47,17 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDto> getProjectById(@PathVariable Long id) {
         return ResponseEntity.ok(projectService.getProjectById(id));
+    }
+
+    @Operation(
+            summary = "Update project status",
+            description = "Allows the creator to update the project's current status (milestone). Notifications will be sent to applicants.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ProjectResponseDto> updateProjectStatus(
+            @PathVariable Long id,
+            @RequestParam ProjectStatus status) {
+        return ResponseEntity.ok(projectService.updateProjectStatus(id, status));
     }
 
     @Operation(

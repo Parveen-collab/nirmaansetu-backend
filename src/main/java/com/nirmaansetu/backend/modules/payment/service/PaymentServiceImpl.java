@@ -1,5 +1,6 @@
 package com.nirmaansetu.backend.modules.payment.service;
 
+import com.nirmaansetu.backend.modules.notifications.service.NotificationService;
 import com.nirmaansetu.backend.modules.payment.dto.PaymentDto;
 import com.nirmaansetu.backend.modules.payment.dto.PaymentSummaryDto;
 import com.nirmaansetu.backend.modules.payment.entity.Payment;
@@ -24,6 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
     private final PaymentMapper paymentMapper;
+    private final NotificationService notificationService;
 
     @Override
     public PaymentDto processPayment(PaymentDto paymentDto) {
@@ -42,6 +44,16 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         Payment savedPayment = paymentRepository.save(payment);
+
+        if (savedPayment.getStatus() == PaymentStatus.SUCCESS) {
+            notificationService.createNotification(
+                    user,
+                    "Payment Successful",
+                    String.format("Your payment of ₹%s for %s was successful. Transaction ID: %s",
+                            savedPayment.getAmount(), savedPayment.getDescription(), savedPayment.getTransactionId())
+            );
+        }
+
         return paymentMapper.toDto(savedPayment);
     }
 

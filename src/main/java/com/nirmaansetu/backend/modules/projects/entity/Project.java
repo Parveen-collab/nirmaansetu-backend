@@ -55,6 +55,10 @@ public class Project extends BaseEntity {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectRole> roles = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProjectStatus status = ProjectStatus.PLANNING;
+
     private boolean deleted = false;
 
     private LocalDateTime deletedAt;

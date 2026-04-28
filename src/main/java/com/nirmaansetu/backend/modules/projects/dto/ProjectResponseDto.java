@@ -1,5 +1,6 @@
 package com.nirmaansetu.backend.modules.projects.dto;
 
+import com.nirmaansetu.backend.modules.projects.entity.ProjectStatus;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,7 @@ public class ProjectResponseDto {
     private String locationName;
     private Double latitude;
     private Double longitude;
+    private ProjectStatus status;
     private UserResponseDto createdBy;
     private List<ProjectRequestDto.ProjectRoleDto> roles;
     private Instant createdAt;
