@@ -50,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
                     user,
                     "Payment Successful",
                     String.format("Your payment of ₹%s for %s was successful. Transaction ID: %s",
-                            savedPayment.getAmount(), savedPayment.getPurpose(), savedPayment.getTransactionId())
+                            savedPayment.getAmount(), savedPayment.getDescription(), savedPayment.getTransactionId())
             );
         }
 

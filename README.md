@@ -137,7 +137,6 @@ If using Render / Railway:
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-8. test the all created APIs and fix the issues
 9. analyse the logic of shop and supplier
 15. what is the APi end point to create orders
 16. understand the working of payment API
@@ -157,4 +156,4 @@ TO DO LIST
 ### **4. Infrastructure Warnings**
 - **Spring Data Redis Store Assignment**: Multiple warnings indicate that Spring Data Redis cannot safely identify store assignments for several JPA repositories (e.g., `ProjectApplicationRepository`, `EnquiryRepository`). This happens because both JPA and Redis modules are on the classpath, and the repositories aren't explicitly restricted to JPA.
 - **Open-In-View Warning**: `spring.jpa.open-in-view` is enabled by default, which can lead to performance issues and "n+1" query problems if not managed carefully.
-
+8. test the all created APIs and fix the issues
