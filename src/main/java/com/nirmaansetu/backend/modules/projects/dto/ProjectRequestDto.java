@@ -1,5 +1,6 @@
 package com.nirmaansetu.backend.modules.projects.dto;
 
+import com.nirmaansetu.backend.modules.projects.entity.ProjectStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -31,6 +32,8 @@ public class ProjectRequestDto {
 
     @NotNull(message = "Longitude is required")
     private Double longitude;
+
+    private ProjectStatus status;
 
     @Valid
     @NotNull(message = "At least one role is required")

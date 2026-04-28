@@ -1,10 +1,12 @@
 package com.nirmaansetu.backend.modules.projects.service;
 
+import com.nirmaansetu.backend.modules.applications.repository.ProjectApplicationRepository;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.modules.notifications.service.NotificationService;
 import com.nirmaansetu.backend.modules.projects.dto.ProjectRequestDto;
 import com.nirmaansetu.backend.modules.projects.dto.ProjectResponseDto;
 import com.nirmaansetu.backend.modules.projects.entity.Project;
+import com.nirmaansetu.backend.modules.projects.entity.ProjectStatus;
 import com.nirmaansetu.backend.modules.projects.mapper.ProjectMapper;
 import com.nirmaansetu.backend.modules.projects.repository.ProjectRepository;
 import com.nirmaansetu.backend.modules.users.entity.User;
@@ -35,6 +37,9 @@ public class ProjectService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private ProjectApplicationRepository applicationRepository;
+
     @Transactional
     public ProjectResponseDto createProject(ProjectRequestDto dto) {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -48,6 +53,10 @@ public class ProjectService {
         // Ensure bidirectional relationship for roles
         if (project.getRoles() != null) {
             project.getRoles().forEach(role -> role.setProject(project));
+        }
+
+        if (dto.getStatus() != null) {
+            project.setStatus(dto.getStatus());
         }
 
         Project savedProject = projectRepository.save(project);
@@ -74,6 +83,39 @@ public class ProjectService {
         });
     }
 
+    @Transactional
+    public ProjectResponseDto updateProjectStatus(Long id, ProjectStatus status) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        validateOwnership(project);
+
+        ProjectStatus oldStatus = project.getStatus();
+        if (oldStatus == status) {
+            return projectMapper.toProjectResponseDto(project);
+        }
+
+        project.setStatus(status);
+        Project savedProject = projectRepository.save(project);
+
+        // Notify applicants about milestone/status change
+        notifyApplicantsOfStatusChange(savedProject, oldStatus);
+
+        return projectMapper.toProjectResponseDto(savedProject);
+    }
+
+    private void notifyApplicantsOfStatusChange(Project project, ProjectStatus oldStatus) {
+        applicationRepository.findByProjectRoleProject(project).stream()
+                .map(application -> application.getUser())
+                .distinct()
+                .forEach(user -> {
+                    String title = "Project Milestone Reached";
+                    String message = String.format("Project '%s' status updated from %s to %s.",
+                            project.getTitle(), oldStatus, project.getStatus());
+                    notificationService.createNotification(user, title, message);
+                });
+    }
+
     public List<ProjectResponseDto> getAllProjects() {
         return projectRepository.findAll().stream()
                 .map(projectMapper::toProjectResponseDto)
@@ -93,13 +135,24 @@ public class ProjectService {
 
         validateOwnership(project);
 
+        ProjectStatus oldStatus = project.getStatus();
         projectMapper.updateProjectFromDto(dto, project);
+        
         // MapStruct expression in mapper might not handle bidirectional link for new roles properly during update
         if (project.getRoles() != null) {
             project.getRoles().forEach(role -> role.setProject(project));
         }
 
+        if (dto.getStatus() != null) {
+            project.setStatus(dto.getStatus());
+        }
+
         Project updatedProject = projectRepository.save(project);
+
+        if (oldStatus != updatedProject.getStatus()) {
+            notifyApplicantsOfStatusChange(updatedProject, oldStatus);
+        }
+
         return projectMapper.toProjectResponseDto(updatedProject);
     }
 
