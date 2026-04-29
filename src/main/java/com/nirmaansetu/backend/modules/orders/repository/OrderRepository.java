@@ -2,6 +2,7 @@ package com.nirmaansetu.backend.modules.orders.repository;
 
 import com.nirmaansetu.backend.modules.orders.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -10,4 +11,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByOrderNumber(String orderNumber);
     java.util.List<Order> findByUserId(Long userId);
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o")
+    Double calculateTotalRevenue();
 }
