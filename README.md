@@ -84,40 +84,6 @@ If using Render / Railway:
    👉 It may auto-redeploy OR you click “Deploy latest image”
 
 
-## API list created
-1. **Auth APIs**
-   - `/api/v1/auth/login` (POST)
-   - `/api/v1/auth/send-otp` (POST)
-   - `/api/v1/auth/verify-otp` (POST)
-   - `/api/v1/auth/send-otp-forgot` (POST)
-   - `/api/v1/auth/reset-password` (POST)
-   - `/api/v1/auth/refresh` (POST)
-2. **SMS APIs**
-   - `/api/sms/send` (POST)
-3. **User APIs**
-   - `/api/v1/user/register` (POST - multipart)
-   - `/api/v1/user/{id}` (GET, PATCH - multipart, DELETE)
-   - `/api/v1/user/all` (GET)
-4. **Admin APIs**
-   - `/api/admin/create-admin` (POST - multipart)
-5. **Enquiry APIs**
-   - `/api/enquiries` (POST, GET)
-6. **Project APIs**
-   - `/api/v1/projects` (POST, GET)
-   - `/api/v1/projects/{id}` (GET, PATCH, DELETE)
-7. **Notification APIs**
-   - `/api/v1/notifications` (GET)
-   - `/api/v1/notifications/{id}` (GET)
-8. **Employee APIs**
-   - `/api/v1/employees` (GET)
-9. **Employer APIs**
-   - `/api/v1/employers` (GET)
-   - `/api/v1/employers/{id}` (GET)
-10. **Shop APIs**
-    - `/api/v1/shops` (POST, GET)
-    - `/api/v1/shops/{id}` (GET)
-    - `/api/v1/shops/{shopId}/materials` (POST)
-
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
@@ -127,27 +93,3 @@ TO DO LIST
 9. be able to explain Spring Boot + AI Integration flow verbally, clear in Database schema design and backend feels routine.
       -learn the flow of all APIs 
       -document the NirmaanSetu Backend Development till Phase 1
-10.  rather than owning its own), its structure will differ slightly from a standard CRUD module.
-
-To complete it for **Admin/Super_Admin** use, here is what you need:
-
-### **1. Implementation Strategy**
-*   **Service Layer ([./src/main/java/com/nirmaansetu/backend/modules/dashboard/service/DashboardService.java](./src/main/java/com/nirmaansetu/backend/modules/dashboard/service/DashboardService.java))**:
-    This service should **inject the repositories or services** of other modules (e.g., `UserRepository`, `OrderRepository`, `ProjectRepository`). It will perform `count()` operations or complex aggregations to fill the `DashboardStatsDto`.
-*   **Controller Layer ([./src/main/java/com/nirmaansetu/backend/modules/dashboard/controller/DashboardController.java](./src/main/java/com/nirmaansetu/backend/modules/dashboard/controller/DashboardController.java))**:
-    Apply strict security annotations here to ensure only authorized roles can access it:
-    ```java
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
-    ```
-
-### **2. What is still "Missing"?**
-Even as an aggregator, you should add these to maintain the project's "Backend as Routine" feel:
-
-*   **`mapper` folder**: If you are transforming raw DB counts or projections into the `DashboardStatsDto`, a **MapStruct** mapper is recommended for consistency with the rest of the project.
-*   **Specific DTOs**: You currently have [./src/main/java/com/nirmaansetu/backend/modules/dashboard/dto/DashboardStatsDto.java](./src/main/java/com/nirmaansetu/backend/modules/dashboard/dto/DashboardStatsDto.java). You might need more specialized DTOs like `UserGrowthDto` or `RevenueStatsDto` for a complete admin view.
-
-### **3. Key Design Decisions**
-*   **Read-Only**: This module usually won't have an `entity` folder because it doesn't "own" any tables; it views others.
-*   **Performance**: Since it queries multiple modules, consider using **Spring Cache** or @Scheduled tasks to pre-calculate stats so the dashboard loads instantly for the Admin.
-
-**Recommendation**: Start by implementing a `getGlobalStats()` method in the `DashboardService` that calls `.count()` on your existing repositories.
