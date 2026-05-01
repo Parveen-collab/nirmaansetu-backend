@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+/**
+ * Controller for managing user-related operations including registration, retrieval, updates, and soft deletion.
+ */
 @RestController
 @RequestMapping("/api/v1/user")
 @Tag(name = "User APIs", description = "Operations related to users")
@@ -23,6 +26,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Registers a new user with a specific role and optional profile photo.
+     * Expects a multipart request containing user details as JSON and an optional image file.
+     */
     @Operation(
             summary = "Create user with a specific role.",
             description = "You can create user with a specific role and you have to provide role specific details too.",
@@ -34,6 +41,9 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(request, photo));
     }
 
+    /**
+     * Retrieves detailed information for a specific user by their ID.
+     */
     @Operation(
             summary = "Get users by id",
             description = "Returns only users where deleted = false. Requires USER or ADMIN role.",
@@ -43,6 +53,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    /**
+     * Lists all users, excluding those with the SUPER_ADMIN role.
+     * Supports filtering by role and keyword search.
+     */
     @Operation(
             summary = "Get all users except super admin",
             description = "Returns all users except those with SUPER_ADMIN role. Can filter by role.",
@@ -54,6 +68,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsersExceptSuperAdmin(role, keyword));
     }
 
+    /**
+     * Updates an existing user's information.
+     * Allows partial updates via PatchMapping.
+     */
     @Operation(
             summary = "Update user by id",
             description = "You can update a particular field and can keep all other the same or you can update as many fields as you have passed.",
@@ -66,6 +84,10 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, request, photo));
     }
 
+    /**
+     * Performs a soft delete on a user by their ID.
+     * Soft-deleted users can be restored by a Super Admin within 24 hours.
+     */
     @Operation(
             summary = "Delete user by id",
             description = "You can soft delete the user, user can be restored within 24 hours by Super Admin only and after 24 hours data will be deleted permanently. then even Super Admin could not restore the data.",
