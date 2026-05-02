@@ -8,6 +8,10 @@ import com.nirmaansetu.backend.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for providing dashboard statistics.
+ * Aggregates data from various repositories to provide a high-level overview of the system.
+ */
 @Service
 @RequiredArgsConstructor
 public class DashboardService {
@@ -17,6 +21,11 @@ public class DashboardService {
     private final ProjectRepository projectRepository;
     private final OrderRepository orderRepository;
 
+    /**
+     * Retrieves global statistics including total counts of users, enquiries, projects, orders, and total revenue.
+     * 
+     * @return DashboardStatsDto containing the aggregated statistics
+     */
     public DashboardStatsDto getGlobalStats() {
         Double revenue = orderRepository.calculateTotalRevenue();
         return DashboardStatsDto.builder()

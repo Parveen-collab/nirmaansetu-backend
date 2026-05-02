@@ -16,6 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service class for managing project applications.
+ * Handles applying for work, updating application status, and sending notifications.
+ */
 @Service
 public class ProjectApplicationService {
 
@@ -31,6 +35,12 @@ public class ProjectApplicationService {
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     * Allows a user to apply for a specific role in a project.
+     * Validates if the user has already applied for the same role.
+     * 
+     * @param dto Data transfer object containing application details
+     */
     @Transactional
     public void applyForWork(ApplyWorkRequestDto dto) {
         User currentUser = getCurrentUser();
@@ -54,6 +64,13 @@ public class ProjectApplicationService {
         notifyProjectCreator(application);
     }
 
+    /**
+     * Updates the status of an application (e.g., APPROVED, REJECTED).
+     * Only the project creator is authorized to update the status.
+     * 
+     * @param id Application ID
+     * @param dto DTO containing the new status
+     */
     @Transactional
     public void updateApplicationStatus(Long id, ApplicationStatusUpdateDto dto) {
         ProjectApplication application = projectApplicationRepository.findById(id)
@@ -72,6 +89,9 @@ public class ProjectApplicationService {
         notifyApplicant(application);
     }
 
+    /**
+     * Sends a notification to the applicant about their application status update.
+     */
     private void notifyApplicant(ProjectApplication application) {
         User applicant = application.getUser();
         String projectName = application.getProjectRole().getProject().getTitle();
@@ -91,6 +111,9 @@ public class ProjectApplicationService {
         notificationService.createNotification(applicant, title, message);
     }
 
+    /**
+     * Sends a notification to the project creator when a new application is submitted.
+     */
     private void notifyProjectCreator(ProjectApplication application) {
         Project project = application.getProjectRole().getProject();
         User creator = project.getCreatedBy();
@@ -104,6 +127,11 @@ public class ProjectApplicationService {
         notificationService.createNotification(creator, title, message);
     }
 
+    /**
+     * Retrieves the currently authenticated user from the security context.
+     * 
+     * @return The current User entity
+     */
     private User getCurrentUser() {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByPhoneNumber(phoneNumber)
