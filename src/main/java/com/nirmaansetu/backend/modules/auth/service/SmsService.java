@@ -6,12 +6,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for sending SMS messages using the Twilio API.
+ */
 @Service
 public class SmsService {
 
     @Value("${twilio.phone-number}")
     private String fromPhoneNumber;
 
+    /**
+     * Asynchronously sends an SMS message to the specified phone number.
+     * Formats the phone number to ensure it starts with '+' and has no spaces.
+     * 
+     * @param toPhoneNumber The recipient's phone number
+     * @param messageBody The content of the SMS message
+     */
     @Async
     public void sendSms(String toPhoneNumber, String messageBody) {
         try {
