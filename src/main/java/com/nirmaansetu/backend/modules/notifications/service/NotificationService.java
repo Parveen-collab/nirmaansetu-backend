@@ -22,6 +22,10 @@ public class NotificationService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Retrieves all notifications for the currently authenticated user, ordered by creation date (newest first).
+     * @return List of NotificationResponseDto
+     */
     public List<NotificationResponseDto> getAllNotifications() {
         User currentUser = getCurrentUser();
         return notificationRepository.findByUserOrderByCreatedAtDesc(currentUser).stream()
@@ -29,6 +33,12 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a specific notification by ID, marks it as read, and ensures it belongs to the current user.
+     * @param id The notification ID
+     * @return NotificationResponseDto of the updated notification
+     * @throws RuntimeException if notification is not found or user is unauthorized
+     */
     @Transactional
     public NotificationResponseDto getNotificationById(Long id) {
         User currentUser = getCurrentUser();
@@ -45,6 +55,12 @@ public class NotificationService {
         return toDto(notification);
     }
 
+    /**
+     * Creates and saves a new notification for a specific user.
+     * @param user The recipient of the notification
+     * @param title The subject of the notification
+     * @param message The content body
+     */
     @Transactional
     public void createNotification(User user, String title, String message) {
         Notification notification = Notification.builder()
@@ -56,12 +72,21 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
+    /**
+     * Helper method to fetch the User entity for the currently logged-in user session.
+     * @return The User entity
+     */
     private User getCurrentUser() {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
     }
 
+    /**
+     * Maps Notification entity to its DTO representation.
+     * @param notification The entity to map
+     * @return The resulting DTO
+     */
     private NotificationResponseDto toDto(Notification notification) {
         return NotificationResponseDto.builder()
                 .id(notification.getId())
