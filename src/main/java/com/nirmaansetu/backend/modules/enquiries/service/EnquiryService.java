@@ -22,6 +22,11 @@ public class EnquiryService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
+    /**
+     * Creates and saves a new enquiry, then notifies all users with the SUPPLIER role.
+     * @param requestDto The enquiry details from the client
+     * @return EnquiryResponseDto containing the saved enquiry data
+     */
     public EnquiryResponseDto sendEnquiry(EnquiryRequestDto requestDto) {
         Enquiry enquiry = Enquiry.builder()
                 .name(requestDto.getName())
@@ -42,12 +47,21 @@ public class EnquiryService {
         return mapToResponseDto(savedEnquiry);
     }
 
+    /**
+     * Retrieves all enquiries from the database.
+     * @return List of EnquiryResponseDto
+     */
     public List<EnquiryResponseDto> getAllEnquiries() {
         return enquiryRepository.findAll().stream()
                 .map(this::mapToResponseDto)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Utility method to map Enquiry entity to EnquiryResponseDto
+     * @param enquiry The source entity
+     * @return The mapped DTO
+     */
     private EnquiryResponseDto mapToResponseDto(Enquiry enquiry) {
         return EnquiryResponseDto.builder()
                 .id(enquiry.getId())

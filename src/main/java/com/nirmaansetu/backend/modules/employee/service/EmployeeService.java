@@ -12,12 +12,18 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeService {
 
+    // Repository for accessing employee profile data
     @Autowired
     private EmployeeProfileRepository employeeProfileRepository;
 
+    // Mapper to convert Employee entities to Response DTOs
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    /**
+     * Retrieves all employees and maps them to DTOs
+     * @return List of EmployeeResponseDto
+     */
     public List<EmployeeResponseDto> getAllEmployees() {
         return employeeProfileRepository.findAll().stream()
                 .map(employeeMapper::toResponseDto)
