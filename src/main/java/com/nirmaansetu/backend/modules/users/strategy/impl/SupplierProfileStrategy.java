@@ -1,5 +1,6 @@
 package com.nirmaansetu.backend.modules.users.strategy.impl;
 
+import com.nirmaansetu.backend.modules.recommendation.service.RecommendationService;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.modules.users.entity.SupplierProfile;
@@ -19,6 +20,9 @@ public class SupplierProfileStrategy implements ProfileStrategy {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RecommendationService recommendationService;
+
     @Override
     public Role getRole() {
         return Role.SUPPLIER;
@@ -32,6 +36,7 @@ public class SupplierProfileStrategy implements ProfileStrategy {
             profile.setPhotoUrl(photoUrl);
             supplierProfileRepository.save(profile);
             user.setSupplierProfile(profile);
+            recommendationService.indexSupplierProfile(profile);
         }
     }
 
@@ -57,6 +62,7 @@ public class SupplierProfileStrategy implements ProfileStrategy {
         }
         if (profile != null) {
             supplierProfileRepository.save(profile);
+            recommendationService.indexSupplierProfile(profile);
         }
     }
 }

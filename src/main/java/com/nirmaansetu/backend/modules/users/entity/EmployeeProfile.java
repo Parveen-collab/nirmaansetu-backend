@@ -35,6 +35,13 @@ public class EmployeeProfile extends BaseEntity {
     @NotNull(message = "Experience years is required")
     @Min(value = 1, message = "Experience years must be greater than 0")
     private Integer experienceYears;
+
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
+    private Double rating = 0.0;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean isAvailable = true;
+
     private String photoUrl;
 
     @OneToOne
