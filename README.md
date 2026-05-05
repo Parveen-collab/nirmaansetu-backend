@@ -50,6 +50,7 @@ Based on the analysis of the codebase, here is a list of the key software engine
 - **Rate Limiting**: Implemented in `OtpService` to prevent brute-force attacks on OTP generation.
 
 ### **4. Infrastructure & Integration**
+- **Vector Search & Recommendation**: Uses **Spring AI** with **Elasticsearch** as a vector store to match Employers with suitable Employees based on skills and location.
 - **Event-Driven Workflow**: Uses **Spring Statemachine** to manage complex states (e.g., Order states).
 - **Caching**: Employs **Redis** for performance optimization (using `@Cacheable` and `@CacheEvict`).
 - **Distributed Logging (ELK)**: Configured for **Elasticsearch**, **Logstash**, and **Kibana** for centralized log management.
@@ -95,32 +96,47 @@ TO DO LIST
       -document the NirmaanSetu Backend Development till Phase 1
 10. Based on my analysis of your **NirmaanSetu** project, here are several high-impact areas where you can implement AI to enhance the platform:
 
-### 1. **AI-Powered Matching Engine (Recommendation System)**
-Since your platform connects **Employees**, **Employers**, and **Suppliers**, a recommendation system would be highly valuable.
-- **Implementation**: Use a recommendation algorithm to match Employers with the most suitable Employees (Mistry, Carpenter, etc.) based on their skills, location, availability, and historical performance ratings.
-- **Tech**: Spring AI with vector database (like PGVector or Milvus) to store and query worker profiles.
-
-### 2. **Smart Enquiry Analysis & Routing**
-Your `Enquiry` module currently handles raw requests. AI can make this "smart."
-- **Implementation**: When an Employer sends an enquiry, use an LLM (Large Language Model) to categorize the enquiry, extract required materials, and estimate the labor force needed.
-- **Benefit**: It can automatically suggest the right **Suppliers** for the materials mentioned in the enquiry text.
-
-### 3. **Natural Language Search (Semantic Search)**
-Instead of basic keyword filtering (like the `keyword` parameter in `/api/v1/user/all`), implement semantic search.
-- **Example**: A user searches for "someone who can build a wooden staircase near Delhi." Basic search might fail if "staircase" isn't a tag, but semantic search understands the intent and finds **Carpenters**.
-
 ### 4. **AI Chatbot for Construction Guidance**
 Many users (like "Common Man") might not know exactly what they need for a construction task.
 - **Implementation**: A RAG (Retrieval-Augmented Generation) based chatbot that answers technical construction questions, helps calculate material costs, and guides users through the `Order` workflow.
 
-### 5. **Automated Verification & Document OCR**
-Since users upload photos and potentially documents (profile photos, IDs):
-- **Implementation**: Use AI to automatically verify identity documents (Aadhaar, PAN) or check if the uploaded profile photo is professional and appropriate.
-- **Tech**: AWS Textract or Google Vision API integrated into your Spring Boot backend.
+The workflow for the `/api/recommendations/employees` endpoint involves an **AI-driven similarity search** using a vector database. Here is the step-by-step process:
 
-### 6. **Predictive Pricing for Materials**
-For your **Suppliers/Shopkeepers**:
-- **Implementation**: Use a regression model to predict price trends for materials like Cement, Steel, or Paint based on historical data. This helps suppliers optimize their pricing strategy.
+1.  **Request Reception**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java) receives a `GET` request with a `query` (e.g., "experienced plumber") and a `limit`.
+2.  **Vector Search**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java) creates a `SearchRequest` that:
+    *   Uses the input query to perform a semantic search.
+    *   Applies a filter `type == 'EMPLOYEE'` to target only employee documents.
+    *   Requests the top `K` results based on the `limit`.
+3.  **Similarity Matching**: The `VectorStore` compares the query's vector embedding against stored employee profile embeddings (which contain details like category, speciality, and experience) and returns the most relevant documents.
+4.  **Database Enrichment**: For each matched document:
+    *   The service extracts the `profileId` from the document metadata.
+    *   It fetches the full `EmployeeProfile` and associated `User` details from the relational database (PostgreSQL) using the `EmployeeProfileRepository`.
+5.  **Score Calculation**: A similarity score is calculated based on the vector distance (typically `1.0 - distance`).
+6.  **Response Construction**: The data is mapped into a `RecommendationResponseDto` and returned as a list of recommended employees sorted by relevance.
 
-### **Next Step Recommendation:**
-I suggest starting with **AI-Powered Matching** or **Semantic Search** using **Spring AI**. This integrates cleanly with your existing modular monolith architecture and provides immediate value to your users.
+
+The workflow for the `/api/recommendations/suppliers` endpoint follows a similar **semantic search** pattern, tailored for material and tool providers:
+
+1.  **Request Reception**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java) handles the `GET` request, accepting a `query` (e.g., "cement supplier near Delhi") and a `limit`.
+2.  **Vector Filtering**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java) executes a `similaritySearch` on the `VectorStore` with a specific filter: `type == 'SUPPLIER'`.
+3.  **Supplier Enrichment**: For each matched document, the service:
+    *   Retrieves the `profileId` from metadata.
+    *   Fetches the `SupplierProfile` and its associated `User` from the database.
+    *   Extracts supplier-specific fields like `shopName`, `shopCategory`, and `shopType`.
+4.  **Location Formatting**: It constructs a location string using the supplier's specific address fields (`areaVillage`, `district`, `state`, `pincode`).
+5.  **Relevance Scoring**: It calculates a relevance score (inverse of vector distance) to show how well the supplier matches the search query.
+6.  **Response Delivery**: A list of `RecommendationResponseDto` objects is returned, containing shop details and contact information.
+
+
+The `/api/recommendations/reindex` API is an administrative endpoint used to synchronize the relational database with the AI vector store. Here is the workflow:
+
+1.  **Administrative Trigger**: An admin sends a `POST` request to `/api/recommendations/reindex`.
+2.  **Full Data Fetch**: The `RecommendationService` fetches every record from both the `EmployeeProfile` and `SupplierProfile` tables in the database.
+3.  **Content Transformation**: For each profile, the service generates a "searchable" text block:
+    *   **Employees**: Includes name, category, speciality, experience, rating, availability, and address.
+    *   **Suppliers**: Includes shop name, category, speciality, type, rating, and location.
+4.  **Metadata Tagging**: It attaches metadata (like `profileId`, `userId`, and `type`) to the text block so the search results can be linked back to database records.
+5.  **Vector Embedding & Storage**:
+    *   The service wraps the text and metadata into `Document` objects.
+    *   It sends these to the `VectorStore`, which generates numerical embeddings (vectors) for the text and stores them in the vector database.
+6.  **Synchronization**: This process ensures that any changes made directly to the database (or records created before the vector store was active) are now searchable by the AI recommendation engine.

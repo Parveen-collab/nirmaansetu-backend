@@ -65,6 +65,9 @@ public class SupplierProfile extends BaseEntity {
     private Double latitude;
     private Double longitude;
 
+    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
+    private Double rating = 0.0;
+
     private String photoUrl;
 
     @OneToOne
