@@ -1,0 +1,62 @@
+package com.nirmaansetu.backend.modules.chat.service;
+
+import com.nirmaansetu.backend.modules.chat.dto.ChatRequestDto;
+import com.nirmaansetu.backend.modules.chat.dto.ChatResponseDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Slf4j
+public class ChatService {
+
+    private final ChatClient chatClient;
+    private final VectorStore vectorStore;
+
+    public ChatService(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
+        this.chatClient = chatClientBuilder
+                .defaultSystem("You are NirmaanSetu Assistant, a specialized AI for the construction sector platform. " +
+                        "Your goal is to help users (workers, employers, and shopkeepers) navigate the platform, " +
+                        "find relevant profiles, and provide basic construction-related advice. " +
+                        "Use the provided context to answer questions accurately. If you don't know the answer, " +
+                        "kindly suggest the user to contact human support.")
+                .build();
+        this.vectorStore = vectorStore;
+    }
+
+    public ChatResponseDto getResponse(ChatRequestDto request) {
+        String userMessage = request.getMessage();
+        log.info("Processing chat request: {}", userMessage);
+
+        // 1. Retrieve context from VectorStore
+        SearchRequest searchRequest = SearchRequest.query(userMessage).withTopK(5);
+        List<Document> similarDocuments = vectorStore.similaritySearch(searchRequest);
+
+        String context = similarDocuments.stream()
+                .map(Document::getContent)
+                .collect(Collectors.joining("\n\n"));
+
+        // 2. Generate response using ChatClient with context
+        String response = chatClient.prompt()
+                .user(u -> u.text("Context information is below:\n" +
+                        "---------------------\n" +
+                        "{context}\n" +
+                        "---------------------\n" +
+                        "Given the context information and not prior knowledge, " +
+                        "answer the user question: {query}")
+                        .param("context", context)
+                        .param("query", userMessage))
+                .call()
+                .content();
+
+        return ChatResponseDto.builder()
+                .response(response)
+                .build();
+    }
+}
