@@ -99,16 +99,11 @@ Since you already have `spring-ai-openai`, you can implement a **Support Assista
 ### 2. **Smart Enquiry Processing**
 Enhance your existing `enquiries` module with AI-driven categorization.
 - **What it does**: Automatically extracts the type of work (Plumbing, Electrical, Masonry) and urgency from a user's raw text enquiry.
-- **Implementation**: When an enquiry is created, send the text to an LLM to "label" it. This can then automatically route the enquiry to the most relevant employees.
+- **Implementation**: When an enquiry is created, send the text to an LLM to "label" it. This can then automatically route the enquiry to the most relevant employees. - done
 
 ### 3. **AI Cost & Material Estimator**
 - **What it does**: An employer describes a project (e.g., *"I want to build a 20ft boundary wall"*), and the AI suggests the required materials (bricks, cement) and estimated labor cost.
 - **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation.
-
-### 4. **Voice-to-Task (Multilingual)**
-Many users in the construction sector prefer speaking over typing.
-- **What it does**: Allows users to record a voice message to create an enquiry or search for a product.
-- **Implementation**: Integrate **OpenAI Whisper** via Spring AI to convert audio to text, then use your existing vector search to find matches.
 
 ### 5. **Advanced "Best Match" Ranking**
 Upgrade your current `recommendation` service.
@@ -123,8 +118,6 @@ Upgrade your current `recommendation` service.
 - **What it does**: Scans reviews and feedback to detect negative behavior or fraud.
 - **Implementation**: Automatically flag reviews with high negative sentiment for admin review to maintain the platform's quality.
 
-**Recommended Next Step**:
-Start with **Smart Enquiry Processing** or the **Support Bot**, as they leverage your existing OpenAI integration with minimal architectural changes.
 10. be able to explain Spring Boot + AI Integration flow verbally, clear in Database schema design and backend feels routine.
       -learn the flow of all APIs 
       -document the NirmaanSetu Backend Development till Phase 1

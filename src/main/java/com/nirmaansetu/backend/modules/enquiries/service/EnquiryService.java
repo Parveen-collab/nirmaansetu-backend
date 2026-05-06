@@ -1,5 +1,6 @@
 package com.nirmaansetu.backend.modules.enquiries.service;
 
+import com.nirmaansetu.backend.modules.enquiries.dto.EnquiryAiResponseDto;
 import com.nirmaansetu.backend.modules.enquiries.dto.EnquiryRequestDto;
 import com.nirmaansetu.backend.modules.enquiries.dto.EnquiryResponseDto;
 import com.nirmaansetu.backend.modules.enquiries.entity.Enquiry;
@@ -9,6 +10,7 @@ import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.modules.users.entity.User;
 import com.nirmaansetu.backend.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +18,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EnquiryService {
 
     private final EnquiryRepository enquiryRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final EnquiryAiService enquiryAiService;
 
     /**
      * Creates and saves a new enquiry, then notifies all users with the SUPPLIER role.
@@ -35,11 +39,22 @@ public class EnquiryService {
                 .message(requestDto.getMessage())
                 .build();
 
+        // Categorize using AI
+        try {
+            EnquiryAiResponseDto aiResult = enquiryAiService.categorizeEnquiry(requestDto.getMessage());
+            enquiry.setWorkType(aiResult.getWorkType());
+            enquiry.setUrgency(aiResult.getUrgency());
+        } catch (Exception e) {
+            log.error("Failed to categorize enquiry with AI: {}", e.getMessage());
+            enquiry.setWorkType("Unknown");
+            enquiry.setUrgency("Low");
+        }
+
         Enquiry savedEnquiry = enquiryRepository.save(enquiry);
 
         // Notify all suppliers
         List<User> suppliers = userRepository.findByRole(Role.SUPPLIER);
-        String title = "New Material Enquiry";
+        String title = "New " + savedEnquiry.getWorkType() + " Enquiry (" + savedEnquiry.getUrgency() + " Priority)";
         String message = "A new enquiry has been received from " + savedEnquiry.getName() + ": " + savedEnquiry.getMessage();
         
         suppliers.forEach(supplier -> notificationService.createNotification(supplier, title, message));
@@ -69,6 +84,8 @@ public class EnquiryService {
                 .email(enquiry.getEmail())
                 .phone(enquiry.getPhone())
                 .message(enquiry.getMessage())
+                .workType(enquiry.getWorkType())
+                .urgency(enquiry.getUrgency())
                 .createdAt(enquiry.getCreatedAt())
                 .build();
     }
