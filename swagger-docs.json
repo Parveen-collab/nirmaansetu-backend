@@ -555,6 +555,29 @@
           }
         }
       }
+    },
+
+    "/api/v1/chat/message": {
+      "post": {
+        "tags": ["Chat APIs"],
+        "summary": "Send a message to the AI support bot and get a response",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
     }
 
   },

@@ -91,12 +91,10 @@ If using Render / Railway:
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-9. Based on your current technical stack (**Spring Boot 3.5.10**, **Java 21**, **Spring AI**, **OpenAI**, and **Elasticsearch Vector Store**), here are the AI features you can implement at this level of development:
-
-### 1. **Conversational Support Bot (LLM Chat)**
+9. ### 1. **Conversational Support Bot (LLM Chat)**
 Since you already have `spring-ai-openai`, you can implement a **Support Assistant**.
 - **What it does**: Helps users (mistry, contractors, shopkeepers) navigate the app, find services, or get basic construction advice.
-- **Implementation**: Create a `/api/chat` endpoint using `ChatClient` that uses RAG (Retrieval Augmented Generation) to answer questions based on your platform's documentation or user profiles.
+- **Implementation**: Create a `/api/chat` endpoint using `ChatClient` that uses RAG (Retrieval Augmented Generation) to answer questions based on your platform's documentation or user profiles. = done
 
 ### 2. **Smart Enquiry Processing**
 Enhance your existing `enquiries` module with AI-driven categorization.
