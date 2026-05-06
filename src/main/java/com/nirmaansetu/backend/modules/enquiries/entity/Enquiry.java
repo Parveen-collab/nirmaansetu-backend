@@ -31,6 +31,10 @@ public class Enquiry {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
+    private String workType;
+
+    private String urgency;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
