@@ -91,19 +91,55 @@ If using Render / Railway:
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-9. be able to explain Spring Boot + AI Integration flow verbally, clear in Database schema design and backend feels routine.
+9. Based on your current technical stack (**Spring Boot 3.5.10**, **Java 21**, **Spring AI**, **OpenAI**, and **Elasticsearch Vector Store**), here are the AI features you can implement at this level of development:
+
+### 1. **Conversational Support Bot (LLM Chat)**
+Since you already have `spring-ai-openai`, you can implement a **Support Assistant**.
+- **What it does**: Helps users (mistry, contractors, shopkeepers) navigate the app, find services, or get basic construction advice.
+- **Implementation**: Create a `/api/chat` endpoint using `ChatClient` that uses RAG (Retrieval Augmented Generation) to answer questions based on your platform's documentation or user profiles.
+
+### 2. **Smart Enquiry Processing**
+Enhance your existing `enquiries` module with AI-driven categorization.
+- **What it does**: Automatically extracts the type of work (Plumbing, Electrical, Masonry) and urgency from a user's raw text enquiry.
+- **Implementation**: When an enquiry is created, send the text to an LLM to "label" it. This can then automatically route the enquiry to the most relevant employees.
+
+### 3. **AI Cost & Material Estimator**
+- **What it does**: An employer describes a project (e.g., *"I want to build a 20ft boundary wall"*), and the AI suggests the required materials (bricks, cement) and estimated labor cost.
+- **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation.
+
+### 4. **Voice-to-Task (Multilingual)**
+Many users in the construction sector prefer speaking over typing.
+- **What it does**: Allows users to record a voice message to create an enquiry or search for a product.
+- **Implementation**: Integrate **OpenAI Whisper** via Spring AI to convert audio to text, then use your existing vector search to find matches.
+
+### 5. **Advanced "Best Match" Ranking**
+Upgrade your current `recommendation` service.
+- **What it does**: Instead of just showing similar profiles, use an LLM to rank the top 5 results from your vector store based on specific project needs, ratings, and availability.
+- **Implementation**: Use the "Re-ranking" pattern: fetch candidates from Elasticsearch, then let the LLM pick the best one with a justification.
+
+### 6. **OCR for Professional Verification**
+- **What it does**: Automatically verifies the identity or certifications of Employees/Suppliers.
+- **Implementation**: Use AI to extract text from images of ID cards or licenses during profile setup to ensure the data matches their registration.
+
+### 7. **Sentiment Analysis for Trust & Safety**
+- **What it does**: Scans reviews and feedback to detect negative behavior or fraud.
+- **Implementation**: Automatically flag reviews with high negative sentiment for admin review to maintain the platform's quality.
+
+**Recommended Next Step**:
+Start with **Smart Enquiry Processing** or the **Support Bot**, as they leverage your existing OpenAI integration with minimal architectural changes.
+10. be able to explain Spring Boot + AI Integration flow verbally, clear in Database schema design and backend feels routine.
       -learn the flow of all APIs 
       -document the NirmaanSetu Backend Development till Phase 1
-10. Based on my analysis of your **NirmaanSetu** project, here are several high-impact areas where you can implement AI to enhance the platform:
+10. Analyse the implementation of AI-based recommendation system for most suitable employee and supplier
+11. for employees there is keyword search parameter also so what search will work keyword or AI search
+12. how do i verify without UI that this AI based search is working
+13. what database is being used to store the vector store
 
-### 4. **AI Chatbot for Construction Guidance**
-Many users (like "Common Man") might not know exactly what they need for a construction task.
-- **Implementation**: A RAG (Retrieval-Augmented Generation) based chatbot that answers technical construction questions, helps calculate material costs, and guides users through the `Order` workflow.
 
 The workflow for the `/api/recommendations/employees` endpoint involves an **AI-driven similarity search** using a vector database. Here is the step-by-step process:
 
-1.  **Request Reception**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java) receives a `GET` request with a `query` (e.g., "experienced plumber") and a `limit`.
-2.  **Vector Search**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java) creates a `SearchRequest` that:
+1.  **Request Reception**: The RecommendationController.java receives a `GET` request with a `query` (e.g., "experienced plumber") and a `limit`.
+2.  **Vector Search**: The RecommendationService.java creates a `SearchRequest` that:
     *   Uses the input query to perform a semantic search.
     *   Applies a filter `type == 'EMPLOYEE'` to target only employee documents.
     *   Requests the top `K` results based on the `limit`.
@@ -117,8 +153,8 @@ The workflow for the `/api/recommendations/employees` endpoint involves an **AI-
 
 The workflow for the `/api/recommendations/suppliers` endpoint follows a similar **semantic search** pattern, tailored for material and tool providers:
 
-1.  **Request Reception**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/controller/RecommendationController.java) handles the `GET` request, accepting a `query` (e.g., "cement supplier near Delhi") and a `limit`.
-2.  **Vector Filtering**: The [./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java](./src/main/java/com/nirmaansetu/backend/modules/recommendation/service/RecommendationService.java) executes a `similaritySearch` on the `VectorStore` with a specific filter: `type == 'SUPPLIER'`.
+1.  **Request Reception**: The RecommendationController.java handles the `GET` request, accepting a `query` (e.g., "cement supplier near Delhi") and a `limit`.
+2.  **Vector Filtering**: The RecommendationService.java executes a `similaritySearch` on the `VectorStore` with a specific filter: `type == 'SUPPLIER'`.
 3.  **Supplier Enrichment**: For each matched document, the service:
     *   Retrieves the `profileId` from metadata.
     *   Fetches the `SupplierProfile` and its associated `User` from the database.
