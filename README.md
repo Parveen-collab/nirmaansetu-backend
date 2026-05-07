@@ -103,7 +103,7 @@ Enhance your existing `enquiries` module with AI-driven categorization.
 
 ### 3. **AI Cost & Material Estimator**
 - **What it does**: An employer describes a project (e.g., *"I want to build a 20ft boundary wall"*), and the AI suggests the required materials (bricks, cement) and estimated labor cost.
-- **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation.
+- **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation. =done
 
 ### 5. **Advanced "Best Match" Ranking**
 Upgrade your current `recommendation` service.
