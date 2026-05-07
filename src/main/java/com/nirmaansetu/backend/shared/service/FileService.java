@@ -16,12 +16,20 @@ public class FileService {
     private final String uploadDir = "uploads/profiles";
 
     public String saveProfilePhoto(MultipartFile file) {
+        return saveFile(file, "profiles");
+    }
+
+    public String saveVerificationDocument(MultipartFile file) {
+        return saveFile(file, "documents");
+    }
+
+    private String saveFile(MultipartFile file, String subDir) {
         if (file == null || file.isEmpty()) {
             return null;
         }
 
         try {
-            Path root = Paths.get(uploadDir);
+            Path root = Paths.get(uploadDir, subDir);
             if (!Files.exists(root)) {
                 Files.createDirectories(root);
             }
@@ -30,9 +38,17 @@ public class FileService {
             Path filePath = root.resolve(fileName);
             Files.copy(file.getInputStream(), filePath);
 
-            return "/api/files/" + fileName; 
+            return "/api/files/" + subDir + "/" + fileName;
         } catch (IOException e) {
             throw new RuntimeException("Could not store file. Error: " + e.getMessage());
         }
+    }
+
+    public String getFileSystemPath(String fileUrl) {
+        if (fileUrl == null || !fileUrl.startsWith("/api/files/")) {
+            return null;
+        }
+        String relativePath = fileUrl.substring("/api/files/".length());
+        return Paths.get(uploadDir, relativePath).toAbsolutePath().toString();
     }
 }

@@ -105,14 +105,9 @@ Enhance your existing `enquiries` module with AI-driven categorization.
 - **What it does**: An employer describes a project (e.g., *"I want to build a 20ft boundary wall"*), and the AI suggests the required materials (bricks, cement) and estimated labor cost.
 - **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation. =done
 
-### 5. **Advanced "Best Match" Ranking**
-Upgrade your current `recommendation` service.
-- **What it does**: Instead of just showing similar profiles, use an LLM to rank the top 5 results from your vector store based on specific project needs, ratings, and availability.
-- **Implementation**: Use the "Re-ranking" pattern: fetch candidates from Elasticsearch, then let the LLM pick the best one with a justification.
-
 ### 6. **OCR for Professional Verification**
 - **What it does**: Automatically verifies the identity or certifications of Employees/Suppliers.
-- **Implementation**: Use AI to extract text from images of ID cards or licenses during profile setup to ensure the data matches their registration.
+- **Implementation**: Use AI to extract text from images of ID cards or licenses during profile setup to ensure the data matches their registration. = done
 
 ### 7. **Sentiment Analysis for Trust & Safety**
 - **What it does**: Scans reviews and feedback to detect negative behavior or fraud.
