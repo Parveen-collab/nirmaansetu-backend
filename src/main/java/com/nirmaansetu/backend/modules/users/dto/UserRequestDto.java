@@ -54,6 +54,7 @@ public class UserRequestDto implements Serializable {
         @NotNull(message = "Experience years is required")
         @Min(value = 1, message = "Experience years must be greater than 0")
         private Integer experienceYears;
+        private String verificationDocumentUrl;
     }
 
     @Data
@@ -102,6 +103,7 @@ public class UserRequestDto implements Serializable {
         private String building;
         private Double latitude;
         private Double longitude;
+        private String verificationDocumentUrl;
     }
 
     @Data

@@ -23,6 +23,12 @@ public class SupplierProfileStrategy implements ProfileStrategy {
     @Autowired
     private RecommendationService recommendationService;
 
+    @Autowired
+    private com.nirmaansetu.backend.shared.service.OcrVerificationService ocrVerificationService;
+
+    @Autowired
+    private com.nirmaansetu.backend.shared.service.FileService fileService;
+
     @Override
     public Role getRole() {
         return Role.SUPPLIER;
@@ -34,9 +40,24 @@ public class SupplierProfileStrategy implements ProfileStrategy {
             SupplierProfile profile = userMapper.toSupplierProfile(request.getSupplierProfile());
             profile.setUser(user);
             profile.setPhotoUrl(photoUrl);
+            
+            // OCR Verification
+            if (request.getSupplierProfile().getVerificationDocumentUrl() != null) {
+                verifyProfile(profile, user, request.getSupplierProfile().getVerificationDocumentUrl());
+            }
+            
             supplierProfileRepository.save(profile);
             user.setSupplierProfile(profile);
             recommendationService.indexSupplierProfile(profile);
+        }
+    }
+
+    private void verifyProfile(SupplierProfile profile, User user, String documentUrl) {
+        String filePath = fileService.getFileSystemPath(documentUrl);
+        if (filePath != null) {
+            com.nirmaansetu.backend.shared.service.OcrVerificationService.VerificationResult result = ocrVerificationService.verifyDocument(
+                    filePath, user.getName(), user.getAadhaarNumber());
+            profile.setVerified(result.isSuccess());
         }
     }
 
@@ -50,6 +71,11 @@ public class SupplierProfileStrategy implements ProfileStrategy {
                 user.setSupplierProfile(profile);
             } else {
                 userMapper.updateSupplierProfileFromDto(request.getSupplierProfile(), profile);
+            }
+            
+            // Re-verify if document URL is updated
+            if (request.getSupplierProfile().getVerificationDocumentUrl() != null) {
+                verifyProfile(profile, user, request.getSupplierProfile().getVerificationDocumentUrl());
             }
         }
         if (photoUrl != null) {

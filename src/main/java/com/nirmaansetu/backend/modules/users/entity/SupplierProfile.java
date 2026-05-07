@@ -70,6 +70,11 @@ public class SupplierProfile extends BaseEntity {
 
     private String photoUrl;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isVerified = false;
+
+    private String verificationDocumentUrl;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
