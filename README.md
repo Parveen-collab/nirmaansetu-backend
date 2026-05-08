@@ -111,7 +111,7 @@ Enhance your existing `enquiries` module with AI-driven categorization.
 
 ### 7. **Sentiment Analysis for Trust & Safety**
 - **What it does**: Scans reviews and feedback to detect negative behavior or fraud.
-- **Implementation**: Automatically flag reviews with high negative sentiment for admin review to maintain the platform's quality.
+- **Implementation**: Automatically flag reviews with high negative sentiment for admin review to maintain the platform's quality. = done
 
 10. be able to explain Spring Boot + AI Integration flow verbally, clear in Database schema design and backend feels routine.
       -learn the flow of all APIs 
