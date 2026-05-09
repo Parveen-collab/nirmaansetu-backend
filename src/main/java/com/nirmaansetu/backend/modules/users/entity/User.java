@@ -56,7 +56,7 @@ public class User extends BaseEntity implements UserDetails {
     private String aadhaarNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     @NotNull(message = "Role is required")
     private Role role;
 
