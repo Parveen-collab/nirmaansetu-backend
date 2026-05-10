@@ -92,7 +92,7 @@ public class AuthController {
 
 
     @RestController
-    @RequestMapping("/api/sms")
+    @RequestMapping("/api/v1/sms")
     @Tag(name = "sms")
     public static class SmsController {
 
