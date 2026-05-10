@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/recommendations")
+@RequestMapping("/api/v1/recommendations")
 @Tag(name = "Recommendation", description = "Endpoints for AI-based matching and recommendations")
 public class RecommendationController {
 
