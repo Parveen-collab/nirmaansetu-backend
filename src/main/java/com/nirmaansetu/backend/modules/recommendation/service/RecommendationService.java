@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Service for managing recommendations using vector search.
+ * It indexes employee and supplier profiles into a VectorStore and provides
+ * search capabilities for recommendations.
+ */
 @Service
 @Slf4j
 public class RecommendationService {
@@ -31,10 +36,17 @@ public class RecommendationService {
     @Autowired
     private SupplierProfileRepository supplierProfileRepository;
 
+    /**
+     * Indexes an employee profile into the vector store.
+     * Converts profile details into a searchable document format.
+     * 
+     * @param profile The employee profile to index.
+     */
     public void indexEmployeeProfile(EmployeeProfile profile) {
         User user = profile.getUser();
         String addressStr = formatAddresses(user.getAddresses());
         
+        // Construct search text containing key profile information
         String content = String.format(
             "Employee Profile: Name: %s, Category: %s, Speciality: %s, Experience: %d years, Rating: %.1f, Available: %s, Location: %s",
             user.getName(),
@@ -46,6 +58,7 @@ public class RecommendationService {
             addressStr
         );
 
+        // Create document with metadata for filtering
         Document document = new Document(content, Map.of(
             "type", "EMPLOYEE",
             "profileId", profile.getId(),
@@ -60,11 +73,17 @@ public class RecommendationService {
         log.info("Indexed employee profile for user: {}", user.getName());
     }
 
+    /**
+     * Indexes a supplier profile into the vector store.
+     * 
+     * @param profile The supplier profile to index.
+     */
     public void indexSupplierProfile(SupplierProfile profile) {
         User user = profile.getUser();
         String location = String.format("%s, %s, %s, %s", 
             profile.getAreaVillage(), profile.getDistrict(), profile.getState(), profile.getPincode());
         
+        // Construct search text for the supplier
         String content = String.format(
             "Supplier Profile: Shop Name: %s, Category: %s, Speciality: %s, Type: %s, Rating: %.1f, Location: %s",
             profile.getShopName(),
@@ -75,6 +94,7 @@ public class RecommendationService {
             location
         );
 
+        // Store with metadata for targeted searches
         Document document = new Document(content, Map.of(
             "type", "SUPPLIER",
             "profileId", profile.getId(),
@@ -88,6 +108,13 @@ public class RecommendationService {
         log.info("Indexed supplier profile for shop: {}", profile.getShopName());
     }
 
+    /**
+     * Recommends employees based on a natural language query.
+     * 
+     * @param query The search query (e.g., "experienced plumber in Delhi").
+     * @param limit Maximum number of recommendations to return.
+     * @return List of matching employee recommendations.
+     */
     public List<RecommendationResponseDto> recommendEmployees(String query, int limit) {
         SearchRequest searchRequest = SearchRequest.query(query)
             .withTopK(limit)
@@ -108,6 +135,7 @@ public class RecommendationService {
                     .serviceSpeciality(profile.getServiceSpeciality())
                     .experienceYears(profile.getExperienceYears())
                     .location(formatAddresses(user.getAddresses()))
+                    // Calculate similarity score from vector search distance
                     .score(doc.getMetadata().containsKey("distance") ? 1.0 - (Double) doc.getMetadata().get("distance") : 0.0)
                     .build();
             })
@@ -115,6 +143,13 @@ public class RecommendationService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Recommends suppliers based on a natural language query.
+     * 
+     * @param query The search query.
+     * @param limit Maximum number of recommendations to return.
+     * @return List of matching supplier recommendations.
+     */
     public List<RecommendationResponseDto> recommendSuppliers(String query, int limit) {
         SearchRequest searchRequest = SearchRequest.query(query)
             .withTopK(limit)
@@ -144,6 +179,9 @@ public class RecommendationService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Formats address entities into a readable string.
+     */
     private String formatAddresses(List<Address> addresses) {
         if (addresses == null || addresses.isEmpty()) return "N/A";
         return addresses.stream()
@@ -151,6 +189,9 @@ public class RecommendationService {
             .collect(Collectors.joining(" | "));
     }
     
+    /**
+     * Clears existing vector data and re-indexes all profiles from the database.
+     */
     public void reindexAll() {
         log.info("Reindexing all profiles...");
         List<EmployeeProfile> employees = employeeProfileRepository.findAll();
