@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Controller for managing user reviews and sentiment analysis.
+ * Provides endpoints for creating reviews, retrieving reviews by user, and moderation of flagged content.
+ */
 @RestController
 @RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor
@@ -23,6 +27,14 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    /**
+     * Creates a new review for a user.
+     * Automatically performs sentiment analysis on the review content.
+     *
+     * @param request The review details
+     * @param principal The authenticated user performing the review
+     * @return The created review with sentiment flags
+     */
     @Operation(
             summary = "Create a new review",
             description = "Creates a review for a user and automatically performs sentiment analysis. Flags reviews with high negative sentiment.",
@@ -34,6 +46,12 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.createReview(request, principal.getName()));
     }
 
+    /**
+     * Retrieves all reviews received by a specific user.
+     *
+     * @param id The ID of the user whose reviews are to be fetched
+     * @return A list of reviews for the specified user
+     */
     @Operation(
             summary = "Get reviews for a user",
             description = "Returns all reviews received by a specific user.",
@@ -43,6 +61,12 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewsForUser(id));
     }
 
+    /**
+     * Retrieves reviews that have been automatically flagged for admin review.
+     * Requires ADMIN or SUPER_ADMIN privileges.
+     *
+     * @return A list of flagged reviews
+     */
     @Operation(
             summary = "Get flagged reviews",
             description = "Returns all reviews that have been automatically flagged for admin review. Requires ADMIN or SUPER_ADMIN role.",
