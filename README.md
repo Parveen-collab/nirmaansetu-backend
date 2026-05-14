@@ -28,12 +28,7 @@ Your image URL:parveendockerhub/nirmaansetu:latest
 1. Step 1:Rebuild Image = docker build -t nirmaansetu .
 2. Step 2:Tag Again = docker tag nirmaansetu parveendockerhub/nirmaansetu:latest
 3. Step 3:Push Again = docker push parveendockerhub/nirmaansetu:latest
-4. 🔄 Step 4: Restart your container / redeploy
-   docker stop <container_id>
-   docker rm <container_id>
-   docker run -p 8080:8080 parveendockerhub/nirmaansetu:latest
-If using Render / Railway:
-   👉 It may auto-redeploy OR you click “Deploy latest image”
+
 
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
