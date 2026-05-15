@@ -14,6 +14,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity representing a construction project in the system.
+ * Stores core project information including location, creator, and available roles.
+ * Supports soft delete via the deleted flag.
+ */
 @Entity
 @Table(name = "projects", indexes = {
         @Index(name = "idx_project_location", columnList = "latitude, longitude")
@@ -48,26 +53,49 @@ public class Project extends BaseEntity {
     @NotNull(message = "Longitude is required")
     private Double longitude;
 
+    /**
+     * The user who created this project.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
+    /**
+     * List of roles (positions) available or required for this project.
+     */
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectRole> roles = new ArrayList<>();
 
+    /**
+     * Current status of the project (e.g., PLANNING, IN_PROGRESS, COMPLETED).
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProjectStatus status = ProjectStatus.PLANNING;
 
+    /**
+     * Flag for soft deletion.
+     */
     private boolean deleted = false;
 
+    /**
+     * Timestamp when the project was soft-deleted.
+     */
     private LocalDateTime deletedAt;
 
+    /**
+     * Helper method to add a role to the project and maintain bidirectional relationship.
+     * @param role The role to add
+     */
     public void addRole(ProjectRole role) {
         roles.add(role);
         role.setProject(this);
     }
 
+    /**
+     * Helper method to remove a role from the project.
+     * @param role The role to remove
+     */
     public void removeRole(ProjectRole role) {
         roles.remove(role);
         role.setProject(null);
