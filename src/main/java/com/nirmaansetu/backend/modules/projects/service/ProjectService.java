@@ -19,6 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class for managing project-related business logic.
+ * Handles project creation, updates, deletions, and notifications for nearby users.
+ */
 @Service
 public class ProjectService {
 
@@ -40,6 +44,12 @@ public class ProjectService {
     @Autowired
     private ProjectApplicationRepository applicationRepository;
 
+    /**
+     * Creates a new project and triggers notifications for nearby users.
+     * 
+     * @param dto Data transfer object containing project details
+     * @return Created project details as a response DTO
+     */
     @Transactional
     public ProjectResponseDto createProject(ProjectRequestDto dto) {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -67,6 +77,11 @@ public class ProjectService {
         return projectMapper.toProjectResponseDto(savedProject);
     }
 
+    /**
+     * Finds users within a 5km radius of the project and sends them SMS and in-app notifications.
+     * 
+     * @param project The newly created project
+     */
     private void notifyNearbyUsers(Project project) {
         List<User> nearbyUsers = projectRepository.findUsersWithinRadius(
                 project.getLatitude(), project.getLongitude(), 5000.0);
@@ -83,6 +98,13 @@ public class ProjectService {
         });
     }
 
+    /**
+     * Updates the status of an existing project.
+     * 
+     * @param id Project ID
+     * @param status New status to apply
+     * @return Updated project details
+     */
     @Transactional
     public ProjectResponseDto updateProjectStatus(Long id, ProjectStatus status) {
         Project project = projectRepository.findById(id)
@@ -104,6 +126,12 @@ public class ProjectService {
         return projectMapper.toProjectResponseDto(savedProject);
     }
 
+    /**
+     * Notifies all users who have applied for roles in the project about a status change.
+     * 
+     * @param project The updated project
+     * @param oldStatus Previous status
+     */
     private void notifyApplicantsOfStatusChange(Project project, ProjectStatus oldStatus) {
         applicationRepository.findByProjectRoleProject(project).stream()
                 .map(application -> application.getUser())
@@ -116,18 +144,36 @@ public class ProjectService {
                 });
     }
 
+    /**
+     * Retrieves all projects in the system.
+     * 
+     * @return List of all project response DTOs
+     */
     public List<ProjectResponseDto> getAllProjects() {
         return projectRepository.findAll().stream()
                 .map(projectMapper::toProjectResponseDto)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a project by its ID.
+     * 
+     * @param id Project ID
+     * @return Project details
+     */
     public ProjectResponseDto getProjectById(Long id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         return projectMapper.toProjectResponseDto(project);
     }
 
+    /**
+     * Updates project details. Only the creator can perform this action.
+     * 
+     * @param id Project ID
+     * @param dto New project data
+     * @return Updated project details
+     */
     @Transactional
     public ProjectResponseDto updateProject(Long id, ProjectRequestDto dto) {
         Project project = projectRepository.findById(id)
@@ -156,6 +202,11 @@ public class ProjectService {
         return projectMapper.toProjectResponseDto(updatedProject);
     }
 
+    /**
+     * Soft deletes a project by ID. Only the creator can perform this action.
+     * 
+     * @param id Project ID
+     */
     @Transactional
     public void deleteProject(Long id) {
         Project project = projectRepository.findById(id)
@@ -165,6 +216,11 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
+    /**
+     * Validates that the current authenticated user is the one who created the project.
+     * 
+     * @param project Project to validate against
+     */
     private void validateOwnership(Project project) {
         String phoneNumber = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!project.getCreatedBy().getPhoneNumber().equals(phoneNumber)) {
