@@ -71,6 +71,7 @@ public class User extends BaseEntity implements UserDetails {
     @Valid
     private List<Address> addresses;
 
+    // Role-specific profiles linked to this user account
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @Valid
     private EmployeeProfile employeeProfile;
