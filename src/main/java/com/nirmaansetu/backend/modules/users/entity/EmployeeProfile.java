@@ -49,6 +49,10 @@ public class EmployeeProfile extends BaseEntity {
 
     private String verificationDocumentUrl;
 
+    /**
+     * Associated user account for this employee profile.
+     * Contains basic identity information like name, email, and phone number.
+     */
     @OneToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
