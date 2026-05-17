@@ -9,6 +9,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Component to initialize default data in the database on application startup.
+ * Specifically, it ensures a SUPER_ADMIN user exists.
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -17,8 +21,12 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Executes logic on startup to seed initial data.
+     */
     @Override
     public void run(String... args) throws Exception {
+        // Create a default SUPER_ADMIN if none exists
         if (userRepository.findByRole(Role.SUPER_ADMIN).isEmpty()) {
             User superAdmin = new User();
             superAdmin.setPhoneNumber("+919999999999");
