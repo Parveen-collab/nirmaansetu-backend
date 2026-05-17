@@ -10,8 +10,17 @@ import java.util.Map;
 import com.nirmaansetu.backend.modules.auth.exception.RateLimitException;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Controller advice to handle exceptions globally across all REST controllers.
+ * Provides consistent error responses for validation failures, rate limiting, and generic runtime errors.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * Handles validation errors for request bodies (e.g., @Valid).
+     * Returns a map of field names and their corresponding error messages.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -20,6 +29,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    /**
+     * Handles custom RateLimitException when a user exceeds allowed request limits.
+     */
     @ExceptionHandler(RateLimitException.class)
     public ResponseEntity<Map<String, String>> handleRateLimitException(RateLimitException ex) {
         Map<String, String> error = new HashMap<>();
@@ -28,6 +40,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
     }
 
+    /**
+     * Fallback handler for generic RuntimeExceptions.
+     */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();

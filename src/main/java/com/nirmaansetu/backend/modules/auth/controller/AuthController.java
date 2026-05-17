@@ -20,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller for handling authentication-related operations such as login, OTP management, and password reset.
+ */
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Auth APIs", description = "Operations related to auth")
@@ -33,6 +36,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Authenticates a user with phone number and password, returning access and refresh tokens.
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
         userService.login(request);
@@ -42,6 +48,9 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDto(accessToken, refreshToken));
     }
 
+    /**
+     * Sends an OTP to a user's phone number for password reset if the user exists.
+     */
     @PostMapping("/send-otp-forgot")
     public ResponseEntity<String> sendOtpForgot(@Valid @RequestBody OtpRequestDto request) {
         if (!userService.existsByPhoneNumber(request.getPhoneNumber())) {
@@ -51,18 +60,27 @@ public class AuthController {
         return ResponseEntity.ok("OTP sent successfully for password reset");
     }
 
+    /**
+     * Resets a user's password after verifying their OTP.
+     */
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequestDto request) {
         userService.resetPassword(request);
         return ResponseEntity.ok("Password reset successfully");
     }
 
+    /**
+     * Sends an OTP to a user's phone number for general verification.
+     */
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp(@Valid @RequestBody OtpRequestDto request) {
         otpService.sendOtp(request.getPhoneNumber());
         return ResponseEntity.ok("OTP sent successfully");
     }
 
+    /**
+     * Verifies the provided OTP and returns JWT tokens upon successful verification.
+     */
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request) {
         if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
@@ -74,6 +92,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
     }
 
+    /**
+     * Refreshes the access token using a valid refresh token.
+     */
     @Operation(
             summary = "Create a refresh token when access token get expired.",
             description = "You can create refresh token to extend the expiration time of the access token.",
@@ -89,8 +110,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
     }
 
-
-
+    /**
+     * Inner controller for handling SMS-related tasks.
+     */
     @RestController
     @RequestMapping("/api/v1/sms")
     @Tag(name = "sms")
@@ -99,6 +121,9 @@ public class AuthController {
         @Autowired
         private SmsService smsService;
 
+        /**
+         * Sends a welcome SMS to the specified phone number.
+         */
         @PostMapping("/send")
         public String sendSms(@RequestParam String phone) {
 
