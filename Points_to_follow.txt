@@ -1,0 +1,70 @@
+## Analysis of Project till Phase 1 and MVP
+
+## Run These commands before push
+1. .\mvnw clean install -DskipTests
+2. .\mvnw test = Run this command to ensure all unit and integration tests pass.
+3. .\mvnw clean install = Run the following combined command for a comprehensive check.
+4. mvn verify = This will trigger the plugin to download the latest API definitions and update swagger-docs.json in your project root.
+
+## Run the following command to run nirmaansetu docker image
+1. docker run -p 8080:8080 parveendockerhub/nirmaansetu:latest
+2. Your backend is now globally usable
+Your image URL:parveendockerhub/nirmaansetu:latest
+
+## Whenever you update your backend code:
+1. Step 1:Rebuild Image = docker build -t nirmaansetu .
+2. Step 2:Tag Again = docker tag nirmaansetu parveendockerhub/nirmaansetu:latest
+3. Step 3:Push Again = docker push parveendockerhub/nirmaansetu:latest
+
+## Important URLs
+1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+3. - Postman: Import `swagger-docs.json` from the root directory.
+
+TO DO LIST
+9. do billing for OpenAI API key
+10. check that how much LLM Token will it take in single API hit of AI chatbot feature
+10. test all the following AI-features
+      1. Conversational Support Bot (LLM Chat)
+      2. Smart Enquiry Processing
+      3. AI Cost & Material Estimator
+      6. OCR for Professional Verification
+      7. Sentiment Analysis for Trust & Safety
+10. document the NirmaanSetu Backend Development till Phase 1
+11. for employees there is keyword search parameter also so what search will work keyword or AI search
+12. how do i verify without UI that this AI based search is working
+13. what database is being used to store the vector store
+
+Based on **NirmaanSetu** backend project, here are the most likely and impactful interview questions categorized by domain. Given your use of **Spring AI**, **Vector Stores**, and the **ELK stack**, you should expect deep dives into these modern technologies.
+
+### 1. Spring AI & Vector Search (The "Hero" Feature)
+*   **Vector Search vs. Keyword Search**: "You have both keyword and AI-based search. When would you use one over the other, and how did you implement the similarity search using `VectorStore`?"
+*   **RAG Implementation**: "Can you explain the **Retrieval-Augmented Generation (RAG)** flow in your `ChatService`? How do you ensure the AI doesn't hallucinate (provide wrong info)?"
+*   **Metadata Filtering**: "How do you use metadata in Elasticsearch to filter search results by user type (Employee vs. Supplier) while performing a vector search?"
+*   **Re-indexing Strategy**: "Your `RecommendationService` has a `reindexAll()` method. How would you handle this in a production environment with millions of records to avoid downtime?"
+
+### 2. Architecture & Design Patterns
+*   **Modular Monolith**: "Why did you choose a modular structure for this project instead of a full microservices architecture?"
+*   **State Machine**: "You've used **Spring State Machine** for orders. What are the benefits of using a state machine over simple status columns in a database?"
+*   **Data Modeling**: "How did you design the database schema to handle different profile types (Employee, Employer, Supplier) while maintaining a common `User` entity?"
+
+### 3. Security & Authentication
+*   **OTP Flow**: "Walk me through the OTP verification process. Why did you choose to store **hashed OTPs** in Redis instead of plain text?"
+*   **Rate Limiting**: "How did you implement rate limiting for OTP requests to prevent SMS API abuse using Redis?"
+*   **JWT Security**: "How do you handle token expiration and secure the endpoints for different user roles?"
+
+### 4. Performance & Observability
+*   **Caching Strategy**: "How are you using **Redis** beyond OTP storage? What is your cache eviction policy for frequently accessed profiles?"
+*   **ELK Stack**: "Why did you integrate Logstash and Kibana? Can you describe a scenario where these tools helped you debug a production-level issue?"
+*   **Monitoring**: "What specific metrics are you tracking with **Prometheus and Actuator** to ensure the health of your AI features?"
+
+### 5. Advanced Implementation Details
+*   **Soft Deletes**: "How do you handle data retention and the automated cleanup of soft-deleted records using scheduled tasks?"
+*   **MapStruct & Lombok**: "How do these libraries improve your development workflow and the performance of your application?"
+*   **External APIs**: "How do you handle failures or latency when calling external services like **OpenAI** or **Twilio**?"
+
+### 6. Problem-Solving & Challenges
+*   "What was the most difficult challenge you faced while integrating **Spring AI** with **Elasticsearch**?"
+*   "How do you verify the 'score' or accuracy of a recommendation? What does a distance of `0.2` signify in your similarity search?"
+
+**Pro Tip**: Be ready to explain your `docker-compose.yml` setup, as it shows you understand how to orchestrate the entire infrastructure (MySQL, Redis, Elasticsearch, Logstash) rather than just writing Java code.
