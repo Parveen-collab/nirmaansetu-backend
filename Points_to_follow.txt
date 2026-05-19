@@ -22,18 +22,8 @@ Your image URL:parveendockerhub/nirmaansetu:latest
 3. - Postman: Import `swagger-docs.json` from the root directory.
 
 TO DO LIST
-9. do billing for OpenAI API key
-10. check that how much LLM Token will it take in single API hit of AI chatbot feature
-10. test all the following AI-features
-      1. Conversational Support Bot (LLM Chat)
-      2. Smart Enquiry Processing
-      3. AI Cost & Material Estimator
-      6. OCR for Professional Verification
-      7. Sentiment Analysis for Trust & Safety
 10. document the NirmaanSetu Backend Development till Phase 1
-11. for employees there is keyword search parameter also so what search will work keyword or AI search
-12. how do i verify without UI that this AI based search is working
-13. what database is being used to store the vector store
+9. do billing for OpenAI API key
 
 Based on **NirmaanSetu** backend project, here are the most likely and impactful interview questions categorized by domain. Given your use of **Spring AI**, **Vector Stores**, and the **ELK stack**, you should expect deep dives into these modern technologies.
 
