@@ -3,14 +3,14 @@
 Problem Statement = done
 Features = done
 Tech Stack = done
-Architecture
-Screenshots
-Live Demo
+Architecture = done
+Screenshots = done
+Live Demo = done
 Installation = done
-Performance
-Scalability
-Security
-Future Improvements
+Performance = done
+Scalability = done
+Security = done
+Future Improvements = done
 
 ## Problem Statement
 The construction sector faces major challenges due to the lack of a unified digital platform connecting workers, contractors, suppliers, and customers. Communication gaps, unverified labor availability, inefficient material procurement, delayed project coordination, and limited transparency create difficulties for all stakeholders involved in construction projects.
@@ -161,53 +161,38 @@ The architecture is designed to support:
 
 ## Screenshots
 1. Landing/Home Page
-2. Login / Register Page
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+2. Login Page
+![img_4.png](img_4.png)
 3. Dashboard Screens
+![img_5.png](img_5.png)
 4. Employer Dashboard
+![img_6.png](img_6.png)
 5. Supplier Dashboard
+![img_7.png](img_7.png)
 6. Job Listing Page
+![img_8.png](img_8.png)
 7. Material Marketplace
+![img_9.png](img_9.png)
 8. Worker Profile Page
-9. Admin Panel
-10. Mobile Responsive UI
-11. Bonus Screenshots (Very Professional)
-12. If available, also add:
-13. Dark mode UI 
-14. Real-time chat system 
-15. Notification system 
-16. Analytics dashboard 
-17. AI recommendation section 
-18. Maps/location-based services
+![img_10.png](img_10.png)
+9. Notification system 
+![img_11.png](img_11.png)
 
-## Live Demo
-Main website URL
-Admin panel URL (optional)
-Demo credentials (optional)
-Deployment platform
 ## Live Demo
 
 🚀 Main Application:  
-https://nirmaansetu.vercel.app
+https://nirmaan-setu.vercel.app/
 
 🛠️ Admin Panel:  
-https://admin.nirmaansetu.vercel.app
+The Admin project deployment is in progress.
+Live demo link will be added soon.
 
 📱 Responsive Design Supported for:
 - Mobile
 - Tablet
 - Desktop
-                           ## or
-## Live Demo
-The project deployment is in progress.
-Live demo link will be added soon.
-Optional Additions
-
-## You can also add:
-Demo video
-Test credentials
-API documentation
-Performance badges
-Deployment status badges
 
 ## ⚙️ Installation & Setup
 1. **Clone the repository**:
@@ -258,21 +243,6 @@ Once the application is running, you can access the Swagger UI at:
 ---
 
 ## Performance
-For the **Performance** section in your README, you should describe how your application is optimized for:
-
-* Speed
-* Scalability
-* Responsiveness
-* User experience
-* Efficient data handling
-
-Since **NirmaanSetu** is intended for global-scale users, this section should show that the platform is built with production-level performance considerations.
-
-You can write something like this:
-
----
-
-## Performance
 ### Frontend Optimization
 * Server-side rendering (SSR) and static rendering using Next.js
 * Optimized component rendering
@@ -307,44 +277,9 @@ You can write something like this:
 * Input validation and error management
 ---
 
-# If You Want a More Technical Version
-You can also include:
-```md id="ag7z8s"
 ### Performance Techniques Used
-- Memoization
-- Dynamic imports
-- Pagination
-- Debouncing & throttling
 - Caching strategies
 - Optimized API calls
-- CDN-ready assets
-```
-
----
-
-# Optional Professional Additions
-If you have metrics, include:
-* Lighthouse Score
-* First Contentful Paint (FCP)
-* Largest Contentful Paint (LCP)
-* API response times
-
-Example:
-```md id="w5o5ta"
-### Lighthouse Performance
-- Performance: 95+
-- Accessibility: 90+
-- Best Practices: 95+
-- SEO: 90+
-```
-
-# Important
-Do not fake performance numbers if you have not tested them yet.
-If you have not measured performance yet, focus on:
-* Optimizations implemented
-* Scalability readiness
-* Architecture decisions
-That is completely acceptable for a developing project like NirmaanSetu.
 
   
 ## Scalability
