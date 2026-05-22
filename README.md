@@ -1,17 +1,4 @@
 
-
-Problem Statement = done
-Features = done
-Tech Stack = done
-Architecture = done
-Screenshots = done
-Live Demo = done
-Installation = done
-Performance = done
-Scalability = done
-Security = done
-Future Improvements = done
-
 ## Problem Statement
 The construction sector faces major challenges due to the lack of a unified digital platform connecting workers, contractors, suppliers, and customers. Communication gaps, unverified labor availability, inefficient material procurement, delayed project coordination, and limited transparency create difficulties for all stakeholders involved in construction projects.
 
@@ -33,8 +20,7 @@ To address these issues, **NirmaanSetu** aims to develop a centralized digital p
    Shopkeepers/Suppliers(cement, gitti, balu, chhar, paint, water-related, pipe-related and many more)
 
 
-# NirmaanSetu - Backend
-
+# NirmaanSetu
 **NirmaanSetu** is a comprehensive platform designed to bridge the gap between various stakeholders in the construction sector. It connects employees (skilled labor like engineers, masons, and carpenters), employers (builders, contractors, and individual homeowners), and suppliers (shopkeepers providing construction materials).
 
 ## 🚀 Key Features
@@ -66,8 +52,7 @@ To address these issues, **NirmaanSetu** aims to develop a centralized digital p
 ## Architecture
 For the **Architecture** section in your README, you should explain how the system is structured, what technologies are used, and how different parts of the platform interact with each other.
 
-Since your project is a large-scale construction ecosystem platform, your architecture section can include:
-
+A large-scale construction ecosystem platform's architecture section can include:
 * Frontend
 * Backend
 * Database
@@ -76,9 +61,6 @@ Since your project is a large-scale construction ecosystem platform, your archit
 * User Roles
 * Deployment/Scalability
 * Future AI integrations (optional)
-
-You can write something like this:
-
 ---
 
 # Architecture
@@ -155,30 +137,30 @@ The architecture is designed to support:
 * Cloud deployment
 * Large-scale concurrent users
 ---
-![img_1.png](img_1.png)
+![img_1.png](src/main/resources/screenshots/img_1.png)
 
-![img.png](img.png)
+![img.png](src/main/resources/screenshots/img.png)
 
 ## Screenshots
 1. Landing/Home Page
-![img_2.png](img_2.png)
-![img_3.png](img_3.png)
+![img_2.png](src/main/resources/screenshots/img_2.png)
+![img_3.png](src/main/resources/screenshots/img_3.png)
 2. Login Page
-![img_4.png](img_4.png)
+![img_4.png](src/main/resources/screenshots/img_4.png)
 3. Dashboard Screens
-![img_5.png](img_5.png)
+![img_5.png](src/main/resources/screenshots/img_5.png)
 4. Employer Dashboard
-![img_6.png](img_6.png)
+![img_6.png](src/main/resources/screenshots/img_6.png)
 5. Supplier Dashboard
-![img_7.png](img_7.png)
+![img_7.png](src/main/resources/screenshots/img_7.png)
 6. Job Listing Page
-![img_8.png](img_8.png)
+![img_8.png](src/main/resources/screenshots/img_8.png)
 7. Material Marketplace
-![img_9.png](img_9.png)
+![img_9.png](src/main/resources/screenshots/img_9.png)
 8. Worker Profile Page
-![img_10.png](img_10.png)
+![img_10.png](src/main/resources/screenshots/img_10.png)
 9. Notification system 
-![img_11.png](img_11.png)
+![img_11.png](src/main/resources/screenshots/img_11.png)
 
 ## Live Demo
 

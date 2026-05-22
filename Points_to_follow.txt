@@ -1,4 +1,3 @@
-## Analysis of Project till Phase 1 and MVP
 
 ## Run These commands before push
 1. .\mvnw clean install -DskipTests
@@ -281,64 +280,3 @@ Companies care less about “AI theory” and more about:
 * Build AI workflows/agents
 
 ---
-
-# Best Projects You Should Build
-
-For your Phase 2 roadmap, these projects are ideal:
-
-## 1. AI Hiring Platform
-
-Perfect for your job platform project.
-
-Features:
-
-* AI resume analysis
-* AI interview questions
-* AI job matching
-* AI recruiter assistant
-
----
-
-## 2. AI SaaS Dashboard
-
-Features:
-
-* AI analytics
-* AI report generation
-* AI summarization
-* AI chatbot
-
----
-
-## 3. AI Construction Assistant
-
-Could integrate into your “nirmaansetu” platform.
-
-Features:
-
-* AI estimation
-* AI material recommendation
-* AI blueprint explanation
-* AI document analysis
-
----
-
-# Most Valuable Combination in 2026–2027
-
-The highest-value combination for junior engineers is:
-
-> Full Stack Development + AI API Integration + Cloud Deployment
-
-Not:
-
-* pure ML research
-* advanced mathematics-heavy AI
-* training foundation models
-
-You’ll get faster income growth by becoming excellent at:
-
-* shipping AI products
-* integrating AI into business systems
-* building production-ready apps
-
-That aligns extremely well with your current roadmap and target companies like [SAP](https://www.sap.com?utm_source=chatgpt.com), [Zalando](https://www.zalando.com?utm_source=chatgpt.com), [Stripe](https://stripe.com?utm_source=chatgpt.com), and [HubSpot](https://www.hubspot.com?utm_source=chatgpt.com).
