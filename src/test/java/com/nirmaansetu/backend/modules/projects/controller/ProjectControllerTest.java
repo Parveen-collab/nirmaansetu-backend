@@ -5,6 +5,9 @@ import com.nirmaansetu.backend.modules.projects.dto.ProjectRequestDto;
 import com.nirmaansetu.backend.modules.projects.dto.ProjectResponseDto;
 import com.nirmaansetu.backend.modules.projects.service.EstimationService;
 import com.nirmaansetu.backend.modules.projects.service.ProjectService;
+import com.nirmaansetu.backend.shared.security.CustomUserDetailsService;
+import com.nirmaansetu.backend.shared.security.JwtAuthenticationFilter;
+import com.nirmaansetu.backend.shared.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,6 +35,15 @@ public class ProjectControllerTest {
 
     @MockBean
     private EstimationService estimationService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private ObjectMapper objectMapper;

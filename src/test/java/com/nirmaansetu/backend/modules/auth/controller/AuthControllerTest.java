@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nirmaansetu.backend.modules.auth.dto.LoginRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.OtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
+import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.modules.users.service.UserService;
+import com.nirmaansetu.backend.shared.security.CustomUserDetailsService;
+import com.nirmaansetu.backend.shared.security.JwtAuthenticationFilter;
 import com.nirmaansetu.backend.shared.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,15 @@ public class AuthControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private SmsService smsService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private ObjectMapper objectMapper;
