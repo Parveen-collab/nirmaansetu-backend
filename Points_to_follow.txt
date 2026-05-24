@@ -23,6 +23,14 @@ Your image URL:parveendockerhub/nirmaansetu:latest
 TO DO LIST
 10. document the NirmaanSetu Backend Development till Phase 1
 9. do billing for OpenAI API key
+11. ⚠️ Blockers for Launch:
+    1. Payment Integration: The PaymentServiceImpl currently contains Demo Logic that mocks transactions. For a real launch, you must integrate a gateway like Razorpay, Stripe, or PayU.
+    2. Test Coverage: There is only one service test (EstimationServiceTest). A production-ready MVP should have at least core service and controller tests to prevent regressions. = done
+    3. Frontend: This repository is backend-only. Ensure the frontend is equally mature and integrated with these APIs.
+💡 Recommendations for Launch:
+    1. Replace Mock Payments: Implement a real payment provider in modules/payment.
+    2. Add Integration Tests: Focus on testing the Auth flow and the Project-Application flow.
+    3. Error Handling: While a GlobalExceptionHandler exists, ensure it covers all edge cases like "Payment Failed" or "Elasticsearch Down".
 
 Based on **NirmaanSetu** backend project, here are the most likely and impactful interview questions categorized by domain. Given your use of **Spring AI**, **Vector Stores**, and the **ELK stack**, you should expect deep dives into these modern technologies.
 
