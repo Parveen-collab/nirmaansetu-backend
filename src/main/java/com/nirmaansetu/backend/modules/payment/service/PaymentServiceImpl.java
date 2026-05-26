@@ -5,6 +5,7 @@ import com.nirmaansetu.backend.modules.payment.dto.PaymentDto;
 import com.nirmaansetu.backend.modules.payment.dto.PaymentSummaryDto;
 import com.nirmaansetu.backend.modules.payment.entity.Payment;
 import com.nirmaansetu.backend.modules.payment.entity.PaymentStatus;
+import com.nirmaansetu.backend.modules.payment.exception.PaymentFailedException;
 import com.nirmaansetu.backend.modules.payment.mapper.PaymentMapper;
 import com.nirmaansetu.backend.modules.payment.repository.PaymentRepository;
 import com.nirmaansetu.backend.modules.users.entity.User;
@@ -52,6 +53,9 @@ public class PaymentServiceImpl implements PaymentService {
                     String.format("Your payment of ₹%s for %s was successful. Transaction ID: %s",
                             savedPayment.getAmount(), savedPayment.getDescription(), savedPayment.getTransactionId())
             );
+        } else if (savedPayment.getStatus() == PaymentStatus.FAILED) {
+            throw new PaymentFailedException(String.format("Payment of ₹%s failed for user %s", 
+                    savedPayment.getAmount(), user.getName()));
         }
 
         return paymentMapper.toDto(savedPayment);
