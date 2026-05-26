@@ -1,5 +1,9 @@
 package com.nirmaansetu.backend.exceptionHandler;
 
+import com.nirmaansetu.backend.modules.auth.exception.RateLimitException;
+import com.nirmaansetu.backend.modules.payment.exception.PaymentFailedException;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,8 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.nirmaansetu.backend.modules.auth.exception.RateLimitException;
-import org.springframework.http.HttpStatus;
 
 /**
  * Controller advice to handle exceptions globally across all REST controllers.
@@ -38,6 +40,28 @@ public class GlobalExceptionHandler {
         error.put("error", "Too Many Requests");
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
+    }
+
+    /**
+     * Handles PaymentFailedException when a payment transaction fails.
+     */
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<Map<String, String>> handlePaymentFailedException(PaymentFailedException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Payment Failed");
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(error);
+    }
+
+    /**
+     * Handles DataAccessResourceFailureException when external services like DB or Elasticsearch are down.
+     */
+    @ExceptionHandler(DataAccessResourceFailureException.class)
+    public ResponseEntity<Map<String, String>> handleServiceUnavailableException(DataAccessResourceFailureException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Service Unavailable");
+        error.put("message", "A required external service (Database or search engine) is currently unavailable. Please try again later.");
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
     }
 
     /**
