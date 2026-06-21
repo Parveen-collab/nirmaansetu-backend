@@ -10,8 +10,7 @@ To address these issues, **NirmaanSetu** aims to develop a centralized digital p
 
 
 ## inspiration
-1. Upwork
-2. Fiverr
+1. Digital Labour Chowk
 
 ## Users 
 ## for phase 1 
@@ -60,7 +59,7 @@ A large-scale construction ecosystem platform's architecture section can include
 * APIs
 * User Roles
 * Deployment/Scalability
-* Future AI integrations (optional)
+* AI integrations
 ---
 
 # Architecture
@@ -112,6 +111,31 @@ Authentication system includes:
 * Secure Login & Registration
 * Role-Based Access Control (RBAC)
 * JWT / Session-based Authentication
+
+### AI Features Implemented
+1. **AI-Powered Matching Engine (Recommendation System)**
+- **What it does**: Use a recommendation algorithm to match Employers with the most suitable Employees (Mistry, Carpenter, etc.) based on their skills, location, availability, and historical performance ratings.
+
+2. **Conversational Support Bot (LLM Chat)**
+- **What it does**: Helps users (mistry, contractors, shopkeepers) navigate the app, find services, or get basic construction advice.
+- **Implementation**: Create a `/api/chat` endpoint using `ChatClient` that uses RAG (Retrieval Augmented Generation) to answer questions based on your platform's documentation or user profiles. = done
+
+3. **Smart Enquiry Processing**
+Enhance your existing `enquiries` module with AI-driven categorization.
+- **What it does**: Automatically extracts the type of work (Plumbing, Electrical, Masonry) and urgency from a user's raw text enquiry.
+- **Implementation**: When an enquiry is created, send the text to an LLM to "label" it. This can then automatically route the enquiry to the most relevant employees. - done
+
+4. **AI Cost & Material Estimator**
+- **What it does**: An employer describes a project (e.g., *"I want to build a 20ft boundary wall"*), and the AI suggests the required materials (bricks, cement) and estimated labor cost.
+- **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation. =done
+
+5. **OCR for Professional Verification**
+- **What it does**: Automatically verifies the identity or certifications of Employees/Suppliers.
+- **Implementation**: Use AI to extract text from images of ID cards or licenses during profile setup to ensure the data matches their registration. = done
+
+6. **Sentiment Analysis for Trust & Safety**
+- **What it does**: Scans reviews and feedback to detect negative behavior or fraud.
+- **Implementation**: Automatically flag reviews with high negative sentiment for admin review to maintain the platform's quality. = done
 
 ### User Roles
 The platform supports multiple user roles:
@@ -421,10 +445,7 @@ NirmaanSetu is designed as a scalable construction ecosystem platform, and sever
 * Advanced admin moderation system
 ---
 
-# Optional Professional Ending
-You can end the section with:
-```md id="rzk8yu"
+
 NirmaanSetu aims to become a complete digital ecosystem for the construction industry by continuously improving scalability, accessibility, security, and user experience.
-```
 
      ## NirmaanSetu - Building Bridges in Construction.
