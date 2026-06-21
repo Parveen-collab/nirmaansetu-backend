@@ -22,12 +22,8 @@ Your image URL:parveendockerhub/nirmaansetu:latest
 
 TO DO LIST
 10. document the NirmaanSetu Backend Development till Phase 1
-9. do billing for OpenAI API key
-11. 💡 Recommendations for Launch:
-    3. Error Handling: While a GlobalExceptionHandler exists, ensure it covers all edge cases like "Payment Failed" or "Elasticsearch Down". = done
 
 #### Interview Questions Based on the project
-
 ### 1. Spring AI & Vector Search (The "Hero" Feature)
 *   **Vector Search vs. Keyword Search**: "You have both keyword and AI-based search. When would you use one over the other, and how did you implement the similarity search using `VectorStore`?"
 *   **RAG Implementation**: "Can you explain the **Retrieval-Augmented Generation (RAG)** flow in your `ChatService`? How do you ensure the AI doesn't hallucinate (provide wrong info)?"
@@ -60,6 +56,7 @@ TO DO LIST
 **Pro Tip**: Be ready to explain your `docker-compose.yml` setup, as it shows you understand how to orchestrate the entire infrastructure (MySQL, Redis, Elasticsearch, Logstash) rather than just writing Java code.
 If you are targeting a **Full Stack + AI Integration Engineer** role (which matches your long-term plan), you should focus on tools across these 6 categories:
 ---
+
 ### AI TOOLS LIST FOR A DEVELOPER OTHER THAN CHATGPT
 # 1. AI Coding & Productivity Tools
 ## Best AI Coding Assistants
