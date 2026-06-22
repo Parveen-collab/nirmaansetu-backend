@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--What does it do?-->
+
+<!--It tells IntelliJ where to download project dependencies from when you:-->
+<!--Open the project-->
+<!--Sync Maven-->
+<!--Download libraries-->
+<!--Resolve dependencies from pom.xml-->
+
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
