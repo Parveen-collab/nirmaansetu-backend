@@ -8,7 +8,6 @@ import com.nirmaansetu.backend.modules.users.entity.User;
 import com.nirmaansetu.backend.modules.users.mapper.UserMapper;
 import com.nirmaansetu.backend.modules.users.repository.EmployeeProfileRepository;
 import com.nirmaansetu.backend.modules.users.strategy.ProfileStrategy;
-import com.nirmaansetu.backend.shared.service.OcrVerificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
