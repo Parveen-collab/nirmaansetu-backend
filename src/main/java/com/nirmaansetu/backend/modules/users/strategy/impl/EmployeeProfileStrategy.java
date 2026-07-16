@@ -1,6 +1,6 @@
 package com.nirmaansetu.backend.modules.users.strategy.impl;
 
-import com.nirmaansetu.backend.modules.recommendation.service.RecommendationService;
+//import com.nirmaansetu.backend.modules.recommendation.service.RecommendationService;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.entity.EmployeeProfile;
 import com.nirmaansetu.backend.modules.users.entity.Role;
@@ -24,12 +24,12 @@ public class EmployeeProfileStrategy implements ProfileStrategy {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private RecommendationService recommendationService;
-
-    @Autowired
-    private OcrVerificationService ocrVerificationService;
+//
+//    @Autowired
+//    private RecommendationService recommendationService;
+//
+//    @Autowired
+//    private OcrVerificationService ocrVerificationService;
 
     @Autowired
     private com.nirmaansetu.backend.shared.service.FileService fileService;
@@ -82,7 +82,7 @@ public class EmployeeProfileStrategy implements ProfileStrategy {
             user.setEmployeeProfile(profile);
 
             // Index profile for AI recommendation/search features
-            recommendationService.indexEmployeeProfile(profile);
+//            recommendationService.indexEmployeeProfile(profile);
         }
     }
 
@@ -100,20 +100,6 @@ public class EmployeeProfileStrategy implements ProfileStrategy {
 
         // Convert URL into actual file system path
         String filePath = fileService.getFileSystemPath(documentUrl);
-
-        if (filePath != null) {
-
-            // Run OCR verification
-            OcrVerificationService.VerificationResult result =
-                    ocrVerificationService.verifyDocument(
-                            filePath,
-                            user.getName(),
-                            user.getAadhaarNumber()
-                    );
-
-            // Mark profile as verified if OCR validation succeeds
-            profile.setVerified(result.isSuccess());
-        }
     }
 
     /**
@@ -194,7 +180,6 @@ public class EmployeeProfileStrategy implements ProfileStrategy {
         // Save updated profile and refresh recommendation index
         if (profile != null) {
             employeeProfileRepository.save(profile);
-            recommendationService.indexEmployeeProfile(profile);
         }
     }
 }
