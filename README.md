@@ -24,7 +24,6 @@ To address these issues, **NirmaanSetu** aims to develop a centralized digital p
 
 ## 🚀 Key Features
 - **Multi-Stakeholder Ecosystem**: Integrated platform for Employees, Employers, and Suppliers.
-- **AI-Powered Search**: Advanced vector search capabilities using Spring AI and Elasticsearch for matching skills with requirements.
 - **Secure Authentication**: Robust security implementation using JWT (JSON Web Tokens) and Twilio for OTP-based verification.
 - **ELK Stack Integration**: Centralized logging and monitoring using Elasticsearch, Logstash, and Kibana.
 - **Real-time Data Management**: Optimized performance with Redis caching.
@@ -33,7 +32,6 @@ To address these issues, **NirmaanSetu** aims to develop a centralized digital p
 ## 🛠 Tech Stack
 - **Framework**: Spring Boot 3.x
 - **Language**: Java 17
-- **AI/ML**: Spring AI (OpenAI Embeddings)
 - **Database**: MySQL (Persistence), Redis (Caching)
 - **Search Engine**: Elasticsearch (Vector Store)
 - **Monitoring**: ELK Stack (Elasticsearch, Logstash, Kibana), Prometheus, Actuator
@@ -45,7 +43,6 @@ To address these issues, **NirmaanSetu** aims to develop a centralized digital p
 - JDK 17 or higher
 - Maven 3.6+
 - Docker & Docker Compose
-- OpenAI API Key (for AI features)
 - Twilio Account (for SMS features)
 
 ## Architecture
@@ -59,7 +56,6 @@ A large-scale construction ecosystem platform's architecture section can include
 * APIs
 * User Roles
 * Deployment/Scalability
-* AI integrations
 ---
 
 # Architecture
@@ -111,31 +107,6 @@ Authentication system includes:
 * Secure Login & Registration
 * Role-Based Access Control (RBAC)
 * JWT / Session-based Authentication
-
-### AI Features Implemented
-1. **AI-Powered Matching Engine (Recommendation System)**
-- **What it does**: Use a recommendation algorithm to match Employers with the most suitable Employees (Mistry, Carpenter, etc.) based on their skills, location, availability, and historical performance ratings.
-
-2. **Conversational Support Bot (LLM Chat)**
-- **What it does**: Helps users (mistry, contractors, shopkeepers) navigate the app, find services, or get basic construction advice.
-- **Implementation**: Create a `/api/chat` endpoint using `ChatClient` that uses RAG (Retrieval Augmented Generation) to answer questions based on your platform's documentation or user profiles. = done
-
-3. **Smart Enquiry Processing**
-Enhance your existing `enquiries` module with AI-driven categorization.
-- **What it does**: Automatically extracts the type of work (Plumbing, Electrical, Masonry) and urgency from a user's raw text enquiry.
-- **Implementation**: When an enquiry is created, send the text to an LLM to "label" it. This can then automatically route the enquiry to the most relevant employees. - done
-
-4. **AI Cost & Material Estimator**
-- **What it does**: An employer describes a project (e.g., *"I want to build a 20ft boundary wall"*), and the AI suggests the required materials (bricks, cement) and estimated labor cost.
-- **Implementation**: Use an LLM with a specific prompt that references material data from your `shop` module to provide a rough quotation. =done
-
-5. **OCR for Professional Verification**
-- **What it does**: Automatically verifies the identity or certifications of Employees/Suppliers.
-- **Implementation**: Use AI to extract text from images of ID cards or licenses during profile setup to ensure the data matches their registration. = done
-
-6. **Sentiment Analysis for Trust & Safety**
-- **What it does**: Scans reviews and feedback to detect negative behavior or fraud.
-- **Implementation**: Automatically flag reviews with high negative sentiment for admin review to maintain the platform's quality. = done
 
 ### User Roles
 The platform supports multiple user roles:
@@ -405,7 +376,6 @@ NirmaanSetu is designed as a scalable construction ecosystem platform, and sever
 
 ### Planned Features
 * Real-time chat between workers, employers, and suppliers
-* AI-based worker and supplier recommendation system
 * Geo-location and nearby service discovery
 * Multi-language support for regional and international users
 * Mobile application for Android and iOS

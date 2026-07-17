@@ -1,6 +1,5 @@
 package com.nirmaansetu.backend.modules.users.strategy.impl;
 
-import com.nirmaansetu.backend.modules.recommendation.service.RecommendationService;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.modules.users.entity.SupplierProfile;
@@ -24,12 +23,6 @@ public class SupplierProfileStrategy implements ProfileStrategy {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private RecommendationService recommendationService;
-
-    @Autowired
-    private com.nirmaansetu.backend.shared.service.OcrVerificationService ocrVerificationService;
 
     @Autowired
     private com.nirmaansetu.backend.shared.service.FileService fileService;
@@ -82,9 +75,6 @@ public class SupplierProfileStrategy implements ProfileStrategy {
 
             // Link profile back to user entity
             user.setSupplierProfile(profile);
-
-            // Add profile to recommendation/search index
-            recommendationService.indexSupplierProfile(profile);
         }
     }
 
@@ -106,20 +96,6 @@ public class SupplierProfileStrategy implements ProfileStrategy {
 
         // Convert document URL into actual file system path
         String filePath = fileService.getFileSystemPath(documentUrl);
-
-        if (filePath != null) {
-
-            // Run OCR verification
-            com.nirmaansetu.backend.shared.service.OcrVerificationService.VerificationResult result =
-                    ocrVerificationService.verifyDocument(
-                            filePath,
-                            user.getName(),
-                            user.getAadhaarNumber()
-                    );
-
-            // Mark profile as verified if OCR validation succeeds
-            profile.setVerified(result.isSuccess());
-        }
     }
 
     /**
@@ -192,8 +168,6 @@ public class SupplierProfileStrategy implements ProfileStrategy {
         if (profile != null) {
 
             supplierProfileRepository.save(profile);
-
-            recommendationService.indexSupplierProfile(profile);
         }
     }
 }
