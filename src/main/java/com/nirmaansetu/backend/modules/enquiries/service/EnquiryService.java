@@ -1,6 +1,5 @@
 package com.nirmaansetu.backend.modules.enquiries.service;
 
-import com.nirmaansetu.backend.modules.enquiries.dto.EnquiryAiResponseDto;
 import com.nirmaansetu.backend.modules.enquiries.dto.EnquiryRequestDto;
 import com.nirmaansetu.backend.modules.enquiries.dto.EnquiryResponseDto;
 import com.nirmaansetu.backend.modules.enquiries.entity.Enquiry;
@@ -24,7 +23,6 @@ public class EnquiryService {
     private final EnquiryRepository enquiryRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
-    private final EnquiryAiService enquiryAiService;
 
     /**
      * Creates and saves a new enquiry, then notifies all users with the SUPPLIER role.
@@ -38,17 +36,6 @@ public class EnquiryService {
                 .phone(requestDto.getPhone())
                 .message(requestDto.getMessage())
                 .build();
-
-        // Categorize using AI
-        try {
-            EnquiryAiResponseDto aiResult = enquiryAiService.categorizeEnquiry(requestDto.getMessage());
-            enquiry.setWorkType(aiResult.getWorkType());
-            enquiry.setUrgency(aiResult.getUrgency());
-        } catch (Exception e) {
-            log.error("Failed to categorize enquiry with AI: {}", e.getMessage());
-            enquiry.setWorkType("Unknown");
-            enquiry.setUrgency("Low");
-        }
 
         Enquiry savedEnquiry = enquiryRepository.save(enquiry);
 
