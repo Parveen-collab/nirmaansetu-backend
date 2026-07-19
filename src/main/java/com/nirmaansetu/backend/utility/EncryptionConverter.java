@@ -20,13 +20,7 @@ public class EncryptionConverter implements AttributeConverter<String, String> {
     private final byte[] key;
 
     public EncryptionConverter(@Value("${app.encryption.secret-key}") String secretKey) {
-        System.out.println("==================================");
-        System.out.println("Secret Key = " + secretKey);
-        System.out.println("Length = " + secretKey.length());
-        System.out.println("==================================");
-
         this.key = secretKey.getBytes(StandardCharsets.UTF_8);
-//        this.key = secretKey.getBytes();
     }
 
 
