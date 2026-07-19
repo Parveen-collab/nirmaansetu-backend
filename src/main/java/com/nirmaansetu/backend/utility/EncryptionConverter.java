@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 //This class is a JPA Attribute Converter that automatically encrypts data before saving to the database and decrypts it when reading from the database.
 
@@ -19,8 +20,15 @@ public class EncryptionConverter implements AttributeConverter<String, String> {
     private final byte[] key;
 
     public EncryptionConverter(@Value("${app.encryption.secret-key}") String secretKey) {
-        this.key = secretKey.getBytes();
+        System.out.println("==================================");
+        System.out.println("Secret Key = " + secretKey);
+        System.out.println("Length = " + secretKey.length());
+        System.out.println("==================================");
+
+        this.key = secretKey.getBytes(StandardCharsets.UTF_8);
+//        this.key = secretKey.getBytes();
     }
+
 
     @Override
     public String convertToDatabaseColumn(String attribute) {
