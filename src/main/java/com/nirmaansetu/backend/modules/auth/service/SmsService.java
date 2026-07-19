@@ -39,7 +39,6 @@ public class SmsService {
                     messageBody
             ).create();
 
-            System.out.println("SMS sent: " + message.getSid());
         } catch (Exception e) {
             System.err.println("Failed to send SMS to " + toPhoneNumber + ": " + e.getMessage());
             e.printStackTrace();

@@ -1,14 +1,14 @@
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-VOLUME /tmp
-
-# Add a non-root user (security best practice)
 RUN addgroup -S spring && adduser -S spring -G spring
-USER spring
 
 COPY target/nirmaansetu.jar app.jar
+
+RUN chown -R spring:spring /app
+
+USER spring
 
 EXPOSE 8080
 
