@@ -50,9 +50,19 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/enquiries").permitAll()
-                        .requestMatchers("/v3/api-docs/**", 
-                                        "/swagger-ui/**", 
-                                        "/swagger-ui.html").permitAll()
+
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
+                        .requestMatchers(
+                                "/actuator/**",
+                                "/actuator/health",
+                                "/actuator/info"
+                        ).permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
