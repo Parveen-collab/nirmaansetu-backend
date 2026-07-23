@@ -1,5 +1,3 @@
-//Expose endpoints for requesting and verifying the OTP, Login.
-
 package com.nirmaansetu.backend.modules.auth.controller;
 
 import com.nirmaansetu.backend.modules.auth.dto.AuthResponseDto;
@@ -7,10 +5,10 @@ import com.nirmaansetu.backend.modules.auth.dto.LoginRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.OtpRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.ResetPasswordRequestDto;
 import com.nirmaansetu.backend.modules.auth.dto.VerifyOtpRequestDto;
+import com.nirmaansetu.backend.modules.auth.service.AuthenticationService;
 import com.nirmaansetu.backend.modules.auth.service.OtpService;
 import com.nirmaansetu.backend.modules.auth.service.SmsService;
 import com.nirmaansetu.backend.modules.users.service.UserService;
-import com.nirmaansetu.backend.shared.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,110 +18,108 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Controller for handling authentication-related operations such as login, OTP management, and password reset.
- */
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Auth APIs", description = "Operations related to auth")
+@Tag(name = "Auth APIs", description = "Operations related to authentication")
 public class AuthController {
-    @Autowired
-    private OtpService otpService;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private OtpService otpService;
 
     @Autowired
     private UserService userService;
 
     /**
-     * Authenticates a user with phone number and password, returning access and refresh tokens.
+     * Login using phone number and password.
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
-        userService.login(request);
-        String accessToken = jwtUtil.generateToken(request.getPhoneNumber(), false);
-        String refreshToken = jwtUtil.generateToken(request.getPhoneNumber(), true);
+    public ResponseEntity<AuthResponseDto> login(
+            @Valid @RequestBody LoginRequestDto request) {
 
-        return ResponseEntity.ok(new AuthResponseDto(accessToken, refreshToken));
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 
     /**
-     * Sends an OTP to a user's phone number for password reset if the user exists.
-     */
-    @PostMapping("/send-otp-forgot")
-    public ResponseEntity<String> sendOtpForgot(@Valid @RequestBody OtpRequestDto request) {
-        if (!userService.existsByPhoneNumber(request.getPhoneNumber())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this phone number");
-        }
-        otpService.sendOtp(request.getPhoneNumber());
-        return ResponseEntity.ok("OTP sent successfully for password reset");
-    }
-
-    /**
-     * Resets a user's password after verifying their OTP.
-     */
-    @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequestDto request) {
-        userService.resetPassword(request);
-        return ResponseEntity.ok("Password reset successfully");
-    }
-
-    /**
-     * Sends an OTP to a user's phone number for general verification.
+     * Send OTP for registration/login.
      */
     @PostMapping("/send-otp")
-    public ResponseEntity<String> sendOtp(@Valid @RequestBody OtpRequestDto request) {
+    public ResponseEntity<String> sendOtp(
+            @Valid @RequestBody OtpRequestDto request) {
+
         otpService.sendOtp(request.getPhoneNumber());
+
         return ResponseEntity.ok("OTP sent successfully");
     }
 
     /**
-     * Verifies the provided OTP and returns JWT tokens upon successful verification.
+     * Verify OTP and return JWT tokens.
      */
     @PostMapping("/verify-otp")
-    public ResponseEntity<?> verifyOtp(@Valid @RequestBody VerifyOtpRequestDto request) {
-        if (otpService.verifyOtp(request.getPhoneNumber(), request.getOtp())) {
-            String accessToken = jwtUtil.generateToken(request.getPhoneNumber(), false);
-            String refreshToken = jwtUtil.generateToken(request.getPhoneNumber(), true);
+    public ResponseEntity<AuthResponseDto> verifyOtp(
+            @Valid @RequestBody VerifyOtpRequestDto request) {
 
-            return ResponseEntity.ok(new AuthResponseDto(accessToken, refreshToken));
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired OTP");
+        return ResponseEntity.ok(authenticationService.verifyOtp(request));
     }
 
     /**
-     * Refreshes the access token using a valid refresh token.
+     * Send OTP for forgot password.
+     */
+    @PostMapping("/send-otp-forgot")
+    public ResponseEntity<String> sendOtpForgot(
+            @Valid @RequestBody OtpRequestDto request) {
+
+        if (!userService.existsByPhoneNumber(request.getPhoneNumber())) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("User not found with this phone number");
+        }
+
+        otpService.sendOtp(request.getPhoneNumber());
+
+        return ResponseEntity.ok("OTP sent successfully for password reset");
+    }
+
+    /**
+     * Reset password after OTP verification.
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @Valid @RequestBody ResetPasswordRequestDto request) {
+
+        userService.resetPassword(request);
+
+        return ResponseEntity.ok("Password reset successfully");
+    }
+
+    /**
+     * Refresh access token using refresh token.
      */
     @Operation(
-            summary = "Create a refresh token when access token get expired.",
-            description = "You can create refresh token to extend the expiration time of the access token.",
-            security = @SecurityRequirement(name = "bearerAuth"))
+            summary = "Refresh Access Token",
+            description = "Generate a new access token using a valid refresh token.",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestParam String refreshToken) {
-        String phoneNumber = jwtUtil.extractPhoneNumber(refreshToken);
-        if (phoneNumber != null && jwtUtil.validateToken(refreshToken, phoneNumber)) {
-            String newAccessToken = jwtUtil.generateToken(phoneNumber, false);
-            String newRefreshToken = jwtUtil.generateToken(phoneNumber, true);
-            return ResponseEntity.ok(new AuthResponseDto(newAccessToken, newRefreshToken));
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+    public ResponseEntity<AuthResponseDto> refreshToken(
+            @RequestParam String refreshToken) {
+
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshToken));
     }
 
     /**
-     * Inner controller for handling SMS-related tasks.
+     * SMS APIs
      */
     @RestController
     @RequestMapping("/api/v1/sms")
-    @Tag(name = "sms")
+    @Tag(name = "SMS APIs")
     public static class SmsController {
 
         @Autowired
         private SmsService smsService;
 
-        /**
-         * Sends a welcome SMS to the specified phone number.
-         */
         @PostMapping("/send")
         public String sendSms(@RequestParam String phone) {
 

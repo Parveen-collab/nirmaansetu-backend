@@ -37,6 +37,9 @@ public class User extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private RegistrationStatus registrationStatus;
+
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Phone number is required")
     @ValidPhoneNumber
