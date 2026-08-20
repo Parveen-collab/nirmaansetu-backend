@@ -55,7 +55,7 @@ public class AuthController {
     }
 
     /**
-     * Verify OTP and return JWT tokens.
+     * Verify OTP, create a guest user (or return existing user), and issue JWT tokens.
      */
     @PostMapping("/verify-otp")
     public ResponseEntity<AuthResponseDto> verifyOtp(

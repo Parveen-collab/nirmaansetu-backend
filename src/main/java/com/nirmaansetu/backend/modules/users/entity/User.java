@@ -53,8 +53,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    @NotBlank(message = "Aadhaar number is required")
+    @Column(unique = true)
     @Convert(converter = EncryptionConverter.class)
     private String aadhaarNumber;
 

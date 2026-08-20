@@ -22,7 +22,10 @@ public class EnquiryController {
 
     private final EnquiryService enquiryService;
 
-    @Operation(summary = "Send an enquiry")
+    @Operation(
+            summary = "Send an enquiry",
+            description = "Requires guest JWT. Visitor must verify OTP first.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping
     public ResponseEntity<EnquiryResponseDto> sendEnquiry(@Valid @RequestBody EnquiryRequestDto requestDto) {
         return ResponseEntity.ok(enquiryService.sendEnquiry(requestDto));

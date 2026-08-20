@@ -3,7 +3,6 @@ package com.nirmaansetu.backend.shared.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -39,6 +38,9 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthFilter;
 
     @Autowired
+    private RoleBasedAuthorizationFilter roleBasedAuthorizationFilter;
+
+    @Autowired
     private CustomUserDetailsService userDetailsService;
 
     @Bean
@@ -48,8 +50,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/user/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/enquiries").permitAll()
 
                         .requestMatchers(
                                 "/v3/api-docs/**",
@@ -69,7 +69,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(roleBasedAuthorizationFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }

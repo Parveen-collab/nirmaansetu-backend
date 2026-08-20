@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -133,12 +135,21 @@ public class UserService {
     @Transactional
     public UserResponseDto registerUser(@Valid UserRequestDto request, MultipartFile photo) {
         validateRequest(request);
-        if (!otpService.isPhoneNumberVerified(request.getPhoneNumber())) {
+        validateGuestRegistrationAccess(request.getPhoneNumber());
+
+        if (!isRegistrationAuthorized(request.getPhoneNumber())) {
             throw new RuntimeException("Phone number not verified via OTP");
         }
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+
+        Optional<User> existingUser = userRepository.findByPhoneNumber(request.getPhoneNumber());
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            if (user.getRole() == Role.GUEST) {
+                return upgradeGuestUser(user, request, photo);
+            }
             throw new RuntimeException("Phone number already exists");
         }
+
         if (request.getEmail() != null && !request.getEmail().isEmpty() && userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
@@ -146,25 +157,92 @@ public class UserService {
             throw new RuntimeException("Aadhaar number already exists");
         }
 
-        User user = userMapper.toUser(request);
-        
-        // Generate a random password
-        String plainPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
-        user.setPassword(passwordEncoder.encode(plainPassword));
+        return createRegisteredUser(request, photo);
+    }
 
-        // Calculate and check photo hash for uniqueness
-        String photoHash = null;
-        if (photo != null && !photo.isEmpty()) {
-            photoHash = photoHashService.calculateHash(photo);
-        } else if (request.getProfileImageUrl() != null && !request.getProfileImageUrl().isEmpty()) {
-            photoHash = photoHashService.calculateHashFromUrl(request.getProfileImageUrl());
+    @Transactional
+    public User createOrGetGuestUser(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseGet(() -> {
+                    User guest = new User();
+                    guest.setPhoneNumber(phoneNumber);
+                    guest.setName("Guest");
+                    guest.setRole(Role.GUEST);
+                    guest.setRegistrationStatus(RegistrationStatus.GUEST);
+                    return userRepository.save(guest);
+                });
+    }
+
+    public User getUserEntityByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    private UserResponseDto upgradeGuestUser(User guest, UserRequestDto request, MultipartFile photo) {
+        if (request.getEmail() != null && !request.getEmail().isEmpty()
+                && userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        if (request.getAadhaarNumber() != null && !request.getAadhaarNumber().isEmpty()
+                && userRepository.existsByAadhaarNumber(request.getAadhaarNumber())) {
+            throw new RuntimeException("Aadhaar number already exists");
         }
 
+        userMapper.updateUserFromDto(request, guest);
+        guest.setRole(request.getRole());
+        guest.setRegistrationStatus(RegistrationStatus.ACTIVE);
+
+        String plainPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+        guest.setPassword(passwordEncoder.encode(plainPassword));
+
+        String photoHash = resolvePhotoHash(photo, request.getProfileImageUrl());
         if (photoHash != null && userRepository.existsByPhotoHash(photoHash)) {
             throw new RuntimeException("Profile photo already exists");
         }
 
-        // Ensure bidirectional relationship for addresses
+        if (guest.getAddresses() != null) {
+            guest.getAddresses().forEach(address -> address.setUser(guest));
+        }
+
+        String photoUrl = fileService.saveProfilePhoto(photo);
+        if (photoUrl == null) {
+            photoUrl = request.getProfileImageUrl();
+        }
+
+        if (photoUrl != null) {
+            guest.setProfileImageUrl(photoUrl);
+            guest.setPhotoHash(photoHash);
+        }
+
+        User savedUser = userRepository.save(guest);
+
+        profileStrategyFactory.getStrategy(request.getRole())
+                .createProfile(savedUser, request, photoUrl);
+
+        otpService.clearVerification(request.getPhoneNumber());
+
+        String messageBody = String.format(
+                "Welcome to NirmaanSetu! Your username is %s and your password is %s. Please login to continue.",
+                savedUser.getPhoneNumber(), plainPassword);
+        smsService.sendSms(savedUser.getPhoneNumber(), messageBody);
+
+        UserResponseDto response = userMapper.toUserResponseDto(savedUser);
+        response.setPassword(plainPassword);
+        return response;
+    }
+
+    private UserResponseDto createRegisteredUser(UserRequestDto request, MultipartFile photo) {
+        User user = userMapper.toUser(request);
+        user.setRegistrationStatus(RegistrationStatus.ACTIVE);
+
+        String plainPassword = java.util.UUID.randomUUID().toString().substring(0, 8);
+        user.setPassword(passwordEncoder.encode(plainPassword));
+
+        String photoHash = resolvePhotoHash(photo, request.getProfileImageUrl());
+        if (photoHash != null && userRepository.existsByPhotoHash(photoHash)) {
+            throw new RuntimeException("Profile photo already exists");
+        }
+
         if (user.getAddresses() != null) {
             user.getAddresses().forEach(address -> address.setUser(user));
         }
@@ -172,7 +250,6 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         String photoUrl = fileService.saveProfilePhoto(photo);
-
         if (photoUrl == null) {
             photoUrl = request.getProfileImageUrl();
         }
@@ -181,21 +258,56 @@ public class UserService {
         savedUser.setPhotoHash(photoHash);
         userRepository.save(savedUser);
 
-        // Automate Profile Creation based on Role using Strategy Pattern
         profileStrategyFactory.getStrategy(request.getRole())
                 .createProfile(savedUser, request, photoUrl);
 
-        // Clear verification status after successful registration
         otpService.clearVerification(request.getPhoneNumber());
 
-        // Send SMS with username and password
-        String messageBody = String.format("Welcome to NirmaanSetu! Your username is %s and your password is %s. Please login to continue.", 
-            savedUser.getPhoneNumber(), plainPassword);
+        String messageBody = String.format(
+                "Welcome to NirmaanSetu! Your username is %s and your password is %s. Please login to continue.",
+                savedUser.getPhoneNumber(), plainPassword);
         smsService.sendSms(savedUser.getPhoneNumber(), messageBody);
 
         UserResponseDto response = userMapper.toUserResponseDto(savedUser);
         response.setPassword(plainPassword);
         return response;
+    }
+
+    private String resolvePhotoHash(MultipartFile photo, String profileImageUrl) {
+        if (photo != null && !photo.isEmpty()) {
+            return photoHashService.calculateHash(photo);
+        }
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            return photoHashService.calculateHashFromUrl(profileImageUrl);
+        }
+        return null;
+    }
+
+    private boolean isRegistrationAuthorized(String phoneNumber) {
+        if (otpService.isPhoneNumberVerified(phoneNumber)) {
+            return true;
+        }
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof User authenticatedUser) {
+            return authenticatedUser.getRole() == Role.GUEST
+                    && authenticatedUser.getPhoneNumber().equals(phoneNumber);
+        }
+
+        return false;
+    }
+
+    private void validateGuestRegistrationAccess(String phoneNumber) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof User authenticatedUser)) {
+            throw new RuntimeException("Guest authentication required to complete registration");
+        }
+        if (authenticatedUser.getRole() != Role.GUEST) {
+            throw new RuntimeException("Only guest users can complete registration through this endpoint");
+        }
+        if (!authenticatedUser.getPhoneNumber().equals(phoneNumber)) {
+            throw new RuntimeException("Phone number must match the authenticated guest user");
+        }
     }
 
     private void validateRequest(UserRequestDto request) {
@@ -213,6 +325,9 @@ public class UserService {
         }
         if (request.getRole() == Role.SUPER_ADMIN) {
             throw new RuntimeException("Role Restriction : SUPER_ADMIN role cannot be requested through public registration");
+        }
+        if (request.getRole() == Role.GUEST || request.getRole() == Role.ADMIN) {
+            throw new RuntimeException("Role Restriction : " + request.getRole() + " role cannot be requested through registration");
         }
 
         // 1. Inconsistent Profile
@@ -376,15 +491,19 @@ public class UserService {
         return response;
     }
 
-    public UserResponseDto login(@Valid LoginRequestDto request) {
+    public User login(@Valid LoginRequestDto request) {
         User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+        if (user.getRole() == Role.GUEST || user.getPassword() == null) {
+            throw new RuntimeException("Please complete registration before logging in");
+        }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return userMapper.toUserResponseDto(user);
+        return user;
     }
 
     @Transactional
