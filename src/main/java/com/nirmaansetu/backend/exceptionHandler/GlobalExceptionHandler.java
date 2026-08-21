@@ -5,6 +5,7 @@ import com.nirmaansetu.backend.modules.payment.exception.PaymentFailedException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -62,6 +63,17 @@ public class GlobalExceptionHandler {
         error.put("error", "Service Unavailable");
         error.put("message", "A required external service (Database or search engine) is currently unavailable. Please try again later.");
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(error);
+    }
+
+    /**
+     * Handles authorization failures when a user lacks permission for a resource.
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Forbidden");
+        error.put("message", ex.getMessage() != null ? ex.getMessage() : "You do not have permission to access this resource");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     /**

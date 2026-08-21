@@ -1,5 +1,6 @@
 package com.nirmaansetu.backend.shared.utils;
 
+import com.nirmaansetu.backend.modules.auth.dto.JwtUserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -29,10 +30,13 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String phoneNumber, boolean isRefresh) {
+    public String generateToken(JwtUserDto user, boolean isRefresh) {
         long expiry = isRefresh ? refreshExpiration : accessExpiration;
         return Jwts.builder()
-                .setSubject(phoneNumber)
+                .setSubject(user.getPhoneNumber())
+                .claim("userId", user.getUserId())
+                .claim("role", user.getRole().name())
+                .claim("registrationStatus", user.getRegistrationStatus().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiry))
                 .signWith(getSigningKey())

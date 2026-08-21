@@ -1,8 +1,11 @@
 package com.nirmaansetu.backend.modules.users.controller;
 
+import com.nirmaansetu.backend.modules.auth.service.AuthenticationService;
+import com.nirmaansetu.backend.modules.users.dto.RegistrationResponseDto;
 import com.nirmaansetu.backend.modules.users.dto.UserRequestDto;
 import com.nirmaansetu.backend.modules.users.dto.UserResponseDto;
 import com.nirmaansetu.backend.modules.users.entity.Role;
+import com.nirmaansetu.backend.modules.users.entity.User;
 import com.nirmaansetu.backend.modules.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,6 +29,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
     /**
      * Registers a new user with a specific role and optional profile photo.
      * Expects a multipart request containing user details as JSON and an optional image file.
@@ -35,10 +41,14 @@ public class UserController {
             description = "You can create user with a specific role and you have to provide role specific details too.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<UserResponseDto> register(
+    public ResponseEntity<RegistrationResponseDto> register(
             @Valid @RequestPart("user") UserRequestDto request,
             @RequestPart(value = "photo", required = false) MultipartFile photo) {
-        return ResponseEntity.ok(userService.registerUser(request, photo));
+        UserResponseDto user = userService.registerUser(request, photo);
+        User upgradedUser = userService.getUserEntityByPhoneNumber(user.getPhoneNumber());
+        return ResponseEntity.ok(new RegistrationResponseDto(
+                user,
+                authenticationService.createAuthResponse(upgradedUser)));
     }
 
     /**

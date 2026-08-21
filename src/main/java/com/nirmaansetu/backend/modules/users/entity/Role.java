@@ -5,5 +5,6 @@ public enum Role {
     EMPLOYER,
     SUPPLIER,
     ADMIN,
-    SUPER_ADMIN
+    SUPER_ADMIN,
+    GUEST
 }
