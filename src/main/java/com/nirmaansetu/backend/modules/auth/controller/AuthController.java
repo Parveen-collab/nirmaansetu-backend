@@ -99,8 +99,8 @@ public class AuthController {
      */
     @Operation(
             summary = "Refresh Access Token",
-            description = "Generate a new access token using a valid refresh token.",
-            security = @SecurityRequirement(name = "bearerAuth")
+            description = "Generate a new access token using a valid refresh token."
+//            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponseDto> refreshToken(

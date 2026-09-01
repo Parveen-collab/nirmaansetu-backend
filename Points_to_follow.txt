@@ -5,16 +5,6 @@
 3. .\mvnw clean install = Run the following combined command for a comprehensive check.
 4. mvn verify = This will trigger the plugin to download the latest API definitions and update swagger-docs.json in your project root.
 
-## Run the following command to run nirmaansetu docker image
-1. docker run -p 8080:8080 parveendockerhub/nirmaansetu:latest
-2. Your backend is now globally usable
-Your image URL:parveendockerhub/nirmaansetu:latest
-
-## Whenever you update your backend code:
-1. Step 1:Rebuild Image = docker build -t nirmaansetu .
-2. Step 2:Tag Again = docker tag nirmaansetu parveendockerhub/nirmaansetu:latest
-3. Step 3:Push Again = docker push parveendockerhub/nirmaansetu:latest
-
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 2. - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
