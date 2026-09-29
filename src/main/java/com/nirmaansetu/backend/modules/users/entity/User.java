@@ -1,7 +1,6 @@
 package com.nirmaansetu.backend.modules.users.entity;
 
 import com.nirmaansetu.backend.modules.auth.globalNumberValidator.ValidPhoneNumber;
-import com.nirmaansetu.backend.modules.users.entity.Role;
 import com.nirmaansetu.backend.shared.utils.BaseEntity;
 import com.nirmaansetu.backend.utility.EncryptionConverter;
 import io.swagger.v3.oas.annotations.media.Schema;

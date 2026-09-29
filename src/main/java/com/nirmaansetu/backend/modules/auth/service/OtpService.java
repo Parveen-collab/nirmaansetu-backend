@@ -27,7 +27,7 @@ public class OtpService {
     // Duration for which a phone number is locked after exceeding attempts
     private static final int LOCK_TIME_MINUTES = 10;
     // OTP validity duration
-    private static final int OTP_EXPIRY_MINUTES = 5;
+    private static final int OTP_EXPIRY_MINUTES = 30;
     // How long the "verified" status remains valid for registration
     private static final int VERIFIED_PHONE_EXPIRY_MINUTES = 10;
 
