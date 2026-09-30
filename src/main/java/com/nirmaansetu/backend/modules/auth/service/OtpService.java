@@ -25,11 +25,11 @@ public class OtpService {
     // Maximum number of OTP requests allowed before locking
     private static final int MAX_OTP_ATTEMPTS = 5;
     // Duration for which a phone number is locked after exceeding attempts
-    private static final int LOCK_TIME_MINUTES = 10;
+    private static final int LOCK_TIME_MINUTES = 20;
     // OTP validity duration
-    private static final int OTP_EXPIRY_MINUTES = 30;
+    private static final int OTP_EXPIRY_MINUTES = 15;
     // How long the "verified" status remains valid for registration
-    private static final int VERIFIED_PHONE_EXPIRY_MINUTES = 10;
+    private static final int VERIFIED_PHONE_EXPIRY_MINUTES = 60;
 
     @Autowired
     private SmsService smsService;
@@ -49,7 +49,7 @@ public class OtpService {
         String currentCount = ops.get(limitKey);
 
         if (currentCount != null && Integer.parseInt(currentCount) >= MAX_OTP_ATTEMPTS) {
-            throw new RateLimitException("OTP limit exceeded. Please try again after 10 minutes.");
+            throw new RateLimitException("OTP limit exceeded. Please try again after 15 minutes.");
         }
 
         // Generate a 4-digit OTP

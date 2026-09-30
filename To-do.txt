@@ -2,9 +2,6 @@
 TO DO LIST
 
 ### Backend Related
-3. understand the complete flow of verify-otp API url
-4. why aadhaar number is compulsory for guest user fix that
-5. increase otp expiry time
 1. for /auth/send-otp-forgot, /sms/send?phone=string, /auth/reset-password, registration API, Login API, /user/all, /auth/refresh?refreshToken=string, get/user/:id, delete/user/:id, Patch/user/:id APIs check for proper implementation for both backend and frontend
     -handle error properly
 
