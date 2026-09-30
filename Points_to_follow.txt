@@ -1,9 +1,24 @@
+## Before Push
 
-## Run These commands before push
-1. .\mvnw clean install -DskipTests
-2. .\mvnw test = Run this command to ensure all unit and integration tests pass.
-3. .\mvnw clean install = Run the following combined command for a comprehensive check.
-4. mvn verify = This will trigger the plugin to download the latest API definitions and update swagger-docs.json in your project root.
+Run the following command for a complete project verification:
+
+.\mvnw clean verify
+
+This runs the configured Maven verification lifecycle, including tests and
+project-specific verification plugins.
+
+### Optional
+
+Run only when needed:
+
+.\mvnw test
+    → Run tests during development.
+
+.\mvnw clean install
+    → Perform a full clean build and install the artifact locally.
+
+.\mvnw clean install -DskipTests
+    → Build without running tests.
 
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
