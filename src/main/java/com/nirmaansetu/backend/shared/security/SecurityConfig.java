@@ -49,7 +49,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/v1/auth/send-otp",
+                                "/api/v1/auth/verify-otp",
+                                "/api/v1/auth/login"
+                        ).permitAll()
 
                         .requestMatchers(
                                 "/v3/api-docs/**",

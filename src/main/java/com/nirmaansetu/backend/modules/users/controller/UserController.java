@@ -38,7 +38,7 @@ public class UserController {
      */
     @Operation(
             summary = "Create user with a specific role.",
-            description = "You can create user with a specific role and you have to provide role specific details too.",
+            description = "You can create user with a specific role (EMPLOYEE, EMPLOYER, SUPPLIER) and you have to provide role specific details too.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<RegistrationResponseDto> register(
