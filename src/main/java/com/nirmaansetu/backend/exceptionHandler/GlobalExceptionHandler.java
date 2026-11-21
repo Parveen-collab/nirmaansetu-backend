@@ -66,6 +66,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles authentication failures (e.g. invalid or expired tokens, wrong credentials).
+     */
+    @ExceptionHandler({org.springframework.security.authentication.BadCredentialsException.class, org.springframework.security.core.AuthenticationException.class})
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Unauthorized");
+        error.put("message", ex.getMessage() != null ? ex.getMessage() : "Invalid or expired session. Please log in again.");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    /**
      * Handles authorization failures when a user lacks permission for a resource.
      */
     @ExceptionHandler(AccessDeniedException.class)

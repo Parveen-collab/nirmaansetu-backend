@@ -1,3 +1,20 @@
+### to run the spring boot app
+.\mvnw.cmd spring-boot:run
+
+### to test database connection 
+mysql -h localhost -P 3306 -u root -p
+
+### to update password in the sysytem
+$env:DB_PASSWORD = "YOUR_ACTUAL_MYSQL_PASSWORD"
+
+### to stop the process using port 8080
+Stop-Process -Id (Get-NetTCPConnection -LocalPort 8080).OwningProcess -Force
+
+### to provide twilio related value permanently
+[System.Environment]::SetEnvironmentVariable('TWILIO_ACCOUNT_SID', 'your_actual_twilio_account_sid', 'User')
+[System.Environment]::SetEnvironmentVariable('TWILIO_AUTH_TOKEN', 'your_actual_twilio_token', 'User')
+[System.Environment]::SetEnvironmentVariable('TWILIO_PHONE_NUMBER', 'your_actual_twilio_phone_number', 'User')
+
 ## Before Push
 
 Run the following command for a complete project verification:
@@ -8,7 +25,6 @@ This runs the configured Maven verification lifecycle, including tests and
 project-specific verification plugins.
 
 ### Optional
-
 Run only when needed:
 
 .\mvnw test
@@ -19,6 +35,118 @@ Run only when needed:
 
 .\mvnw clean install -DskipTests
     → Build without running tests.
+
+### to update the docker
+Ran find Dockerfiles in repo
+Analyzed .dockerignore:L1-2
+Ran search docker commands in README.md
+Analyzed README.md:L735-775
+Ran check git history for Dockerfile
+Ran show historical Dockerfile
+Ran check finalName in pom.xml
+Created Dockerfile
+Ran check if target/nirmaansetu.jar exists
+Ran check timestamp of target/nirmaansetu.jar
+
+Here is the step-by-step guide to package your latest code and update your Docker image.
+
+---
+
+### Step 1: Package the Latest Code into a JAR
+
+Before building the Docker image, compile and bundle all your latest code changes into the runnable JAR file:
+
+```powershell
+.\mvnw.cmd clean package -DskipTests
+```
+
+> **Note:** This verifies and generates `target/nirmaansetu.jar` which is copied into the Docker image.
+
+---
+
+### Step 2: Ensure [Dockerfile](file:///c:/Users/Hp/nirmaansetu-backend/Dockerfile) is in Place
+
+A [`Dockerfile`](file:///c:/Users/Hp/nirmaansetu-backend/Dockerfile) has been created in your project root with the following configuration:
+
+```dockerfile
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+VOLUME /tmp
+COPY target/nirmaansetu.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+```
+
+---
+
+### Step 3: Make Sure Docker Desktop is Running
+
+Ensure **Docker Desktop** is running on your machine before running Docker CLI commands.
+
+---
+
+### Step 4: Build the Updated Docker Image
+
+In your project root directory (`c:\Users\Hp\nirmaansetu-backend`), run:
+
+```powershell
+docker build -t nirmaansetu-backend .
+```
+
+*If you are using Docker Hub or a remote registry, tag it with your username and version:*
+```powershell
+docker build -t your-dockerhub-username/nirmaansetu-backend:latest .
+```
+
+---
+
+### Step 5: Replace Any Running Container
+
+If you already have a container running the old image:
+
+1. **Stop the old container:**
+   ```powershell
+   docker stop nirmaansetu-backend
+   ```
+
+2. **Remove the old container:**
+   ```powershell
+   docker rm nirmaansetu-backend
+   ```
+
+3. **Start the new container with your environment variables:**
+   ```powershell
+   docker run -d `
+     --name nirmaansetu-backend `
+     -p 8080:8080 `
+     -e DB_PASSWORD="your_mysql_password" `
+     -e TWILIO_ACCOUNT_SID="$env:TWILIO_ACCOUNT_SID" `
+     -e TWILIO_AUTH_TOKEN="$env:TWILIO_AUTH_TOKEN" `
+     -e TWILIO_PHONE_NUMBER="$env:TWILIO_PHONE_NUMBER" `
+     nirmaansetu-backend
+   ```
+
+---
+
+### Step 6: Verify the Running Container
+
+- **Check logs:**
+  ```powershell
+  docker logs -f nirmaansetu-backend
+  ```
+- **Test in browser / Swagger:**
+  Open `http://localhost:8080/swagger-ui/index.html` to confirm all endpoints are running on the new build.
+
+---
+
+### Step 7 (Optional): Push to Remote Registry / Docker Hub
+
+If deploying to a cloud server or sharing:
+
+```powershell
+docker login
+docker push your-dockerhub-username/nirmaansetu-backend:latest
+```
 
 ## Important URLs
 1. - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
