@@ -20,17 +20,20 @@ public class AuthenticationService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final JwtMapper jwtMapper;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthenticationService(
             OtpService otpService,
             UserService userService,
             JwtUtil jwtUtil,
-            JwtMapper jwtMapper) {
+            JwtMapper jwtMapper,
+            RefreshTokenService refreshTokenService) {
 
         this.otpService = otpService;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.jwtMapper = jwtMapper;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public AuthResponseDto login(LoginRequestDto request) {
@@ -49,33 +52,78 @@ public class AuthenticationService {
         return buildAuthResponse(user);
     }
 
+    /**
+     * Refreshes user session if called within the refresh time window (Case 1).
+     * If called after the time window or with a revoked token, throws BadCredentialsException (Case 2).
+     */
     public AuthResponseDto refreshToken(String refreshToken) {
-        String phone = jwtUtil.extractPhoneNumber(refreshToken);
-
-        if (phone == null || !jwtUtil.validateToken(refreshToken, phone)) {
-            throw new BadCredentialsException("Invalid refresh token");
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new BadCredentialsException("Refresh token cannot be empty");
         }
 
+        // Validate and rotate refresh token. Throws BadCredentialsException if outside time window.
+        String newRefreshToken = refreshTokenService.rotateRefreshToken(refreshToken);
+
+        String phone = jwtUtil.extractPhoneNumber(newRefreshToken);
         User user = userService.getUserEntityByPhoneNumber(phone);
-        return buildAuthResponse(user);
+
+        JwtUserDto jwtUser = jwtMapper.toJwtUser(user);
+        String newAccessToken = jwtUtil.generateToken(jwtUser, false);
+
+        return AuthResponseDto.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .userId(jwtUser.getUserId())
+                .role(jwtUser.getRole())
+                .registrationStatus(jwtUser.getRegistrationStatus())
+                .phoneNumber(user.getPhoneNumber())
+                .name(user.getName())
+                .build();
     }
 
     public AuthResponseDto createAuthResponse(User user) {
         return buildAuthResponse(user);
     }
 
+    /**
+     * Returns current user session details for an existing user coming within access token time window (Case 1).
+     */
+    public AuthResponseDto getCurrentSession(User user) {
+        JwtUserDto jwtUser = jwtMapper.toJwtUser(user);
+        return AuthResponseDto.builder()
+                .userId(jwtUser.getUserId())
+                .role(jwtUser.getRole())
+                .registrationStatus(jwtUser.getRegistrationStatus())
+                .phoneNumber(user.getPhoneNumber())
+                .name(user.getName())
+                .build();
+    }
+
+    /**
+     * Revokes session on logout.
+     */
+    public void logout(String refreshToken, User user) {
+        if (refreshToken != null && !refreshToken.isBlank()) {
+            refreshTokenService.revokeRefreshToken(refreshToken);
+        } else if (user != null) {
+            refreshTokenService.revokeAllTokens(user);
+        }
+    }
+
     private AuthResponseDto buildAuthResponse(User user) {
         JwtUserDto jwtUser = jwtMapper.toJwtUser(user);
 
         String accessToken = jwtUtil.generateToken(jwtUser, false);
-        String refreshToken = jwtUtil.generateToken(jwtUser, true);
+        String refreshToken = refreshTokenService.createRefreshToken(user);
 
-        return new AuthResponseDto(
-                accessToken,
-                refreshToken,
-                jwtUser.getUserId(),
-                jwtUser.getRole(),
-                jwtUser.getRegistrationStatus()
-        );
+        return AuthResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .userId(jwtUser.getUserId())
+                .role(jwtUser.getRole())
+                .registrationStatus(jwtUser.getRegistrationStatus())
+                .phoneNumber(user.getPhoneNumber())
+                .name(user.getName())
+                .build();
     }
 }

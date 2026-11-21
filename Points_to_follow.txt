@@ -1,3 +1,20 @@
+### to run the spring boot app
+.\mvnw.cmd spring-boot:run
+
+### to test database connection 
+mysql -h localhost -P 3306 -u root -p
+
+### to update password in the sysytem
+$env:DB_PASSWORD = "YOUR_ACTUAL_MYSQL_PASSWORD"
+
+### to stop the process using port 8080
+Stop-Process -Id (Get-NetTCPConnection -LocalPort 8080).OwningProcess -Force
+
+### to provide twilio related value permanently
+[System.Environment]::SetEnvironmentVariable('TWILIO_ACCOUNT_SID', 'your_actual_twilio_account_sid', 'User')
+[System.Environment]::SetEnvironmentVariable('TWILIO_AUTH_TOKEN', 'your_actual_twilio_token', 'User')
+[System.Environment]::SetEnvironmentVariable('TWILIO_PHONE_NUMBER', 'your_actual_twilio_phone_number', 'User')
+
 ## Before Push
 
 Run the following command for a complete project verification:
@@ -8,7 +25,6 @@ This runs the configured Maven verification lifecycle, including tests and
 project-specific verification plugins.
 
 ### Optional
-
 Run only when needed:
 
 .\mvnw test

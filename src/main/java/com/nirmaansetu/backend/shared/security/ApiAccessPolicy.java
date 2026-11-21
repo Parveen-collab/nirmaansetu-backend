@@ -29,10 +29,14 @@ public class ApiAccessPolicy {
 
     private static final List<String> GUEST_PATTERNS = List.of(
             "/api/v1/enquiries",
-            "/api/v1/user/register"
+            "/api/v1/user/register",
+            "/api/v1/auth/me",
+            "/api/v1/auth/logout"
     );
 
     private static final List<String> SHARED_REGISTERED_PATTERNS = List.of(
+            "/api/v1/auth/me",
+            "/api/v1/auth/logout",
             "/api/v1/user/**",
             "/api/v1/projects/**",
             "/api/v1/applications/**",
@@ -83,6 +87,12 @@ public class ApiAccessPolicy {
             return true;
         }
         if (HttpMethod.POST.matches(method) && PATH_MATCHER.match("/api/v1/user/register", path)) {
+            return true;
+        }
+        if (HttpMethod.GET.matches(method) && PATH_MATCHER.match("/api/v1/auth/me", path)) {
+            return true;
+        }
+        if (HttpMethod.POST.matches(method) && PATH_MATCHER.match("/api/v1/auth/logout", path)) {
             return true;
         }
         return false;
