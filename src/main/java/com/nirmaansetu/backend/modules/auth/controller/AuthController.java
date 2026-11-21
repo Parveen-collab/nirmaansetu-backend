@@ -60,7 +60,8 @@ public class AuthController {
     }
 
     /**
-     * Verify OTP, create a guest user (or return existing user), and issue JWT tokens.
+     * Verify OTP, create a guest user (or return existing user), and issue JWT
+     * tokens.
      */
     @PostMapping("/verify-otp")
     public ResponseEntity<AuthResponseDto> verifyOtp(
@@ -101,13 +102,12 @@ public class AuthController {
 
     /**
      * Refresh access token using refresh token.
-     * Case 1: If requested within the valid refresh window, returns new access & refresh tokens.
-     * Case 2: If requested after the refresh window (or revoked), returns 401 Unauthorized so client redirects to login.
+     * Case 1: If requested within the valid refresh window, returns new access &
+     * refresh tokens.
+     * Case 2: If requested after the refresh window (or revoked), returns 401
+     * Unauthorized so client redirects to login.
      */
-    @Operation(
-            summary = "Refresh Access Token",
-            description = "Generate a new access token using a valid refresh token. Supported via query param or JSON body."
-    )
+    @Operation(summary = "Refresh Access Token", description = "Generate a new access token using a valid refresh token. Supported via query param or JSON body.")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponseDto> refreshToken(
             @RequestParam(required = false) String refreshToken,
@@ -126,13 +126,10 @@ public class AuthController {
 
     /**
      * Validates current active session (within access token time window).
-     * Used by existing user visiting the site to directly redirect to dashboard (Case 1).
+     * Used by existing user visiting the site to directly redirect to dashboard
+     * (Case 1).
      */
-    @Operation(
-            summary = "Get current authenticated session",
-            description = "Validates the active session and returns user identity, role, and registration status.",
-            security = @SecurityRequirement(name = "bearerAuth")
-    )
+    @Operation(summary = "Get current authenticated session", description = "Validates the active session and returns user identity, role, and registration status.", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/me")
     public ResponseEntity<AuthResponseDto> getCurrentSession() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -145,11 +142,7 @@ public class AuthController {
     /**
      * Logout and revoke the active refresh token.
      */
-    @Operation(
-            summary = "Logout user",
-            description = "Revokes the active refresh token.",
-            security = @SecurityRequirement(name = "bearerAuth")
-    )
+    @Operation(summary = "Logout user", description = "Revokes the active refresh token.", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/logout")
     public ResponseEntity<String> logout(
             @RequestParam(required = false) String refreshToken,

@@ -24,15 +24,13 @@ public class ApiAccessPolicy {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/actuator/**"
-    );
+            "/actuator/**");
 
     private static final List<String> GUEST_PATTERNS = List.of(
             "/api/v1/enquiries",
             "/api/v1/user/register",
             "/api/v1/auth/me",
-            "/api/v1/auth/logout"
-    );
+            "/api/v1/auth/logout");
 
     private static final List<String> SHARED_REGISTERED_PATTERNS = List.of(
             "/api/v1/auth/me",
@@ -42,13 +40,11 @@ public class ApiAccessPolicy {
             "/api/v1/applications/**",
             "/api/v1/orders/**",
             "/api/v1/payments/**",
-            "/api/v1/notifications/**"
-    );
+            "/api/v1/notifications/**");
 
     private static final List<String> ADMIN_ONLY_PATTERNS = List.of(
             "/api/v1/admin/**",
-            "/api/v1/dashboard/**"
-    );
+            "/api/v1/dashboard/**");
 
     public boolean isPublic(String method, String path) {
         return matchesAny(PUBLIC_PATTERNS, path);
